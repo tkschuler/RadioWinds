@@ -1,0 +1,88 @@
+<area coords="171,1,5" shape="CIRCLE" href="javascript:g('29839')" title="29839  Barnaul, IR">
+<area coords="203,2,5" shape="CIRCLE" href="javascript:g('29862')" title="29862  Hakasskaja, NO">
+<area coords="277,5,5" shape="CIRCLE" href="javascript:g('30635')" title="30635  Ust-Barguzin, IR">
+<area coords="255,13,5" shape="CIRCLE" href="javascript:g('30715')" title="30715  Angarsk, IR">
+<area coords="297,12,5" shape="CIRCLE" href="javascript:g('30758')" title="30758  Chita, IR (UIAA)">
+<area coords="278,26,5" shape="CIRCLE" href="javascript:g('30935')" title="30935  Krasnyj Chikoj, IR">
+<area coords="312,21,5" shape="CIRCLE" href="javascript:g('30965')" title="30965  Borzja, IR">
+<area coords="379,4,5" shape="CIRCLE" href="javascript:g('31538')" title="31538  Sutur">
+<area coords="396,9,5" shape="CIRCLE" href="javascript:g('31736')" title="31736  Habarovsk, HA">
+<area coords="397,29,5" shape="CIRCLE" href="javascript:g('31873')" title="31873  Dalnerechensk, HA">
+<area coords="396,48,5" shape="CIRCLE" href="javascript:g('31977')" title="31977  Vladivostok (Sad Gorod), HA">
+<area coords="433,4,5" shape="CIRCLE" href="javascript:g('32150')" title="32150  Juzhno-Sahalinsk, HA (UHSS)">
+<area coords="120,14,5" shape="CIRCLE" href="javascript:g('35394')" title="35394  Karaganda, AL">
+<area coords="92,19,5" shape="CIRCLE" href="javascript:g('35671')" title="35671  Zhezkazgan, AL">
+<area coords="141,2,5" shape="CIRCLE" href="javascript:g('36003')" title="36003  Pavlodar, AL">
+<area coords="215,18,5" shape="CIRCLE" href="javascript:g('36096')" title="36096  Kyzyl, NO">
+<area coords="126,62,5" shape="CIRCLE" href="javascript:g('36872')" title="36872  Almaty, AL">
+<area coords="75,34,5" shape="CIRCLE" href="javascript:g('38064')" title="38064  Kyzylorda">
+<area coords="98,57,5" shape="CIRCLE" href="javascript:g('38341')" title="38341  Zhambyl, AL">
+<area coords="0,58,5" shape="CIRCLE" href="javascript:g('40738')" title="40738  Gorgan (OING)">
+<area coords="11,95,5" shape="CIRCLE" href="javascript:g('40809')" title="40809  Birjand (OIMB)">
+<area coords="176,209,5" shape="CIRCLE" href="javascript:g('41923')" title="41923  Dhaka (VGTJ)">
+<area coords="97,120,5" shape="CIRCLE" href="javascript:g('42027')" title="42027  Srinagar">
+<area coords="101,160,5" shape="CIRCLE" href="javascript:g('42182')" title="42182  New Delhi/Safdarjung (VIDD)">
+<area coords="71,168,5" shape="CIRCLE" href="javascript:g('42339')" title="42339  Jodhpur (VIJO)">
+<area coords="103,178,5" shape="CIRCLE" href="javascript:g('42361')" title="42361  Gwalior (VIGR)">
+<area coords="120,178,5" shape="CIRCLE" href="javascript:g('42369')" title="42369  Lucknow/Amausi (VILK)">
+<area coords="135,181,5" shape="CIRCLE" href="javascript:g('42379')" title="42379  Gorakhpur (VEGK)">
+<area coords="62,190,5" shape="CIRCLE" href="javascript:g('42647')" title="42647  Ahmadabad (VAAH)">
+<area coords="92,197,5" shape="CIRCLE" href="javascript:g('42667')" title="42667  Bhopal/Bairagarh (VABP)">
+<area coords="163,215,5" shape="CIRCLE" href="javascript:g('42809')" title="42809  Calcutta/Dum Dum (VECC)">
+<area coords="99,215,5" shape="CIRCLE" href="javascript:g('42867')" title="42867  Nagpur Sonegaon (VANP)">
+<area coords="133,216,5" shape="CIRCLE" href="javascript:g('42886')" title="42886  Jharsuguda (VEJH)">
+<area coords="143,230,5" shape="CIRCLE" href="javascript:g('42971')" title="42971  Bhubaneswar (VEBS)">
+<area coords="116,233,5" shape="CIRCLE" href="javascript:g('43041')" title="43041  Jagdalpur">
+<area coords="60,223,5" shape="CIRCLE" href="javascript:g('43063')" title="43063  Poona">
+<area coords="89,240,5" shape="CIRCLE" href="javascript:g('43128')" title="43128  Hyderabad Airport (VOHY)">
+<area coords="105,253,5" shape="CIRCLE" href="javascript:g('43185')" title="43185  Mapatnam">
+<area coords="93,275,5" shape="CIRCLE" href="javascript:g('43279')" title="43279  Madras/Minambakkam (VOMM)">
+<area coords="184,299,5" shape="CIRCLE" href="javascript:g('43333')" title="43333  Port Blair (VEPB)">
+<area coords="87,290,5" shape="CIRCLE" href="javascript:g('43346')" title="43346  Karaikal">
+<area coords="59,290,5" shape="CIRCLE" href="javascript:g('43353')" title="43353  Cochin/Willingdon (VOCC)">
+<area coords="203,32,5" shape="CIRCLE" href="javascript:g('44212')" title="44212  Ulaan-Gom">
+<area coords="269,46,5" shape="CIRCLE" href="javascript:g('44292')" title="44292  Ulaan-Baator">
+<area coords="260,76,5" shape="CIRCLE" href="javascript:g('44373')" title="44373  Dalanzadgad">
+<area coords="333,215,5" shape="CIRCLE" href="javascript:g('45004')" title="45004  Kings Park">
+<area coords="370,95,5" shape="CIRCLE" href="javascript:g('47102')" title="47102  Baengnyeongdo">
+<area coords="393,89,5" shape="CIRCLE" href="javascript:g('47104')" title="47104  Bukgangneung">
+<area coords="385,97,5" shape="CIRCLE" href="javascript:g('47122')" title="47122  Osan Ab (RKSO)">
+<area coords="399,100,5" shape="CIRCLE" href="javascript:g('47138')" title="47138  Pohang">
+<area coords="388,110,5" shape="CIRCLE" href="javascript:g('47158')" title="47158  Kwangju Ab (RKJJ)">
+<area coords="381,115,5" shape="CIRCLE" href="javascript:g('47169')" title="47169  Heuksando">
+<area coords="391,122,5" shape="CIRCLE" href="javascript:g('47186')" title="47186  National Typhoon Centre">
+<area coords="433,16,5" shape="CIRCLE" href="javascript:g('47401')" title="47401  Wakkanai">
+<area coords="439,31,5" shape="CIRCLE" href="javascript:g('47412')" title="47412  Sapporo">
+<area coords="443,54,5" shape="CIRCLE" href="javascript:g('47582')" title="47582  Akita">
+<area coords="454,77,5" shape="CIRCLE" href="javascript:g('47646')" title="47646  Tateno">
+<area coords="461,96,5" shape="CIRCLE" href="javascript:g('47678')" title="47678  Hachijyojima/Omure">
+<area coords="410,114,5" shape="CIRCLE" href="javascript:g('47807')" title="47807  Fukuoka">
+<area coords="416,127,5" shape="CIRCLE" href="javascript:g('47827')" title="47827  Kagoshima">
+<area coords="417,150,5" shape="CIRCLE" href="javascript:g('47909')" title="47909  Naze/Funchatoge">
+<area coords="394,187,5" shape="CIRCLE" href="javascript:g('47918')" title="47918  Ishigakijima (ROIG)">
+<area coords="433,163,5" shape="CIRCLE" href="javascript:g('47945')" title="47945  Minamidaitojima (ROMD)">
+<area coords="241,352,5" shape="CIRCLE" href="javascript:g('48601')" title="48601  Penang/Bayan Lepas (WMKP)">
+<area coords="253,373,5" shape="CIRCLE" href="javascript:g('48650')" title="48650  Sepang">
+<area coords="278,231,5" shape="CIRCLE" href="javascript:g('48820')" title="48820  Ha Noi (VVNB)">
+<area coords="298,266,5" shape="CIRCLE" href="javascript:g('48855')" title="48855  Da Nang (VVDN)">
+<area coords="290,306,5" shape="CIRCLE" href="javascript:g('48900')" title="48900  Ho Chi Minh (VVTS)">
+<area coords="228,366,5" shape="CIRCLE" href="javascript:g('96035')" title="96035  Medan/Polonia (WIMM)">
+<area coords="308,360,5" shape="CIRCLE" href="javascript:g('96147')" title="96147  Ranai (WION)">
+<area coords="242,404,5" shape="CIRCLE" href="javascript:g('96163')" title="96163  Padang/Tabing (WIMG)">
+<area coords="293,413,5" shape="CIRCLE" href="javascript:g('96237')" title="96237  Pangkal Pinang (WIKK)">
+<area coords="260,430,5" shape="CIRCLE" href="javascript:g('96253')" title="96253  Bengkulu/Padang Kemiling (WIPL)">
+<area coords="326,378,5" shape="CIRCLE" href="javascript:g('96413')" title="96413  Kuching (WBGG)">
+<area coords="383,354,5" shape="CIRCLE" href="javascript:g('96509')" title="96509  Tarakan/Juwata (WRLR)">
+<area coords="320,393,5" shape="CIRCLE" href="javascript:g('96581')" title="96581  Pontianak/Supadio (WIOO)">
+<area coords="370,415,5" shape="CIRCLE" href="javascript:g('96685')" title="96685  Banjarmasin/Syamsudin (WRBB)">
+<area coords="300,448,5" shape="CIRCLE" href="javascript:g('96749')" title="96749  Jakarta/Soekarno-Hatta (WIII)">
+<area coords="358,454,5" shape="CIRCLE" href="javascript:g('96935')" title="96935  Surabaya/Juanda (WRSJ)">
+<area coords="447,354,5" shape="CIRCLE" href="javascript:g('97014')" title="97014  Menado/ Sam Ratulangi (WAMM)">
+<area coords="408,383,5" shape="CIRCLE" href="javascript:g('97072')" title="97072  Palu/Mutiara (WAML)">
+<area coords="464,459,5" shape="CIRCLE" href="javascript:g('97372')" title="97372  Kupang/Eltari (WRKK)">
+<area coords="381,236,5" shape="CIRCLE" href="javascript:g('98223')" title="98223  Laoag (RPLI)">
+<area coords="384,249,5" shape="CIRCLE" href="javascript:g('98328')" title="98328  Baguio (RPUB)">
+<area coords="393,261,5" shape="CIRCLE" href="javascript:g('98433')" title="98433  Tanay">
+<area coords="382,301,5" shape="CIRCLE" href="javascript:g('98618')" title="98618  Puerto Princesa (RPVP)">
+<area coords="420,287,5" shape="CIRCLE" href="javascript:g('98646')" title="98646  Mactan (RPMT)">
+<area coords="440,308,5" shape="CIRCLE" href="javascript:g('98753')" title="98753  Davao Airport (RPMD)">
