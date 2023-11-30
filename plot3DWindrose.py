@@ -251,8 +251,8 @@ def find_opposing_wind_ranges(df, threshold_speed, threshold_angle):
 ####################################################
 if __name__=="__main__":
     # Create a datetime object for the sounding and string of the station identifier.
-    date = datetime(2023, 5, 28, 12)
-    station = 'ABQ'
+    date = datetime(2012, 1, 1, 12)
+    station = '82244'
 
     pd.set_option("display.max_rows", None)
     # Make the request (a pandas dataframe is returned).

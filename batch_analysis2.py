@@ -1,5 +1,4 @@
 from datetime import datetime
-from siphon.simplewebservice.wyoming import WyomingUpperAir
 import pandas as pd
 from termcolor import colored
 import numpy as np
@@ -7,17 +6,14 @@ from pathlib import Path
 import dataframe_image as dfi
 import os
 from os import listdir
-import glob
-
 import opposing_wind_wyoming
 
+'''
 def get_soundings(FAA, WMO, year):
     data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-
     sub_folders = [name for name in os.listdir(folder) if os.path.isdir(os.path.join(folder, name))]
-
     print(sub_folders)
-
+'''
 
 def determing_wind_statistics(df , min_alt, max_alt, alt_step, n_sectors, speed_threshold):
     wind_bins = np.arange(min_alt, max_alt, alt_step)
@@ -53,17 +49,12 @@ def determing_wind_statistics(df , min_alt, max_alt, alt_step, n_sectors, speed_
     return wind_bins, opposing_wind_levels
 
 def save_wind_probabilties(wind_probabilities, analysis_folder, date):
-    #print("=========SAVING MONTHLY WIND PROBABILITIES FOR " +str(date.month) + "/" + str(date.year) + "==============\n")
 
-
-    #print(wind_probabilities)
     wind_probabilities = pd.concat([wind_probabilities, wind_probabilities.apply(['average'])])
 
-    # print(wind_probabilities)
     print(colored(
         "Processing data for Station-" + str(FAA) + " - " + str(WMO) + "    Year-" + str(date.year) + "    Month-" + str(date.month),
         "cyan"))
-    #sdf
 
     wind_probabilities = wind_probabilities.apply(pd.to_numeric)
     wind_probabilities_styled = wind_probabilities.style.background_gradient(axis=None, vmin=0, vmax=1.0, cmap='RdYlGn')
@@ -94,8 +85,6 @@ def save_wind_probabilties(wind_probabilities, analysis_folder, date):
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     wind_probabilities.to_csv(filepath_dataframe)
 
-    #return wind_probabilities
-
 #THIS IS THE MAIN FUNCTION THAT INCOPROATES ALL THE HELPER FUNCTIONS
 def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_step = 500, n_sectors = 16, speed_threshold = 2):
     '''
@@ -118,6 +107,9 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
     data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
     analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
+    #Check if sounding data has already been analyzed.  If so, skip
+    if check_monthly_analyzed(analysis_folder):
+        return True
 
     #Iterate by month and day for a particular year.
     for j in range (1,12+1):
@@ -127,26 +119,23 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
         wind_probabilities = pd.DataFrame(columns=column_headers)
         wind_probabilities_styled = pd.DataFrame()
 
-        #j  = 6
-        #NOW get all CSVs?
-        all_files = os.listdir(data_folder + str(j))
+        try:
+            all_files = os.listdir(data_folder + str(j))
+        except:
+            print(colored(str(FAA) + " - " + str(WMO) + "/" + str(year) + " Not Downloaded.", "red"))
+            return False
+            #raise ValueError
         csv_files = list(filter(lambda f: f.endswith('.csv'), all_files))
         csv_files.sort() #sort the list of CSVs to have the table in the right order
 
-        #print(csv_files)
-        #asasf
 
         #Will need to check if there is missing data.
         if csv_files:
             for csv in csv_files:
-                #print("\nMONTH:", j)
-                #print(data_folder  + str(j) + "/" + csv)
                 df = pd.read_csv(data_folder + str(j) + "/" + csv, index_col = 0)
                 #df = df.dropna(axis='rows')  #change this to speed
                 df.dropna(subset=['direction', 'speed'], how='all', inplace=True)
 
-               # print(df)
-                #sdfs
                 wind_bins, opposing_wind_levels = determing_wind_statistics(df, min_alt=min_alt, max_alt=max_alt,
                                                                             alt_step=alt_step, n_sectors=n_sectors,
                                                                             speed_threshold=speed_threshold)
@@ -159,26 +148,7 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
                     else:
                         mask[k] = 0
 
-                #If the whole array is empty skip.  XMR 7-13-2015 is an example
-                #print(df)
-                #print(df.speed)
-                #print(df['time'])
-                df.time = pd.to_datetime(df['time'])
-
-                #print(df.time)
-
-                date = df.time.iat[0]
-
-                # date = datetime(year, j, i, 12)
-                # date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-
-                #print(date)
-                # asda
-
-                wind_probabilities.loc[date, :] = mask
-
-                #sdfs
-
+                #Need to check if Dataframe is empty after dropping nan values was done on direction and speed
                 try:
                     df.time = pd.to_datetime(df['time'])
 
@@ -200,18 +170,14 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             date = datetime(year, j, 1, 00)  #day and time shouldn't matter
             mask = np.empty(len(wind_bins))
             mask[:] = np.nan
-            #print(mask)
-            #print(wind_probabilities)
-            #wind_probabilities = wind_probabilities.reset_index(drop=True)
             wind_probabilities.loc[date, :] = mask
 
             print(wind_probabilities)
 
-        #sdfs
-
         save_wind_probabilties(wind_probabilities, analysis_folder, date)
 
-        #sdfs
+        return True
+
 
 def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
     print("=========CUMULATIVE WIND PROBABILITY ANALYSIS==============\n")
@@ -219,15 +185,12 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
     analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
     files = [f for f in listdir(analysis_folder + "dataframes") if f.endswith(".csv")]
-    #print(files)
 
     wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     column_headers = np.char.mod("%.1f", wind_bins / 1000.)
     cumulative = pd.DataFrame(columns=column_headers)
 
-
-    #print(cumulative)
 
     for csv in files:
         # read csv for each month of individual station
@@ -240,6 +203,7 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
             cumulative.loc[date.month, :] = df.iloc[-1:].values
         except:
             continue
+
     cumulative.sort_index(inplace=True, ascending=True)
     print(cumulative)
 
@@ -275,17 +239,50 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     cumulative.to_csv(filepath_dataframe)
 
+def check_monthly_analyzed(analysis_folder):
+    '''
 
-#main
+        Helper Function to see if annual sounding data has been analyzed yet
+
+    '''
+
+    isExist = os.path.exists(analysis_folder)
+    if not isExist:
+        print(colored(analysis_folder, "yellow"))
+        return False
+
+    print(colored(analysis_folder, "green"))
+    return True
+
+def check_annual_analyzed(FAA, WMO, year):
+    '''
+
+    Helper Function to see if annual sounding data has been analyzed yet
+
+    '''
+
+    analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    file = analysis_folder[:-14] + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
+
+    isExist = os.path.exists(file)
+    if not isExist:
+        print(colored(file, "yellow"))
+        return False
+
+    print(colored(file, "green"))
+    return True
+
+
+#mMain
 if __name__=="__main__":
 
-    continent = "North_America"
-    stations_df = pd.read_csv('Radisonde_String_Parsing/CLEANED/' + continent + ".csv")
+    continent = "Antarctica"
+    stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
 
     #stations_df = stations_df.loc[stations_df["FAA"] == "PHLI"]
 
-    stations_df = stations_df[5:]
+    #stations_df = stations_df[2:]
 
     print(stations_df)
 
@@ -313,6 +310,7 @@ if __name__=="__main__":
         year = 2013
         #station = 'SKBO'
         local_download = False
+        local_download = False
 
         folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
         #print(folder)
@@ -331,7 +329,11 @@ if __name__=="__main__":
 
         # DO THE WIND PROBABILTIES ANALYSIS
 
-        for year in range (2014, 2023 +1):
-            anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
+        for year in range (2012, 2023 +1):
+            status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
 
-            cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)
+            if not status:
+                print(colored("Can't perform cumulative analysis because + " + str(FAA) + "/" + str(WMO) + "/" + str(year) + " not downloaded.", "red"))
+
+            if not check_annual_analyzed(FAA, WMO, year) and status:
+                cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)

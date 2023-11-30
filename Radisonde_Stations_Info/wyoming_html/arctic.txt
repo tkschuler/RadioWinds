@@ -1,0 +1,153 @@
+<area coords="298,214,5" shape="CIRCLE" href="javascript:g('01001')" title="01001  Jan Mayen (ENJA)">
+<area coords="256,187,5" shape="CIRCLE" href="javascript:g('01004')" title="01004  Ny-Alesund Ii (ENAS)">
+<area coords="336,176,5" shape="CIRCLE" href="javascript:g('01241')" title="01241  Orland (ENOL)">
+<area coords="378,189,5" shape="CIRCLE" href="javascript:g('01400')" title="01400  Ekofisk">
+<area coords="358,202,5" shape="CIRCLE" href="javascript:g('03005')" title="03005  Lerwick">
+<area coords="326,252,5" shape="CIRCLE" href="javascript:g('04018')" title="04018  Keflavikurflugvollur (BIKF)">
+<area coords="325,231,5" shape="CIRCLE" href="javascript:g('04089')" title="04089  Egilsstadir (BIEG)">
+<area coords="267,288,5" shape="CIRCLE" href="javascript:g('04220')" title="04220  Aasiaat (Egedesminde) (BGEM)">
+<area coords="306,308,5" shape="CIRCLE" href="javascript:g('04270')" title="04270  Narsarsuaq (BGBW)">
+<area coords="264,221,5" shape="CIRCLE" href="javascript:g('04320')" title="04320  Danmarkshavn (BGDH)">
+<area coords="294,237,5" shape="CIRCLE" href="javascript:g('04339')" title="04339  Ittoqqortoormiit (BGSC)">
+<area coords="387,167,5" shape="CIRCLE" href="javascript:g('10035')" title="10035  Schleswig">
+<area coords="393,175,5" shape="CIRCLE" href="javascript:g('10113')" title="10113  Norderney">
+<area coords="387,154,5" shape="CIRCLE" href="javascript:g('10184')" title="10184  Greifswald">
+<area coords="397,149,5" shape="CIRCLE" href="javascript:g('10393')" title="10393  Lindenberg">
+<area coords="379,142,5" shape="CIRCLE" href="javascript:g('12120')" title="12120  Leba">
+<area coords="388,127,5" shape="CIRCLE" href="javascript:g('12374')" title="12374  Legionowo">
+<area coords="225,158,5" shape="CIRCLE" href="javascript:g('20046')" title="20046  Polargmo Im. Krenkelja, DK">
+<area coords="183,137,5" shape="CIRCLE" href="javascript:g('20292')" title="20292  Gmo Im.E.K. Fedorova, DK">
+<area coords="213,114,5" shape="CIRCLE" href="javascript:g('20674')" title="20674  Ostrov Dikson, DK">
+<area coords="255,126,5" shape="CIRCLE" href="javascript:g('20744')" title="20744  Malye Karmakuly, DK">
+<area coords="145,150,5" shape="CIRCLE" href="javascript:g('21432')" title="21432  Ostrov Kotelnyj, DK">
+<area coords="113,145,5" shape="CIRCLE" href="javascript:g('21946')" title="21946  Chokurdah, TK">
+<area coords="295,136,5" shape="CIRCLE" href="javascript:g('22008')" title="22008  Murmansk">
+<area coords="301,135,5" shape="CIRCLE" href="javascript:g('22217')" title="22217  Kandalaksa, AR">
+<area coords="282,118,5" shape="CIRCLE" href="javascript:g('22271')" title="22271  Sojna, AR">
+<area coords="308,124,5" shape="CIRCLE" href="javascript:g('22522')" title="22522  Kem, LE">
+<area coords="301,112,5" shape="CIRCLE" href="javascript:g('22543')" title="22543  Arhangelsk, AR">
+<area coords="322,115,5" shape="CIRCLE" href="javascript:g('22820')" title="22820  Petrozavodsk, LE">
+<area coords="317,104,5" shape="CIRCLE" href="javascript:g('22845')" title="22845  Kargopol, AR">
+<area coords="202,90,5" shape="CIRCLE" href="javascript:g('23078')" title="23078  Norilsk">
+<area coords="270,105,5" shape="CIRCLE" href="javascript:g('23205')" title="23205  Narjan-Mar, AR">
+<area coords="248,85,5" shape="CIRCLE" href="javascript:g('23330')" title="23330  Salehard, NO">
+<area coords="270,89,5" shape="CIRCLE" href="javascript:g('23415')" title="23415  Pechora, AR">
+<area coords="294,83,5" shape="CIRCLE" href="javascript:g('23802')" title="23802  Syktyvkar, AR">
+<area coords="199,48,5" shape="CIRCLE" href="javascript:g('23884')" title="23884  Bor, NO">
+<area coords="276,64,5" shape="CIRCLE" href="javascript:g('23921')" title="23921  Ivdel, SV">
+<area coords="254,55,5" shape="CIRCLE" href="javascript:g('23933')" title="23933  Hanty-Mansijsk, NO (USHH)">
+<area coords="232,45,5" shape="CIRCLE" href="javascript:g('23955')" title="23955  Aleksandrovskoe, NO">
+<area coords="156,95,5" shape="CIRCLE" href="javascript:g('24122')" title="24122  Olenek, HA">
+<area coords="118,113,5" shape="CIRCLE" href="javascript:g('24266')" title="24266  Verhojansk, HA">
+<area coords="132,97,5" shape="CIRCLE" href="javascript:g('24343')" title="24343  Zhigansk, HA">
+<area coords="175,65,5" shape="CIRCLE" href="javascript:g('24507')" title="24507  Tura, NO">
+<area coords="126,81,5" shape="CIRCLE" href="javascript:g('24641')" title="24641  Viljujsk, HA">
+<area coords="86,114,5" shape="CIRCLE" href="javascript:g('24688')" title="24688  Ojmjakon, HA">
+<area coords="140,66,5" shape="CIRCLE" href="javascript:g('24726')" title="24726  Mirnvy, HB">
+<area coords="166,45,5" shape="CIRCLE" href="javascript:g('24908')" title="24908  Vanavara, NO">
+<area coords="119,63,5" shape="CIRCLE" href="javascript:g('24947')" title="24947  Olekminsk, HA">
+<area coords="104,85,5" shape="CIRCLE" href="javascript:g('24959')" title="24959  Jakutsk, HA (UEEE)">
+<area coords="93,163,5" shape="CIRCLE" href="javascript:g('25123')" title="25123  Cherskij, HA">
+<area coords="87,137,5" shape="CIRCLE" href="javascript:g('25403')" title="25403  Zyrjanka, HA">
+<area coords="72,133,5" shape="CIRCLE" href="javascript:g('25703')" title="25703  Sejmchan, HA">
+<area coords="58,120,5" shape="CIRCLE" href="javascript:g('25913')" title="25913  Magadan, HA (UHMM)">
+<area coords="336,117,5" shape="CIRCLE" href="javascript:g('26075')" title="26075  St.Petersburg(Voejkovo), St.Petersburg(Voejkovo), LE (ULLI)">
+<area coords="341,103,5" shape="CIRCLE" href="javascript:g('26298')" title="26298  Bologoe, LE">
+<area coords="354,107,5" shape="CIRCLE" href="javascript:g('26477')" title="26477  Velikie Luki, LE (ULOL)">
+<area coords="359,99,5" shape="CIRCLE" href="javascript:g('26781')" title="26781  Smolensk, MI">
+<area coords="324,94,5" shape="CIRCLE" href="javascript:g('27038')" title="27038  Vologda, AR (ULWW)">
+<area coords="307,72,5" shape="CIRCLE" href="javascript:g('27199')" title="27199  Kirov, MS">
+<area coords="329,74,5" shape="CIRCLE" href="javascript:g('27459')" title="27459  Niznij Novgorod, MS">
+<area coords="320,62,5" shape="CIRCLE" href="javascript:g('27594')" title="27594  Kazan (Vyzaovye), MS">
+<area coords="344,88,5" shape="CIRCLE" href="javascript:g('27713')" title="27713  Moskva (Dolgoprudnyj), MS">
+<area coords="356,87,5" shape="CIRCLE" href="javascript:g('27707')" title="27707  Suhinici, MS">
+<area coords="345,78,5" shape="CIRCLE" href="javascript:g('27730')" title="27730  Rjazan, MS">
+<area coords="339,59,5" shape="CIRCLE" href="javascript:g('27962')" title="27962  Penza, MS (UWPP)">
+<area coords="329,48,5" shape="CIRCLE" href="javascript:g('27995')" title="27995  Samara (Bezencuk), MS">
+<area coords="294,57,5" shape="CIRCLE" href="javascript:g('28225')" title="28225  Perm, SV">
+<area coords="262,41,5" shape="CIRCLE" href="javascript:g('28275')" title="28275  Tobolsk, NO">
+<area coords="285,43,5" shape="CIRCLE" href="javascript:g('28445')" title="28445  Verhnee Dubrovo, SV">
+<area coords="276,31,5" shape="CIRCLE" href="javascript:g('28661')" title="28661  Kurgan, SV">
+<area coords="305,42,5" shape="CIRCLE" href="javascript:g('28722')" title="28722  Ufa, SV">
+<area coords="287,22,5" shape="CIRCLE" href="javascript:g('28951')" title="28951  Kostanai, AK">
+<area coords="193,31,5" shape="CIRCLE" href="javascript:g('29263')" title="29263  Enisejsk, NO (UNII)">
+<area coords="177,32,5" shape="CIRCLE" href="javascript:g('29282')" title="29282  Bogucany, NO">
+<area coords="191,18,5" shape="CIRCLE" href="javascript:g('29572')" title="29572  Emeljanovo, NO">
+<area coords="236,17,5" shape="CIRCLE" href="javascript:g('29612')" title="29612  Barabinsk, NO">
+<area coords="222,13,5" shape="CIRCLE" href="javascript:g('29634')" title="29634  Novosibirsk, NO (UNNN)">
+<area coords="169,13,5" shape="CIRCLE" href="javascript:g('29698')" title="29698  Nizhneudinsk, NO (UINN)">
+<area coords="220,3,5" shape="CIRCLE" href="javascript:g('29839')" title="29839  Barnaul, IR">
+<area coords="195,4,5" shape="CIRCLE" href="javascript:g('29862')" title="29862  Hakasskaja, NO">
+<area coords="137,49,5" shape="CIRCLE" href="javascript:g('30054')" title="30054  Vitim, HA">
+<area coords="146,35,5" shape="CIRCLE" href="javascript:g('30230')" title="30230  Kirensk, IR (UIKK)">
+<area coords="162,22,5" shape="CIRCLE" href="javascript:g('30309')" title="30309  Bratsk, IR">
+<area coords="135,13,5" shape="CIRCLE" href="javascript:g('30635')" title="30635  Ust-Barguzin, IR">
+<area coords="102,30,5" shape="CIRCLE" href="javascript:g('30673')" title="30673  Mogoca, IR">
+<area coords="151,3,5" shape="CIRCLE" href="javascript:g('30715')" title="30715  Angarsk, IR">
+<area coords="118,11,5" shape="CIRCLE" href="javascript:g('30758')" title="30758  Chita, IR (UIAA)">
+<area coords="103,7,5" shape="CIRCLE" href="javascript:g('30965')" title="30965  Borzja, IR">
+<area coords="102,63,5" shape="CIRCLE" href="javascript:g('31004')" title="31004  Aldan, HA">
+<area coords="68,101,5" shape="CIRCLE" href="javascript:g('31088')" title="31088  Ohotsk, HA">
+<area coords="81,44,5" shape="CIRCLE" href="javascript:g('31300')" title="31300  Zeja, HA">
+<area coords="46,73,5" shape="CIRCLE" href="javascript:g('31369')" title="31369  Nikolaevsk-Na-Amure, HA">
+<area coords="54,39,5" shape="CIRCLE" href="javascript:g('31538')" title="31538  Sutur">
+<area coords="39,40,5" shape="CIRCLE" href="javascript:g('31736')" title="31736  Habarovsk, HA">
+<area coords="32,25,5" shape="CIRCLE" href="javascript:g('31873')" title="31873  Dalnerechensk, HA">
+<area coords="27,8,5" shape="CIRCLE" href="javascript:g('31977')" title="31977  Vladivostok (Sad Gorod), HA">
+<area coords="32,69,5" shape="CIRCLE" href="javascript:g('32061')" title="32061  Aleksandrovsk-Sahalnskij, HA">
+<area coords="22,66,5" shape="CIRCLE" href="javascript:g('32098')" title="32098  Poronajsk, HA">
+<area coords="12,57,5" shape="CIRCLE" href="javascript:g('32150')" title="32150  Juzhno-Sahalinsk, HA (UHSS)">
+<area coords="5,113,5" shape="CIRCLE" href="javascript:g('32215')" title="32215  Severo-Kurilsk, HA">
+<area coords="29,140,5" shape="CIRCLE" href="javascript:g('32389')" title="32389  Kljuchi, HA">
+<area coords="24,121,5" shape="CIRCLE" href="javascript:g('32477')" title="32477  Sobolevo">
+<area coords="14,126,5" shape="CIRCLE" href="javascript:g('32540')" title="32540  Kamchatskij, HA (UHPP)">
+<area coords="18,154,5" shape="CIRCLE" href="javascript:g('32618')" title="32618  Nikolskoe, HA">
+<area coords="366,77,5" shape="CIRCLE" href="javascript:g('34009')" title="34009  Kursk, MS">
+<area coords="359,68,5" shape="CIRCLE" href="javascript:g('34122')" title="34122  Voronez, MS (UUOO)">
+<area coords="343,50,5" shape="CIRCLE" href="javascript:g('34172')" title="34172  Saratov, MS">
+<area coords="361,58,5" shape="CIRCLE" href="javascript:g('34247')" title="34247  Kalac, MS">
+<area coords="359,42,5" shape="CIRCLE" href="javascript:g('34467')" title="34467  Volgograd, TB (URWW)">
+<area coords="378,50,5" shape="CIRCLE" href="javascript:g('34731')" title="34731  Rostov-Na-Donu, TB (URRR)">
+<area coords="374,34,5" shape="CIRCLE" href="javascript:g('34858')" title="34858  Divnoe, TB">
+<area coords="359,21,5" shape="CIRCLE" href="javascript:g('34882')" title="34882  Astrakhan, TB">
+<area coords="317,29,5" shape="CIRCLE" href="javascript:g('35121')" title="35121  Orenburg, AL">
+<area coords="316,18,5" shape="CIRCLE" href="javascript:g('35229')" title="35229  Aktjubinsk, AL (UATT)">
+<area coords="343,15,5" shape="CIRCLE" href="javascript:g('35700')" title="35700  Atyran, AL">
+<area coords="245,1,5" shape="CIRCLE" href="javascript:g('36003')" title="36003  Pavlodar, AL">
+<area coords="395,40,5" shape="CIRCLE" href="javascript:g('37011')" title="37011  Tuapse, TB">
+<area coords="374,8,5" shape="CIRCLE" href="javascript:g('37259')" title="37259  Mahachkala">
+<area coords="8,48,5" shape="CIRCLE" href="javascript:g('47401')" title="47401  Wakkanai">
+<area coords="109,238,5" shape="CIRCLE" href="javascript:g('70026')" title="70026  Barrow/W. Post W.Rogers, AK (PABR)">
+<area coords="83,235,5" shape="CIRCLE" href="javascript:g('70133')" title="70133  Kotzebue, Ralph Wien, AK (PAOT)">
+<area coords="69,233,5" shape="CIRCLE" href="javascript:g('70200')" title="70200  Nome, AK (PAOM)">
+<area coords="69,258,5" shape="CIRCLE" href="javascript:g('70231')" title="70231  Mcgrath, AK (PAMC)">
+<area coords="86,270,5" shape="CIRCLE" href="javascript:g('70261')" title="70261  Fairbanks/Int, AK (PAFA)">
+<area coords="66,275,5" shape="CIRCLE" href="javascript:g('70273')" title="70273  Anchorage/Int, AK (PANC)">
+<area coords="26,229,5" shape="CIRCLE" href="javascript:g('70308')" title="70308  St. Paul, AK (PASN)">
+<area coords="21,254,5" shape="CIRCLE" href="javascript:g('70316')" title="70316  Cold Bay, AK (PACD)">
+<area coords="46,265,5" shape="CIRCLE" href="javascript:g('70326')" title="70326  King Salmon, AK (PAKN)">
+<area coords="46,278,5" shape="CIRCLE" href="javascript:g('70350')" title="70350  Kodiak, AK (PADQ)">
+<area coords="75,304,5" shape="CIRCLE" href="javascript:g('70361')" title="70361  Yakutat, AK (PAYA)">
+<area coords="121,303,5" shape="CIRCLE" href="javascript:g('71043')" title="71043  Norman Wells Ua, NT (YVQ)">
+<area coords="216,309,5" shape="CIRCLE" href="javascript:g('71081')" title="71081  Hall Beach, NT (YUX)">
+<area coords="217,234,5" shape="CIRCLE" href="javascript:g('71082')" title="71082  Alert, NT (WLT)">
+<area coords="70,368,5" shape="CIRCLE" href="javascript:g('71109')" title="71109  Port Hardy, BC (YZT)">
+<area coords="119,378,5" shape="CIRCLE" href="javascript:g('71119')" title="71119  Edmonton Stony Plain, AB (WSE)">
+<area coords="339,383,5" shape="CIRCLE" href="javascript:g('71802')" title="71802  Mt Pearl, NF (AYT)">
+<area coords="286,396,5" shape="CIRCLE" href="javascript:g('71811')" title="71811  Sept-Iles, QB (YZV)">
+<area coords="316,391,5" shape="CIRCLE" href="javascript:g('71815')" title="71815  Stephenville, NF (YJT)">
+<area coords="297,371,5" shape="CIRCLE" href="javascript:g('71816')" title="71816  Goose Bay, NF (YYR)">
+<area coords="254,386,5" shape="CIRCLE" href="javascript:g('71823')" title="71823  La Grande Iv, QB (YAH)">
+<area coords="162,389,5" shape="CIRCLE" href="javascript:g('71867')" title="71867  The Pas, MB (YQD)">
+<area coords="262,357,5" shape="CIRCLE" href="javascript:g('71906')" title="71906  Kuujjuaq, QB (YVP)">
+<area coords="94,362,5" shape="CIRCLE" href="javascript:g('71908')" title="71908  Prince George, BC (ZXS)">
+<area coords="187,365,5" shape="CIRCLE" href="javascript:g('71913')" title="71913  Churchill, MB (YYQ)">
+<area coords="203,251,5" shape="CIRCLE" href="javascript:g('71917')" title="71917  Eureka, NT (WEU)">
+<area coords="192,279,5" shape="CIRCLE" href="javascript:g('71924')" title="71924  Resolute, NT (YRB)">
+<area coords="171,305,5" shape="CIRCLE" href="javascript:g('71925')" title="71925  Cambridge Bay, NT (YCB)">
+<area coords="185,334,5" shape="CIRCLE" href="javascript:g('71926')" title="71926  Baker Lake, NT (YBK)">
+<area coords="110,339,5" shape="CIRCLE" href="javascript:g('71945')" title="71945  Fort Nelson, BC (YYE)">
+<area coords="120,282,5" shape="CIRCLE" href="javascript:g('71957')" title="71957  Inuvik, NT (YEV)">
+<area coords="89,309,5" shape="CIRCLE" href="javascript:g('71964')" title="71964  Whitehorse, YT (YXY)">
+<area coords="69,387,5" shape="CIRCLE" href="javascript:g('72797')" title="72797  Quillayute, WA (UIL)">
+<area coords="94,387,5" shape="CIRCLE" href="javascript:g('73033')" title="73033  Vernon, BC (CWVK)">

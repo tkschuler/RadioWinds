@@ -53,6 +53,10 @@ class SiphonMulti(WyomingUpperAir):
         sounding_titles = soup.find_all('h2')
         soundings = soup.find_all('pre')
 
+        #print(soup)
+
+        #sdfs
+
 
         monthly_soundings = []
 
@@ -88,6 +92,7 @@ class SiphonMulti(WyomingUpperAir):
 
         tabular_data = StringIO(soundings[i].contents[0])
 
+
         col_names = ['pressure', 'height', 'temperature', 'dewpoint', 'direction', 'speed']
         #print(tabular_data)
 
@@ -105,6 +110,7 @@ class SiphonMulti(WyomingUpperAir):
 
 
 
+
         df['u_wind'], df['v_wind'] = get_wind_components(df['speed'],
                                                          np.deg2rad(df['direction']))
 
@@ -112,10 +118,16 @@ class SiphonMulti(WyomingUpperAir):
         df = df.dropna(subset=('temperature', 'dewpoint', 'direction', 'speed',
                                'u_wind', 'v_wind'), how='all').reset_index(drop=True)
 
+
+
         # Parse metadata
         #meta_data = soup.find_all('pre')[1].contents[0]
         meta_data = soundings[i+1].contents[0]
         lines = meta_data.splitlines()
+
+        #print(meta_data)
+
+
 
         # If the station doesn't have a name identified we need to insert a
         # record showing this for parsing to proceed.
@@ -127,9 +139,25 @@ class SiphonMulti(WyomingUpperAir):
         sounding_time = datetime.strptime(lines[3].split(':')[1].strip(), '%y%m%d/%H%M')
         #print(lines[3].split(':')[1])
         #print(sounding_time)
-        latitude = float(lines[4].split(':')[1].strip())
-        longitude = float(lines[5].split(':')[1].strip())
-        elevation = float(lines[6].split(':')[1].strip())
+
+        #print(lines[6])
+
+        #ANOTHER CHECK?
+
+        #print(lines[4].split(':')[1].strip())
+
+
+        #New Error for South America with some older data.  I don't think this affects batch analysis
+        if (lines[4].split(':')[1].strip() == '******'):
+            latitude = None
+            longitude = None
+            elevation = None
+        else:
+            latitude = float(lines[4].split(':')[1].strip())
+            longitude = float(lines[5].split(':')[1].strip())
+            elevation = float(lines[6].split(':')[1].strip())
+
+        #print("here")
 
         df['station'] = station
         df['station_number'] = station_number
@@ -137,8 +165,6 @@ class SiphonMulti(WyomingUpperAir):
         df['latitude'] = latitude
         df['longitude'] = longitude
         df['elevation'] = elevation
-
-        #print(df)
 
         # Add unit dictionary
 
@@ -156,11 +182,7 @@ class SiphonMulti(WyomingUpperAir):
                     'latitude': 'degrees',
                     'longitude': 'degrees',
                     'elevation': 'meter'}
-
-        #print(df)
-        #gfgf
         return df
-
 
     def _get_data_raw(self, year, month, site_id):
         """Download data from the University of Wyoming's upper air archive.
@@ -187,6 +209,8 @@ class SiphonMulti(WyomingUpperAir):
         start_time = datetime(year, month, 1, 00)
         end_time = datetime(year, month, num_days, 23)
 
+        #print(start_time)
+
 
 
         path = ('?region=naconf&TYPE=TEXT%3ALIST'
@@ -201,6 +225,8 @@ class SiphonMulti(WyomingUpperAir):
                '&TO=3112'
                '&STNM=72402')
         '''
+
+        #print(path)
 
         #path = ('?region=naconf&TYPE=TEXT%3ALIST&YEAR=2023&MONTH=04&FROM=0112&TO=0112&STNM=74794')
 
@@ -236,6 +262,9 @@ class SiphonMulti(WyomingUpperAir):
         if resp.text.find('Forbidden') != -1:
             print("FORBIDDEN, this is the error")
             #Do I raise an Http error?
+
+        #if resp.text.find('******') != -1:
+        #    print("WE FOUND A BUG!")
 
 
         #print(resp.text)

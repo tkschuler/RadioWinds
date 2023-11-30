@@ -6,7 +6,6 @@ from pathlib import Path
 
 from multiprocessing import Process, Manager
 
-
 def save_monthly_soundings(df_monthly_list, FAA, WMO, year, month):
 
     folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/" + str(month) + "/"
@@ -106,8 +105,8 @@ def parallel_something(stations_df, year):
 
 if __name__=="__main__":
 
-    continent = "South_America"
-    stations_df = pd.read_csv('Radisonde_String_Parsing/CLEANED/' + continent + ".csv")
+    continent = "Antarctica"
+    stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
     #stations_df = stations_df.drop_duplicates(subset=['FAA'])
 
@@ -115,9 +114,9 @@ if __name__=="__main__":
     print(stations_df)
 
 
-    for i in range (2014, 2023+ 1):
-        #parallel_something(stations_df, year = i)
-        for row in stations_df.itertuples(index=False):
-            get_yearly_soundings(row.FAA, row.WMO, year = i)
-            #Do not move onto the next year until all the processes have finished.
+    for i in range (2012, 2023+ 1):
+        parallel_something(stations_df, year = i)
+        #for row in stations_df.itertuples(index=False):
+        #    get_yearly_soundings(row.FAA, row.WMO, year = i)
+        #    #Do not move onto the next year until all the processes have finished.
         print(colored("MOVING ON TO YEAR" + str(i), "cyan"))

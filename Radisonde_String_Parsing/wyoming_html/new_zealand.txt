@@ -1,3 +1,0 @@
-<area coords="214,109,5" shape="CIRCLE" href="javascript:g('93112')" title="93112  Whenuapai (NZWP)">
-<area coords="218,241,5" shape="CIRCLE" href="javascript:g('93417')" title="93417  Paraparaumu Aerodrome (NZPP)">
-<area coords="72,412,5" shape="CIRCLE" href="javascript:g('93844')" title="93844  Invercargill Aerodrome (NZNV)">

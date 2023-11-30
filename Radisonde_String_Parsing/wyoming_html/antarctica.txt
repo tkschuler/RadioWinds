@@ -1,7 +1,0 @@
-<area coords="149,149,5" shape="CIRCLE" href="javascript:g('89009')" title="89009  Amundsen-Scott">
-<area coords="39,105,5" shape="CIRCLE" href="javascript:g('89062')" title="89062  Rothera">
-<area coords="219,64,5" shape="CIRCLE" href="javascript:g('89532')" title="89532  Syowa">
-<area coords="254,95,5" shape="CIRCLE" href="javascript:g('89564')" title="89564  Mawson">
-<area coords="259,126,5" shape="CIRCLE" href="javascript:g('89571')" title="89571  Davis">
-<area coords="266,193,5" shape="CIRCLE" href="javascript:g('89611')" title="89611  Casey">
-<area coords="164,211,5" shape="CIRCLE" href="javascript:g('89664')" title="89664  Mcmurdo">
