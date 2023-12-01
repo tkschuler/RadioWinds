@@ -6,24 +6,22 @@ from pathlib import Path
 import dataframe_image as dfi
 import os
 from os import listdir
-import opposing_wind_wyoming
 
+import opposing_wind_wyoming
 import config
 
-#parent_folder = config.parent_folder
+# maybe add this to utils.py?
+def get_analysis_folder(FAA, WMO, year):
+    return config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
-'''
-def get_soundings(FAA, WMO, year):
-    data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-    sub_folders = [name for name in os.listdir(folder) if os.path.isdir(os.path.join(folder, name))]
-    print(sub_folders)
-'''
+# maybe add this to utils.py?
+def get_data_folder(FAA, WMO, year):
+    return config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
 
-def determing_wind_statistics(df , min_alt, max_alt, alt_step, n_sectors, speed_threshold):
+def determine_wind_statistics(df, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
     wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     # Do some filtering of the dataframe
-    # Only analyze between 10-25km  as well as speeds over 2m/s is the default for now
     #df.dropna(inplace=True)
 
     df.dropna(subset=['height'], how='all', inplace=True)
@@ -53,6 +51,16 @@ def determing_wind_statistics(df , min_alt, max_alt, alt_step, n_sectors, speed_
     return wind_bins, opposing_wind_levels
 
 def save_wind_probabilties(wind_probabilities, analysis_folder, date):
+    '''
+
+    Args:
+        wind_probabilities: df of wind probabilities
+        analysis_folder: path
+        date: datetime
+
+    Returns: Void, saves .csv and colored png table of the wind probabilities table for a particular station
+
+    '''
 
     wind_probabilities = pd.concat([wind_probabilities, wind_probabilities.apply(['average'])])
 
@@ -89,7 +97,6 @@ def save_wind_probabilties(wind_probabilities, analysis_folder, date):
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     wind_probabilities.to_csv(filepath_dataframe)
 
-#THIS IS THE MAIN FUNCTION THAT INCOPROATES ALL THE HELPER FUNCTIONS
 def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_step = 500, n_sectors = 16, speed_threshold = 2):
     '''
         Iterate through every sounding for a particular [station] in [year]
@@ -108,8 +115,8 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             and [alt_step/columns] and output as a .csv and a colored dataframe image (png) for each month.
     '''
 
-    data_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    data_folder = get_data_folder(FAA, WMO, year)
+    analysis_folder = get_analysis_folder(FAA, WMO, year)
 
     #Check if sounding data has already been analyzed.  If so, skip
     if check_monthly_analyzed(analysis_folder):
@@ -140,7 +147,7 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
                 #df = df.dropna(axis='rows')  #change this to speed
                 df.dropna(subset=['direction', 'speed'], how='all', inplace=True)
 
-                wind_bins, opposing_wind_levels = determing_wind_statistics(df, min_alt=min_alt, max_alt=max_alt,
+                wind_bins, opposing_wind_levels = determine_wind_statistics(df, min_alt=min_alt, max_alt=max_alt,
                                                                             alt_step=alt_step, n_sectors=n_sectors,
                                                                             speed_threshold=speed_threshold)
 
@@ -155,15 +162,7 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
                 #Need to check if Dataframe is empty after dropping nan values was done on direction and speed
                 try:
                     df.time = pd.to_datetime(df['time'])
-
                     date = df.time.iat[0]
-
-                    #date = datetime(year, j, i, 12)
-                    #date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-                    print()
-                    print(date)
-                    #asda
-
                     wind_probabilities.loc[date, :] = mask
                 except:
                     print(colored("GOT AN EXCEPTION","yellow"))
@@ -179,14 +178,12 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             print(wind_probabilities)
 
         save_wind_probabilties(wind_probabilities, analysis_folder, date)
-
-        return True
-
+    return True
 
 def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
-    print("=========CUMULATIVE WIND PROBABILITY ANALYSIS==============\n")
+    print("============CUMULATIVE WIND PROBABILITY ANALYSIS==============\n")
 
-    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    analysis_folder = get_analysis_folder(FAA, WMO, year)
 
     files = [f for f in listdir(analysis_folder + "dataframes") if f.endswith(".csv")]
 
@@ -226,7 +223,7 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
 
     cumulative_styled = cumulative_styled.format(precision=2)
 
-    #Put the cumulative stuff in 2 spots for easy visual inspection.
+    #Put the cumulative probabilities in 2 spots for easy visual inspection and further decade-based cumulative analysis.
     filepath_image = Path(analysis_folder[:-14] + "analysis_" + str(year) + '-wind_probabilities-TOTAL.png')
     filepath_image.parent.mkdir(parents=True, exist_ok=True)
     dfi.export(cumulative_styled, filepath_image, max_rows=-1)
@@ -243,6 +240,7 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     cumulative.to_csv(filepath_dataframe)
 
+#Maybe add this to a utils.py function?
 def check_monthly_analyzed(analysis_folder):
     '''
 
@@ -258,6 +256,7 @@ def check_monthly_analyzed(analysis_folder):
     print(colored(analysis_folder, "green"))
     return True
 
+#Maybe add this to a utils.py function?
 def check_annual_analyzed(FAA, WMO, year):
     '''
 
@@ -265,7 +264,7 @@ def check_annual_analyzed(FAA, WMO, year):
 
     '''
 
-    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    analysis_folder = get_analysis_folder(FAA, WMO, year)
     file = analysis_folder[:-14] + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
     isExist = os.path.exists(file)
@@ -283,14 +282,9 @@ if __name__=="__main__":
     continent = "Antarctica"
     stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
-
-    #stations_df = stations_df.loc[stations_df["FAA"] == "PHLI"]
-
     #stations_df = stations_df[2:]
 
     print(stations_df)
-
-    #sdfs
 
     for row in stations_df.itertuples(index=False):
 
@@ -298,10 +292,6 @@ if __name__=="__main__":
         WMO = row.WMO
         FAA = row.FAA
         Name = row.Station_Name
-
-        #WMO = 72206
-        #FAA = 'JAX'
-        #Name = "Somewhere in Alaska?"
 
         #Initialize Variables
         min_alt = 15000
@@ -313,26 +303,8 @@ if __name__=="__main__":
         #Station downloads
         year = 2013
         #station = 'SKBO'
-        local_download = False
-        local_download = False
-
-        folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-        #print(folder)
-
-        isExist = os.path.exists(folder)
-        if isExist:
-            print(colored("Soundings for " + str(Name) +  " - " + str(FAA) + " - " + str(WMO) + " in " + str(year) + " are downloaded locally", "green"))
-            local_download = True
-        else:
-            print(colored("Soundings for " + str(Name) +  " - " + str(FAA) + " - " + str(WMO) + " in " + str(
-                year) + " are not downloaded locally. \n Will continue to download for offline analysis", "yellow"))
-
-        #get_soundings(FAA, WMO, year)
-
-        #sdfs
 
         # DO THE WIND PROBABILTIES ANALYSIS
-
         for year in range (2012, 2023 +1):
             status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
 

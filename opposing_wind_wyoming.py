@@ -149,10 +149,10 @@ def determine_full_winds(df , wind_bins, speed_threshold = 2):
 # MAIN
 #=======================================================================================
 
-def main():
+if __name__=="__main__":
     # Download Individual Raidosnde Sounding from University of Wyoming.
     date = datetime(2023, 5, 29, 12)
-    station = 'SBBV'
+    station = 'ABQ'
 
     print(station, date)
 
@@ -266,6 +266,3 @@ def main():
                                     no_interpolation=True, blowing=-1, station=station, date=date)
 
     plt.show()
-
-if __name__=="__main__":
-    main()

@@ -9,18 +9,18 @@ import config
 
 def save_monthly_soundings(df_monthly_list, FAA, WMO, year, month):
 
-    folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/" + str(month) + "/"
+    data_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/" + str(month) + "/"
 
     # This takes care of empty months.
-    isExist = os.path.exists(folder)
+    isExist = os.path.exists(data_folder)
     if not isExist:
-        os.makedirs(folder)
+        os.makedirs(data_folder)
 
     if df_monthly_list is not None:
         for df in df_monthly_list:
             date = df.time[0]
 
-            filepath_sounding = Path(folder + str(FAA) + "-" + str(date.year) + "-" + str(
+            filepath_sounding = Path(data_folder + str(FAA) + "-" + str(date.year) + "-" + str(
                 date.month) + "-" + str(date.day) + "-" + str(date.hour) + '.csv')
             filepath_sounding.parent.mkdir(parents=True, exist_ok=True)
             df.to_csv(filepath_sounding)

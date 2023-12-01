@@ -1,42 +1,29 @@
 import pandas as pd
 import numpy as np
 
-
-# Using readlines()
 file1 = open('wyoming_html/' + 'antarctica.txt', 'r')
 continent = "Antarctica"
 Lines = file1.readlines()
 
 df = pd.DataFrame(columns=['WMO', 'FAA', 'Station_Name', 'Continent'])
 
-
 count = 0
-
 
 # Strips the newline character
 for line in Lines:
-
     line  = line.strip()
-    #print(line)
-
     sub1 = line.split(":g('")
-    #print(new)
     sub2 = sub1[1].split("')\" ")
-    #print(sub2)
     WMO = sub2[0]
-
     sub3= sub2[1]
     name = sub3[7+6+1:-2]
 
-
     if name[-1] == ")":
         sub4 = name.rsplit("(" , 1)
-        #print(sub4)
         FAA = sub4[1][:-1]
         name = sub4[0]
     else:
         FAA = None
-
 
     print(WMO, " - ", FAA, " - ", name)
 
@@ -56,7 +43,3 @@ continent_export = pd.merge(df, df2, left_on='WMO', right_on='WMO')
 print(continent_export)
 
 continent_export.to_csv("CLEANED/" + continent + ".csv")
-
-    #sdfsd
-
-#intro.split("<>")
