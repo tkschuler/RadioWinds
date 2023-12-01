@@ -6,6 +6,10 @@ import numpy as np
 import cartopy.feature as cfeature
 from scipy.interpolate import griddata
 import calendar
+import sys
+sys.path.insert(0, sys.path[0] + '/../') #add config from 1 directory up.
+import config
+
 #Example stuff ---------------------
 
 def func(x, y):
@@ -98,7 +102,7 @@ for row in stations_df.itertuples(index = 'WMO'):
 
 
     #data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/"
-    analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
     file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
@@ -192,5 +196,5 @@ for month in range (1,12+1):
 
     ax.set_title("Western Hemisphere Opposing Winds Probabilities - Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year))
 
-    plt.savefig('SOUNDINGS_DATA2/' + str(year) + '-' + str(month))
+    plt.savefig(config.parent_folder + str(year) + '-' + str(month))
     #plt.show()

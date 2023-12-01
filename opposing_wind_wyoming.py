@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import sys
 import matplotlib.cm as cm
 from plot3DWindrose import polar_interpolated_scatter_plot
+import config
 
 '''
 This file downloads an individual sounding from University of Wyoming and determines if the sounding meets the 4 criteria.  
@@ -175,8 +176,8 @@ def main():
     speed_threshold = 2
     wind_bins = np.arange(min_alt, max_alt, alt_step)
 
-    # Determing which way to visualize wind rose
-    blowing = -1  # 1 FOR (typical wind rose),  -1 for TO (where balloon will drift to)
+    # Determine which way to visualize wind rose
+    blowing = config.blowing  # 1 FOR (typical wind rose),  -1 for TO (where balloon will drift to)
 
     print()
     print()
@@ -256,7 +257,7 @@ def main():
     # Plot 3D Wind Rose
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='polar')
-    polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=100, color='winter', blowing=-1,
+    polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=100, color='winter', blowing= config.blowing,
                                     station=station, date=date)
 
     # To plot the sounding datapoints on top of the interpolated plot:

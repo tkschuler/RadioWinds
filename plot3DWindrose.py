@@ -19,6 +19,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import pandas as pd
+import config
 
 
 def interpolate(df, num_interpolations = 10):
@@ -278,11 +279,11 @@ if __name__=="__main__":
     #Plot 3D Wind Rose
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='polar')
-    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing = -1, station = station, date = date)
+    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing = config.blowing, station = station, date = date)
 
     #To plot the sounding datapoints on top of the interpolated plot:
     viridis = cm.get_cmap('Set1', 1) #This is jsut to get red dots
-    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing = -1, station = station, date = date)
+    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing = config.blowing, station = station, date = date)
 
 
     '''

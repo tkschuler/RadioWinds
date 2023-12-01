@@ -5,10 +5,11 @@ from termcolor import colored
 from pathlib import Path
 
 from multiprocessing import Process, Manager
+import config
 
 def save_monthly_soundings(df_monthly_list, FAA, WMO, year, month):
 
-    folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/" + str(month) + "/"
+    folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/" + str(month) + "/"
 
     # This takes care of empty months.
     isExist = os.path.exists(folder)
@@ -28,7 +29,7 @@ def save_monthly_soundings(df_monthly_list, FAA, WMO, year, month):
 def get_yearly_soundings(FAA, WMO, year):
     #Check if Soundings Data Folder exists:
 
-    folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
+    folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
 
     # Check if the soundings have already been downloaded.
     # not checking incomplete downloads yet.

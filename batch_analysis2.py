@@ -8,6 +8,10 @@ import os
 from os import listdir
 import opposing_wind_wyoming
 
+import config
+
+#parent_folder = config.parent_folder
+
 '''
 def get_soundings(FAA, WMO, year):
     data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
@@ -104,8 +108,8 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             and [alt_step/columns] and output as a .csv and a colored dataframe image (png) for each month.
     '''
 
-    data_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-    analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    data_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
+    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
     #Check if sounding data has already been analyzed.  If so, skip
     if check_monthly_analyzed(analysis_folder):
@@ -182,7 +186,7 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
 def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
     print("=========CUMULATIVE WIND PROBABILITY ANALYSIS==============\n")
 
-    analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
     files = [f for f in listdir(analysis_folder + "dataframes") if f.endswith(".csv")]
 
@@ -261,7 +265,7 @@ def check_annual_analyzed(FAA, WMO, year):
 
     '''
 
-    analysis_folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    analysis_folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
     file = analysis_folder[:-14] + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
     isExist = os.path.exists(file)
@@ -312,7 +316,7 @@ if __name__=="__main__":
         local_download = False
         local_download = False
 
-        folder = 'SOUNDINGS_DATA2/' + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
+        folder = config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
         #print(folder)
 
         isExist = os.path.exists(folder)
