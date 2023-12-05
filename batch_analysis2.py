@@ -36,17 +36,25 @@ def determine_wind_statistics(df, min_alt, max_alt, alt_step, n_sectors, speed_t
     calm_winds = opposing_wind_wyoming.determine_calm_winds(df, alt_step=alt_step)
     full_winds = opposing_wind_wyoming.determine_full_winds(df, wind_bins=wind_bins, speed_threshold=speed_threshold)
 
+
     if not calm_winds.any() and not opposing_wind_directions.any():
-        print(colored("Station Keeping FAIL.", "red"))
-    if calm_winds.any() or opposing_wind_directions.any():
-        print(colored("Station Keeping PASS.", "green"))
-        if full_winds:
-            print(colored("Full Navigation PASS.", "green"))
+        print(colored("Wind Diversity FAIL.", "red"))
+    else:
+        if not calm_winds.any():
+            print(colored("No Calm Winds.", "yellow"))
         else:
-            print(colored("Full Navigation FAIL.", "yellow"))
-    print("Calm Winds:", bool(calm_winds.any()))
-    print("Opposing Winds", bool(opposing_wind_directions.any()))
-    print("Full Winds:", full_winds)
+            print(colored("Calm Winds.", "green"))
+
+        if not opposing_wind_directions.any():
+            print(colored("No Opposing Winds.", "yellow"))
+        else:
+            print(colored("Opposing Winds.", "green"))
+
+        if not full_winds:
+            print(colored("No Full Wind Diversity.", "yellow"))
+        else:
+            print(colored("Full Wind Diversity", "green"))
+    print()
 
     return wind_bins, opposing_wind_levels
 
@@ -163,13 +171,14 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
                 try:
                     df.time = pd.to_datetime(df['time'])
                     date = df.time.iat[0]
+                    print(date)
                     wind_probabilities.loc[date, :] = mask
                 except:
                     print(colored("GOT AN EXCEPTION","yellow"))
                     pass
 
         else:
-            print(colored("MADE IT HERE", "magenta"))
+            #print(colored("MADE IT HERE", "magenta"))
             date = datetime(year, j, 1, 00)  #day and time shouldn't matter
             mask = np.empty(len(wind_bins))
             mask[:] = np.nan
@@ -178,6 +187,7 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             print(wind_probabilities)
 
         save_wind_probabilties(wind_probabilities, analysis_folder, date)
+
     return True
 
 def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
@@ -279,7 +289,7 @@ def check_annual_analyzed(FAA, WMO, year):
 #mMain
 if __name__=="__main__":
 
-    continent = "Antarctica"
+    continent = "South_America"
     stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
     #stations_df = stations_df[2:]
@@ -294,14 +304,14 @@ if __name__=="__main__":
         Name = row.Station_Name
 
         #Initialize Variables
-        min_alt = 15000
-        max_alt = 24000
-        alt_step = 500
-        n_sectors = 16
-        speed_threshold = 2 #should we raise this,  it's in knots
+        min_alt = config.min_alt
+        max_alt = config.max_alt
+        alt_step = config.alt_step
+        n_sectors = config.n_sectors
+        speed_threshold = config.speed_threshold
 
         #Station downloads
-        year = 2013
+        #year = 2013
         #station = 'SKBO'
 
         # DO THE WIND PROBABILTIES ANALYSIS

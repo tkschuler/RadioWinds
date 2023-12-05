@@ -29,16 +29,16 @@ min_lat = 0
 
 
 
+min_lat = 10
+max_lat = 75
+min_lon = 360-185
+max_lon = 360-20
 
-#max_lat = 55
-#min_lon = 360-125
-#max_lon = 360-60
 
-
-min_lat = -58
-max_lat = 85
-min_lon = 360-180
-max_lon = 360-30
+#min_lat = -58
+#max_lat = 85
+#min_lon = 360-180
+#max_lon = 360-30
 res = 1
 
 lons = np.arange(min_lon,max_lon,res)
@@ -167,8 +167,8 @@ for month in range (1,12+1):
     stn_lat = 40
     stn_lon = -100
 
-
-    extent = [-180, 0, -5, 35]
+    extent = [-125 , -70, 20, 50] # North America
+    #extent = [-180, 0, -5, 35] # Western Hemisphere
     #extent = [min_lon-10, max_lon + 10, min_lat-10, max_lat +10]
     #extent = [(min_lon -360)-20, (max_lon -360)-15, min_lat - 1, max_lat]
     central_lon = np.mean(extent[:2])
@@ -192,9 +192,11 @@ for month in range (1,12+1):
     ax.scatter(stations_df[' LONG'], stations_df['  LAT'], marker = ".", c = "blue", s= 55, transform = ccrs.Geodetic(), zorder=200)
     ax.scatter(stations_df[' LONG'], stations_df['  LAT'], marker = ".", c = "cyan", s= 4, transform = ccrs.Geodetic(), zorder=200)
 
-    ax.add_feature(cfeature.OCEAN, facecolor = 'black', alpha = .7, zorder = 150)
+    ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
 
-    ax.set_title("Western Hemisphere Opposing Winds Probabilities - Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year))
+    ax.set_title("Continental USA Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
+
+    plt.tight_layout()
 
     plt.savefig(config.parent_folder + str(year) + '-' + str(month))
     #plt.show()

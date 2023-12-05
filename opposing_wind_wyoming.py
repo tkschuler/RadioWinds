@@ -151,8 +151,11 @@ def determine_full_winds(df , wind_bins, speed_threshold = 2):
 
 if __name__=="__main__":
     # Download Individual Raidosnde Sounding from University of Wyoming.
-    date = datetime(2023, 5, 29, 12)
-    station = 'ABQ'
+    date = datetime(2023, 11, 27, 12)
+    station = 'SBBV'
+
+    #date = datetime(2018, 7, 27, 0)
+    #station = 'AMA'
 
     print(station, date)
 
@@ -164,16 +167,12 @@ if __name__=="__main__":
         print(colored(ve,"red"))
         sys.exit()
 
-    print(df)
-
-
-
     #Default values for individual sounding data filtering
-    min_alt = 15000
-    max_alt = 25000
-    alt_step = 500
-    n_sectors = 8
-    speed_threshold = 2
+    min_alt = config.min_alt
+    max_alt = config.max_alt
+    alt_step = config.alt_step
+    n_sectors = config.n_sectors
+    speed_threshold = config.speed_threshold
     wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     # Determine which way to visualize wind rose
@@ -209,8 +208,6 @@ if __name__=="__main__":
     df = df.drop(df[df['height'] < min_alt].index)
     df = df.drop(df[df['height'] > max_alt].index)
     #df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
-    print(df)
-    #sdfs
 
     #Determine Wind Statistics
     opposing_wind_directions, opposing_wind_levels = determine_opposing_winds(df, wind_bins = wind_bins, n_sectors = n_sectors, speed_threshold = speed_threshold)
@@ -219,6 +216,25 @@ if __name__=="__main__":
 
     print()
     print("WIND STATISTICS")
+    if not calm_winds.any() and not opposing_wind_directions.any():
+        print(colored("Wind Diversity FAIL.", "red"))
+    else:
+        if not calm_winds.any():
+            print(colored("No Calm Winds.", "yellow"))
+        else:
+            print(colored("Calm Winds.", "green"))
+
+        if not opposing_wind_directions.any():
+            print(colored("No Opposing Winds.", "yellow"))
+        else:
+            print(colored("Opposing Winds.", "green"))
+
+        if not full_winds:
+            print(colored("No Full Wind Diversity.", "yellow"))
+        else:
+            print(colored("Full Wind Diversity", "green"))
+
+    '''
     if not calm_winds.any() and not opposing_wind_directions.any():
         print(colored("Station Keeping FAIL.","red"))
     if calm_winds.any() or opposing_wind_directions.any():
@@ -231,6 +247,7 @@ if __name__=="__main__":
     print("Opposing Winds", bool(opposing_wind_directions.any()))
     print("Full Winds:", full_winds)
     #print("opposing_wind_levels", bool(opposing_wind_levels.any()))
+    '''
 
     print()
     print("Calm Winds Regions:", calm_winds)
@@ -238,6 +255,9 @@ if __name__=="__main__":
 
 
     ### PLOTING AFTER FILTERING###
+
+    print(df)
+    #asfa
     ws = np.asarray(df['speed'])
     wd = np.asarray(df['direction'])
     wd = wd * blowing % 360
@@ -248,6 +268,40 @@ if __name__=="__main__":
     #ax.bar(wd, ws,  bins=np.arange(0, 50, 5), opening = 1, normed=False, edgecolor="white", nsector = 16) #opening = 0.8
     ax.bar(wd, alt, opening = 1, bins=wind_bins, nsector=n_sectors, cmap = cm.rainbow)
     ax.set_legend(loc = 'lower left')
+
+    '''
+    fig = plt.figure(figsize=(8, 8))
+    table = ax._info["table"]
+    direction = ax._info["dir"]
+    wd_freq = np.sum(table, axis=0)
+
+    plt.bar(np.arange(16), wd_freq, align="center")
+    xlabels = (
+        "N",
+        "",
+        "N-E",
+        "",
+        "E",
+        "",
+        "S-E",
+        "",
+        "S",
+        "",
+        "S-W",
+        "",
+        "W",
+        "",
+        "N-W",
+        "",
+    )
+    xticks = np.arange(16)
+    plt.gca().set_xticks(xticks)
+    plt.gca().set_xticklabels(xlabels)
+    '''
+
+
+
+
 
     if blowing == -1:
         ax.set_title("Altitude Windrose (BLOWING TO) for Station " +str(station) + " on " + str(date))
@@ -261,7 +315,7 @@ if __name__=="__main__":
                                     station=station, date=date)
 
     # To plot the sounding datapoints on top of the interpolated plot:
-    viridis = cm.get_cmap('Set1', 1)  # This is jsut to get red dots
+    viridis = cm.get_cmap('Set1', 1)  # This is just to get red dots
     polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=1, color=viridis, size=20,
                                     no_interpolation=True, blowing=-1, station=station, date=date)
 
