@@ -70,13 +70,13 @@ def interpolate(df, num_interpolations = 10):
             interpolated_directions_deg.append(interp_dir_deg)
 
     new_df = pd.DataFrame({'height': interpolated_altitudes, 'speed': interpolated_speeds, 'direction': interpolated_directions_deg})
-
+    #print(new_df)
     return (new_df)
 
 
 #===============================================================================
 
-def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolations=1, color = "magma", size = 10, no_interpolation = False, blowing = -1, ):
+def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolations=1, color = "magma", size = 10, no_interpolation = False, blowing_to = True):
     """
     Create a polar scatter plot with altitude as the radius, wind direction in degrees, and a color bar for wind speed.
 
@@ -85,7 +85,9 @@ def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolatio
     - num_interpolations: Number of altitude interpolations between each altitude level (default is 20).
     """
 
-    blowing = blowing  # 1 FOR (typical wind rose),  -1 for TO (where balloon will drift to)
+    if not blowing_to:
+        df['direction'] = (df['direction'] - 180) % 360
+
 
     #df = df.drop(df[df['height'] < 10000].index)
     #df = df.drop(df[df['height'] > 25000].index)
@@ -160,6 +162,10 @@ def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolatio
 
     # Create a scatter plot where radius is altitude, angle is wind direction (in radians), and color represents wind speed
 
+
+    #print(interpolated_altitudes)
+
+
     #Switch from math winds to Meteorological Winda visually
     compass = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
     ax.set_theta_zero_location('N')
@@ -167,14 +173,14 @@ def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolatio
     ax.set_xticklabels(compass)
 
 
-    sc = ax.scatter(blowing*np.radians(interpolated_directions_deg), interpolated_altitudes, c=interpolated_speeds, cmap=color, s=10)
+    sc = ax.scatter(np.radians(interpolated_directions_deg), interpolated_altitudes, c=interpolated_speeds, cmap=color, s=10)
 
 
     if not no_interpolation:
         cbar = plt.colorbar(sc, label='Wind Speed (m/s)')
 
     # Set title
-    if blowing == -1:
+    if blowing_to:
         plt.title("3D Windrose (BLOWING TO) for Station " + str(station) + " on " + str(date))
     else:
         plt.title("3D Windrose (BLOWING FROM) for Station " + str(station) + " on " + str(date))
@@ -279,11 +285,11 @@ if __name__=="__main__":
     #Plot 3D Wind Rose
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='polar')
-    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing = config.blowing, station = station, date = date)
+    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing_to = config.blowing_to, station = station, date = date)
 
     #To plot the sounding datapoints on top of the interpolated plot:
     viridis = cm.get_cmap('Set1', 1) #This is jsut to get red dots
-    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing = config.blowing, station = station, date = date)
+    polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing_to = config.blowing_to, station = station, date = date)
 
 
     '''

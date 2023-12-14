@@ -151,8 +151,8 @@ def determine_full_winds(df , wind_bins, speed_threshold = 2):
 
 if __name__=="__main__":
     # Download Individual Raidosnde Sounding from University of Wyoming.
-    date = datetime(2023, 11, 27, 12)
-    station = 'SBBV'
+    date = datetime(2023, 2, 1, 12)
+    station = 'BUF'
 
     #date = datetime(2018, 7, 27, 0)
     #station = 'AMA'
@@ -175,17 +175,14 @@ if __name__=="__main__":
     speed_threshold = config.speed_threshold
     wind_bins = np.arange(min_alt, max_alt, alt_step)
 
-    # Determine which way to visualize wind rose
-    blowing = config.blowing  # 1 FOR (typical wind rose),  -1 for TO (where balloon will drift to)
+    #Radiosondes are Blowing from by default
+    if config.blowing_to:
+        df['direction']=(df['direction'] -180) % 360
 
-    print()
-    print()
 
-    # PLOTTING BEFORE FILTERING)
     df.dropna(inplace=True)
     ws = np.asarray(df['speed'])
     wd = np.asarray(df['direction'])
-    wd = wd * blowing % 360
     alt = np.asarray(df['height'])
 
 
@@ -196,7 +193,7 @@ if __name__=="__main__":
     ax2.bar(wd, ws, opening=.8, bins = np.arange(0, 50, 5), nsector=n_sectors, cmap = cm.cool_r)
     ax2.set_legend()
 
-    if blowing == -1:
+    if config.blowing_to:
         ax2.set_title("Speed Windrose (BLOWING TO) for Station " +str(station) + " on " + str(date))
     else:
         ax2.set_title("Speed Windrose (BLOWING FROM) for Station " + str(station) + " on " + str(date))
@@ -258,10 +255,11 @@ if __name__=="__main__":
 
     print(df)
     #asfa
-    ws = np.asarray(df['speed'])
-    wd = np.asarray(df['direction'])
-    wd = wd * blowing % 360
-    alt = np.asarray(df['height'])
+    #ws = np.asarray(df['speed'])
+    #wd = np.asarray(df['direction'])
+    #wd = wd * blowing % 360
+    #wd = (wd - 180) % 360
+    #alt = np.asarray(df['height'])
 
     #Altitude Windrose
     ax = windrose.WindroseAxes.from_ax()
@@ -303,7 +301,7 @@ if __name__=="__main__":
 
 
 
-    if blowing == -1:
+    if config.blowing_to:
         ax.set_title("Altitude Windrose (BLOWING TO) for Station " +str(station) + " on " + str(date))
     else:
         ax.set_title("Altitude Windrose (BLOWING FROM) for Station " + str(station) + " on " + str(date))
@@ -311,12 +309,16 @@ if __name__=="__main__":
     # Plot 3D Wind Rose
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='polar')
-    polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=100, color='winter', blowing= config.blowing,
+    polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=100, color='winter', blowing_to = config.blowing_to,
                                     station=station, date=date)
 
     # To plot the sounding datapoints on top of the interpolated plot:
     viridis = cm.get_cmap('Set1', 1)  # This is just to get red dots
     polar_interpolated_scatter_plot(df, fig, ax, num_interpolations=1, color=viridis, size=20,
-                                    no_interpolation=True, blowing=-1, station=station, date=date)
+                                    no_interpolation=True, blowing_to=config.blowing_to, station=station, date=date)
+
+    plt.figure()
+    plt.plot(df['u_wind'], df['height'])
+    plt.plot(df['v_wind'], df['height'])
 
     plt.show()
