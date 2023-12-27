@@ -16,16 +16,15 @@ class ERA5:
     def __init__(self):
         self.geod = Geodesic.WGS84
 
-
     def import_forecast(self, filepath):
         self.file = netCDF4.Dataset(filepath)
 
         self.ds = xr.open_dataset(filepath, engine="netcdf4", decode_times=True)
-        print(self.ds)
+        #print(self.ds)
 
 
     def get_statistics(self):
-        print(self.file)
+        #print(self.file)
 
         time_arr = self.file.variables['time']
         # Convert from epoch to human readable time. Different than GFS for now.
@@ -44,12 +43,18 @@ class ERA5:
         self.LAT_HIGH = self.file.variables['latitude'][self.lat_max_idx]
         self.LON_HIGH = self.file.variables['longitude'][self.lon_max_idx - 1]
 
-        print("LAT RANGE: min:" + str(self.file.variables['latitude'][self.lat_min_idx - 1]),
+        print()
+        print("ERA5 Forecast Statistics")
+        print("LAT RANGE: min: " + str(self.file.variables['latitude'][self.lat_min_idx - 1]),
               " max: " + str(self.file.variables['latitude'][self.lat_max_idx]) + " size: " + str(
                   self.lat_min_idx - self.lat_max_idx))
-        print("LON RANGE: min:" + str(self.file.variables['longitude'][self.lon_min_idx]),
+        print("LON RANGE: min: " + str(self.file.variables['longitude'][self.lon_min_idx]),
               " max: " + str(self.file.variables['longitude'][self.lon_max_idx - 1]) + " size: " + str(
                   self.lon_max_idx - self.lon_min_idx))
+
+        print("TIME RANGE: start time: " + str(self.time_convert[self.start_time_idx]) +
+                                " end time: " + str(self.time_convert[self.end_time_idx]))
+        print()
 
     def determineRanges(self, netcdf_ranges):
         """
@@ -80,22 +85,44 @@ class ERA5:
             self.lon_min_idx = 0
 
     def get_station(self, time, lat, lon):
-        station = self.ds.sel(time=time, longitude=lon, latitude=lat, method = "nearest")
+        station_ds = self.ds.sel(time=time, longitude=lon, latitude=lat, method = "nearest")
         #print(alt)
         #print(alt.latitude, alt.longitude)
 
-        return station
+        station_df = self.get_dataframe(station_ds, time)
+
+        #print(station_ds.z/config.g)
+
+        #sdfs
+
+        return station_df
+
+    def get_dataframe(self, station, time):
+        g = 9.80665  # gravitation constant used to convert geopotential height to height
+        df = pd.DataFrame()
+
+        df['height'] = station.z / g
+        df['time'] = time
+        df['u_wind'] = station.u * 1  # put in same as radiosonde format,  blowing from?
+        df['v_wind'] = station.v * 1  # put in same as radiosonde format,  blowing from?
+        df['speed'] = (df['u_wind'] ** 2 + df['v_wind'] ** 2) ** 0.5
+        df['direction'] = (90 - np.rad2deg(np.arctan2(df['v_wind'], df['u_wind']))) % 360  # convert to meteolorological wind?
+        df['pressure'] = station.level
+
+        #Reverse order, so altitude is in ascending order
+        df = df[::-1].reset_index(drop=True)
+        return df
 
 if __name__=="__main__":
-    time = date = '2023-02-01  12:00:00'
+    time = date = '2022-10-25  12:00:00'
 
     #PHTO
     lat = 19.72
     lon = -155
 
     #BUF
-    lat = 42.9
-    lon = -78.7
+    #lat = 42.9
+    #lon = -78.7
 
     #SLC
     #lat = 40.6
@@ -109,49 +136,36 @@ if __name__=="__main__":
     #lat = 46.8
     #lon = -100.8
 
+    #SBBV
+    #lat = 2.8206
+    #lon = -60.6738
+
 
     era5 = ERA5()
     #era5.import_forecast("forecasts/" + "western_hemisphere-08-08-23.nc")
-    era5.import_forecast("forecasts/" + "western_hemisphere_feb_2023.nc")
+    era5.import_forecast("forecasts/" + "western_hemisphere-2022.nc")
     era5.get_statistics()
 
-    station = era5.get_station(time, lat, lon)
-    print(station.z)
+    df = era5.get_station(time, lat, lon)
 
-    g = 9.80665  # gravitation constant used to convert geopotential height to height
-    df = pd.DataFrame()
-
-
-    df['height'] = station.z/g
-    df['u_wind'] = station.u * 1  #put in same as radiosonde format,  blowing from?
-    df['v_wind'] = station.v * 1 #put in same as radiosonde format,  blowing from?
-    df['speed'] = (df['u_wind'] ** 2 + df['v_wind'] ** 2) ** 0.5
-    df['direction'] = (90 - np.rad2deg(np.arctan2(df['v_wind'],df['u_wind']))) % 360  #convert to meteolorological wind?
-
-
-    FAA = 00000
-    WMO = 99999
-
-
-
-    df['station'] = 'test'
-    df['FAA'] = FAA
-    df['WMO'] = WMO
-    df['date'] = time
-    df = df[::-1]
     print(df)
+    #print("hey')")
+
+    #sdfs
+
+    #if config.altitude_type == "pres":
+    #    df['height'] = df.index
 
 
-
-
-
+    station = 'test'
 
     min_alt = config.min_alt
     max_alt = config.max_alt
+    min_pressure = config.min_pressure
+    max_pressure = config.max_pressure
     alt_step = config.alt_step
     n_sectors = config.n_sectors
     speed_threshold = config.speed_threshold
-    wind_bins = np.arange(min_alt, max_alt, alt_step)
 
 
     print()
@@ -161,31 +175,47 @@ if __name__=="__main__":
     if not config.blowing_to:
         df['direction'] = (df['direction'] - 180) % 360
 
+        # ================= Filter Data Frame for Opposing WInd Analysis ===================
+
+    if not config.by_pressure:
+        df = df.drop(df[df['height'] < min_alt].index)
+        df = df.drop(df[df['height'] > max_alt].index)
+        # df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
+    else:
+        df = df.drop(df[df['pressure'] < min_pressure].index)
+        df = df.drop(df[df['pressure'] > max_pressure].index)
+        # df = df [::-1]
+
+    if config.by_pressure:
+        wind_bins = config.era5_pressure_levels[::-1]
+        wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
+        wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
+        print(wind_bins)
+    else:
+        wind_bins = np.arange(min_alt, max_alt, alt_step)
+
     df.dropna(inplace=True)
     ws = np.asarray(df['speed'])
     wd = np.asarray(df['direction'])
     alt = np.asarray(df['height'])
 
+    #print(df)
 
-    # '''
-    # Wind Speed Windrose
+    # ============= Unfiltered Standard Windspeed Windrose ======================
+    df.dropna(inplace=True)
+    ws = np.asarray(df['speed'])
+    wd = np.asarray(df['direction'])
+    alt = np.asarray(df['height'])
+    pressure = np.asarray(df['pressure'])
+
     ax2 = windrose.WindroseAxes.from_ax()
-    # ax.bar(wd, ws,  bins=np.arange(0, 50, 5), opening = 0.8, normed=False, edgecolor="white", nsector = 16)
-    ax2.bar(wd, ws, opening=.8, bins = np.arange(0, 50, 5), nsector=n_sectors, cmap = cm.cool_r)
+    ax2.bar(wd, ws, opening=.8, bins=np.arange(0, 50, 5), nsector=n_sectors, cmap=cm.cool_r)
     ax2.set_legend()
 
-    if config.blowing_to: #ERA5 is flipped from radiosonde (already default to blowing to)
-        ax2.set_title("Speed Windrose (BLOWING TO) for Station " +str(station) + " on " + str(date))
+    if config.blowing_to: #ERA4 is flipped from Radiosonde
+        ax2.set_title("Speed Windrose (BLOWING TO) for Station " + str(station) + " on " + str(date))
     else:
         ax2.set_title("Speed Windrose (BLOWING FROM) for Station " + str(station) + " on " + str(date))
-    #'''
-
-    #Do some filtering of the dataframe
-    # Only analyze between 10-25km  as well as speeds over 2m/s is the default for now
-    #df.dropna(inplace=True)
-    df = df.drop(df[df['height'] < min_alt].index)
-    df = df.drop(df[df['height'] > max_alt].index)
-    #df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
 
     #Determine Wind Statistics
     opposing_wind_directions, opposing_wind_levels = opposing_wind_wyoming.determine_opposing_winds(df, wind_bins = wind_bins, n_sectors = n_sectors, speed_threshold = speed_threshold)
@@ -193,8 +223,10 @@ if __name__=="__main__":
     full_winds = opposing_wind_wyoming.determine_full_winds(df , wind_bins = wind_bins, speed_threshold = speed_threshold)
 
     print()
+    print(df)
+
     print("WIND STATISTICS")
-    if not calm_winds.any() and not opposing_wind_directions.any():
+    if not calm_winds.any() and not opposing_wind_levels.any():
         print(colored("Wind Diversity FAIL.", "red"))
     else:
         if not calm_winds.any():
@@ -202,7 +234,7 @@ if __name__=="__main__":
         else:
             print(colored("Calm Winds.", "green"))
 
-        if not opposing_wind_directions.any():
+        if not opposing_wind_levels.any():
             print(colored("No Opposing Winds.", "yellow"))
         else:
             print(colored("Opposing Winds.", "green"))
@@ -219,8 +251,6 @@ if __name__=="__main__":
 
 
     ### PLOTING AFTER FILTERING###
-
-    print(df)
     #asfa
     ws = np.asarray(df['speed'])
     wd = np.asarray(df['direction'])
@@ -229,43 +259,11 @@ if __name__=="__main__":
 
     #Altitude Windrose
     ax = windrose.WindroseAxes.from_ax()
-    #ax.bar(wd, ws,  bins=np.arange(0, 50, 5), opening = 1, normed=False, edgecolor="white", nsector = 16) #opening = 0.8
-    ax.bar(wd, alt, opening = 1, bins=wind_bins, nsector=n_sectors, cmap = cm.rainbow)
+    if not config.by_pressure:
+        ax.bar(wd, alt, opening=1, bins=wind_bins, nsector=n_sectors, cmap=cm.rainbow)
+    else:
+        ax.bar(wd, pressure, opening=1, bins=wind_bins, nsector=n_sectors, cmap=cm.rainbow)
     ax.set_legend(loc = 'lower left')
-
-    '''
-    fig = plt.figure(figsize=(8, 8))
-    table = ax._info["table"]
-    direction = ax._info["dir"]
-    wd_freq = np.sum(table, axis=0)
-    
-    plt.bar(np.arange(16), wd_freq, align="center")
-    xlabels = (
-        "N",
-        "",
-        "N-E",
-        "",
-        "E",
-        "",
-        "S-E",
-        "",
-        "S",
-        "",
-        "S-W",
-        "",
-        "W",
-        "",
-        "N-W",
-        "",
-    )
-    xticks = np.arange(16)
-    plt.gca().set_xticks(xticks)
-    plt.gca().set_xticklabels(xlabels)
-    '''
-
-
-    print(df)
-
 
     if config.blowing_to: #ERA5 is flipped from radiosonde (already default to blowing to)
         ax.set_title("Altitude Windrose (BLOWING TO) for Station " +str(station) + " on " + str(date))

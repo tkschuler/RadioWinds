@@ -121,6 +121,7 @@ for row in stations_df.itertuples(index = 'WMO'):
 stations_df = stations_df.join(df_probabilities)
 print(stations_df)
 
+#Convert Ranges of Coordinates
 stations_df[' LONG'] = stations_df.apply(lambda x: (360-x[' LONG'] if x['E'] == 'W' else 1*x[' LONG']), axis = 1)
 stations_df['  LAT'] = stations_df.apply(lambda x: (-1*x['  LAT'] if x['N'] == 'S' else 1*x['  LAT']), axis = 1)
 

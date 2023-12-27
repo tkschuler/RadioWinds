@@ -3,7 +3,11 @@ SOUNDINGS_DATA2/
 .idea/
 
 forecasts/
-
+SOUNDINGS_DATA2/
+SOUNDINGS_DATA3/
+SOUNDINGS_DATA2_COPY/
+ERA5_Analysis/
+ERA5_Analysis2/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
