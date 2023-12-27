@@ -70,7 +70,30 @@ For this project we use UofWY because the dataset is easier to work with.  You c
 
 ``batch_analysis2.py``  this script does opposing wind anaylsis for a year of soundings per station.  Currently, we assume that the soundings were downloaded properly and in full by ``AnnualWyomingDownload.py.``  (If the script finished running everything should be downloaded for the parameters). We should add some error handling for incomplete downloads. The script then generates binary opposing wind charts organized by date and altitude level (500m increments) for each month.  After all 12 months are analyzed and saved,  a final annual probability chart is saved by taking the max probability from each altitude level per month.
 
-``Mapping/rainbnow.py`` This script creates colored mesh plots by interpolating the annual probability wind diversity charts. 
+``ERA5.py`` This script creates a *radiosonde-like* dataframe for running ``opposing_wind_wyoming.py`` with ERA5 forecasts.  Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=form which includes the right timestamp, geographic region, pressure levels [300-10hPa], geopotential, u-wind, v-wind, and temperature. 
+
+
+``Mapping/rainbow.py`` This script creates colored mesh plots by interpolating the annual probability wind diversity charts. 
+
+
+## Notes/Discussion
+* While not the same, we assume geopotential height and geometric height are the same for this analysis.  At stratospheric altitudes, the difference is usually 100-200m of difference. 
+* When binning winds,  it can be good to go over the limit to include some measurements outside the desired range for more accurate results. 
+  * For instance, when doing radiosonde-based batch analysis with a pressure of 125 hPa, anything above 125 won't be included even though 126hPa is much closer to the mandatory pressure level of 125 than the next highest level of 150.  This causes lower opposing wind probabilities at the maximum and minimum altitudes. 
+* Pressure is not linear like altitude,  so binning to the mandatory levels may not be the best method for radiosonde data.  Because higher altitudes will have a lot more readings assigned to the pressure levels since they are more spaced out. 
+* Altitude is tough to compare between radiosonde and ERA5 forecasts because of the geopotential to height conversion.  (The heights are not the same level for every location and time of year).  Therefore pressure makes more sense to compare,  however the pressure bins are huge altitude gaps, so that doesn't tell the full story either. 
+* Wind transition regions between 2 opposing wind altitudes lovels have the most variability and calm winds.  Many commercial balloon navigators try to avoid these regions because they're unpredictable 
+
+
+## TODO Future Plots
+* Graph with degree variations (for full wind diversity)  in an altitude region (pressure bins?)
+    *Also include pie charts with this diversity
+* 3D colormesh plot, volume surface. Probably have to turn it into a sliced GIF. 
+* Power cycle (Diurnal Wind effects)
+* QBO analysis
+* Craig's Cross Section Plots with variations (Radiosonde, ERA5, Radiosonde vs ERA5, 00z vs 12Z)
+* Radiosonde vs ERA5 SKEW-T plot comparison.  Or winds comparison. 
+* 
 
 ## Authors
 
