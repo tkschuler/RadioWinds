@@ -81,7 +81,7 @@ def get_yearly_soundings(FAA, WMO, year):
         print("Total number of annual soundings download for", FAA, "-", WMO, "in", year, ":", yearly_count)
 
 
-def parallel_something(stations_df, year):
+def parallelize(stations_df, year):
     '''
     Parralel the process.  each station downlaod goes on it's own thread.  THis make the downloads much faster.
 
@@ -106,7 +106,7 @@ def parallel_something(stations_df, year):
 
 if __name__=="__main__":
 
-    continent = "Antarctica"
+    continent = "North_America"
     stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
     #stations_df = stations_df.drop_duplicates(subset=['FAA'])
@@ -115,9 +115,14 @@ if __name__=="__main__":
     print(stations_df)
 
 
-    for i in range (2012, 2023+ 1):
-        parallel_something(stations_df, year = i)
-        #for row in stations_df.itertuples(index=False):
-        #    get_yearly_soundings(row.FAA, row.WMO, year = i)
-        #    #Do not move onto the next year until all the processes have finished.
+    for i in range (2013, 2023+ 1): #Now that it's 2024, do 2012-2023
+
+        if config.parallelize:
+            print(colored("Downloading Radiosonde Datasets in Parallel [MultiThreading]", "cyan"))
+            parallelize(stations_df, year = i)
+        else:
+            print(colored("Downloading Radiosonde Datasets in Sequence", "cyan"))
+            for row in stations_df.itertuples(index=False):
+                get_yearly_soundings(row.FAA, row.WMO, year = i)
+                #Do not move onto the next year until all the processes have finished.
         print(colored("MOVING ON TO YEAR" + str(i), "cyan"))

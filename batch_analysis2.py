@@ -6,6 +6,7 @@ from pathlib import Path
 import dataframe_image as dfi
 import os
 from os import listdir
+from multiprocessing import Process, Manager
 
 import opposing_wind_wyoming
 import config
@@ -13,36 +14,33 @@ from ERA5 import ERA5
 
 # maybe add this to utils.py?
 def get_analysis_folder(FAA, WMO, year):
-    return config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
+    return config.analysis_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis/"
 
 # maybe add this to utils.py?
 def get_data_folder(FAA, WMO, year):
     return config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
 
 
-def get_pressure_range():
-    tst = 5
-
-def determine_wind_statistics(df, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
-    if config.by_pressure:
+def determine_wind_statistics(df, min_alt = 15000, max_alt = 24000, min_pressure = 20, max_pressure  = 125, alt_step = 500, n_sectors = 16, speed_threshold = 2):
+    if config.type == "PRES":
         wind_bins = config.era5_pressure_levels[::-1]
-        wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
-        wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
+        wind_bins = wind_bins[(wind_bins <= max_pressure)]
+        wind_bins = wind_bins[(wind_bins >= min_pressure)]
         #print(wind_bins)
-    else:
+    if config.type == "ALT":
         wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     # Do some filtering of the dataframe
     #df.dropna(inplace=True)
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         df.dropna(subset=['height'], how='all', inplace=True)
         df = df.drop(df[df['height'] < min_alt].index)
         df = df.drop(df[df['height'] > max_alt].index)
         # df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
-    else:
-        df = df.drop(df[df['pressure'] < config.min_pressure].index)
-        df = df.drop(df[df['pressure'] > config.max_pressure].index)
+    if config.type == "PRES":
+        df = df.drop(df[df['pressure'] < min_pressure].index)
+        df = df.drop(df[df['pressure'] > max_pressure].index)
 
     # Determine Wind Statistics
     opposing_wind_directions, opposing_wind_levels = opposing_wind_wyoming.determine_opposing_winds(df,
@@ -52,27 +50,28 @@ def determine_wind_statistics(df, min_alt, max_alt, alt_step, n_sectors, speed_t
     calm_winds = opposing_wind_wyoming.determine_calm_winds(df, alt_step=alt_step)
     full_winds = opposing_wind_wyoming.determine_full_winds(df, wind_bins=wind_bins, speed_threshold=speed_threshold)
 
-    if not calm_winds.any() and not opposing_wind_levels.any():
-        print(colored("Wind Diversity FAIL.", "red"))
-    else:
-        if not calm_winds.any():
-            print(colored("No Calm Winds.", "yellow"))
+    if config.logging:
+        if not calm_winds.any() and not opposing_wind_levels.any():
+            print(colored("Wind Diversity FAIL.", "red"))
         else:
-            print(colored("Calm Winds.", "green"))
+            if not calm_winds.any():
+                print(colored("No Calm Winds.", "yellow"))
+            else:
+                print(colored("Calm Winds.", "green"))
 
-        if not opposing_wind_levels.any():
-            print(colored("No Opposing Winds.", "yellow"))
-        else:
-            print(colored("Opposing Winds.", "green"))
+            if not opposing_wind_levels.any():
+                print(colored("No Opposing Winds.", "yellow"))
+            else:
+                print(colored("Opposing Winds.", "green"))
 
-        if not full_winds:
-            print(colored("No Full Wind Diversity.", "yellow"))
-        else:
-            print(colored("Full Wind Diversity", "green"))
+            if not full_winds:
+                print(colored("No Full Wind Diversity.", "yellow"))
+            else:
+                print(colored("Full Wind Diversity", "green"))
 
     return wind_bins, opposing_wind_levels
 
-def save_wind_probabilties(wind_probabilities, analysis_folder, date):
+def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
     '''
 
     Args:
@@ -92,7 +91,7 @@ def save_wind_probabilties(wind_probabilities, analysis_folder, date):
 
     wind_probabilities = wind_probabilities.apply(pd.to_numeric)
 
-    if config.by_pressure:
+    if config.type == "PRES":
         #reverse order of dataframes for pressure, since high pressure = low altitude
         wind_probabilities = wind_probabilities.iloc[:,::-1]
         #wind_probabilities = wind_probabilities[wind_probabilities.columns[::-1]]
@@ -127,27 +126,28 @@ def save_wind_probabilties(wind_probabilities, analysis_folder, date):
     wind_probabilities.to_csv(filepath_dataframe)
 
 
-def anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year):
+def anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year, min_alt = 15000, max_alt = 24000, min_pressure = 20, max_pressure  = 125, alt_step = 500, n_sectors = 16, speed_threshold = 2):
+
 
     current_month = 1
 
     analysis_folder = get_analysis_folder(FAA, WMO, year)
 
     # reinitialize dataframes
-    if config.by_pressure:
+    if config.type == "PRES":
         wind_bins = config.era5_pressure_levels[::-1]
-        wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
-        wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
+        wind_bins = wind_bins[(wind_bins <= max_pressure)]
+        wind_bins = wind_bins[(wind_bins >= min_pressure)]
         #print(wind_bins)
-    else:
-        wind_bins = np.arange(config.min_alt, config.max_alt, config.alt_step)
+    if config.type == "ALT":
+        wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     #print("wind bins", wind_bins)
 
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         column_headers = np.char.mod("%.1f", wind_bins / 1000.)
-    else:
+    if config.type == "PRES":
         pressure_bins = wind_bins
         column_headers = np.char.mod("%.1f", pressure_bins)
 
@@ -164,27 +164,23 @@ def anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year):
 
     for time in era5.time_convert:
 
+        #print(time)
+
         station = era5.get_station(time, lat, lon)
-        #print((station.pressure).to_numpy())
-        #print(station)
-        #print(station.z/config.g)
 
         month = time.month
         day = time.day
         hour = time.hour
-        #print(month, day, hour)
-        #print(FAA, WMO, time)
-
-        #print(station)
 
         station.dropna(subset=['direction', 'speed'], how='all', inplace=True)
 
 
-        wind_bins, opposing_wind_levels = determine_wind_statistics(station, min_alt=config.min_alt, max_alt=config.max_alt,
-                                                                    alt_step=config.alt_step, n_sectors=config.n_sectors,
-                                                                    speed_threshold=config.speed_threshold)
+        wind_bins, opposing_wind_levels = determine_wind_statistics(station, min_alt=min_alt, max_alt=max_alt, min_pressure= min_pressure, max_pressure = max_pressure,
+                                                                    alt_step=alt_step, n_sectors=n_sectors,
+                                                                    speed_threshold=speed_threshold)
 
-        print(opposing_wind_levels)
+        if config.logging:
+            print("opposing_wind_levels", opposing_wind_levels)
         # Double check this when full forecast is downloaded
         #print(month, current_month)
 
@@ -192,22 +188,22 @@ def anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year):
 
         #Do I need to do this again?
         if month != current_month or (month == 12 and day== 31 and hour == 12):
-            print(wind_probabilities)
-            save_wind_probabilties(wind_probabilities, analysis_folder, date)
+            if config.logging:
+                print(wind_probabilities)
+            save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date)
             current_month += 1
 
             # reinitialize dataframes
-            if config.by_pressure:
+            if config.type == "PRES":
                 wind_bins = config.era5_pressure_levels[::-1]
-                wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
-                wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
-                # print(wind_bins)
-            else:
-                wind_bins = np.arange(config.min_alt, config.max_alt, config.alt_step)
+                wind_bins = wind_bins[(wind_bins <= max_pressure)]
+                wind_bins = wind_bins[(wind_bins >= min_pressure)]
+            if config.type == "ALT":
+                wind_bins = np.arange(min_alt, max_alt, alt_step)
 
-            if not config.by_pressure:
+            if config.type == "ALT":
                 column_headers = np.char.mod("%.1f", wind_bins / 1000.)
-            else:
+            if config.type == "PRES":
                 #pressure_bins = [300, 250, 225, 200, 175, 150, 125, 100, 70, 50, 30, 20]  # LEAVE OFF 10 HPA
                 column_headers = np.char.mod("%.1f", pressure_bins)
             wind_probabilities = pd.DataFrame(columns=column_headers)
@@ -227,13 +223,15 @@ def anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year):
 
         #station.time = station['time']
         date = station.time.iat[0]
-        print(date)
+        if config.logging:
+            print()
+            print(date)
         wind_probabilities.loc[date, :] = mask
 
     return True
 
 
-def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_step = 500, n_sectors = 16, speed_threshold = 2):
+def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, min_pressure = 20, max_pressure  = 125, alt_step = 500, n_sectors = 16, speed_threshold = 2):
     '''
         Iterate through every sounding for a particular [station] in [year]
 
@@ -262,19 +260,19 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
     for j in range (1,12+1):
         #reinitialize dataframes
 
-        if config.by_pressure:
+        if config.type == "PRES":
             wind_bins = config.era5_pressure_levels[::-1]
-            wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
-            wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
+            wind_bins = wind_bins[(wind_bins <= max_pressure)]
+            wind_bins = wind_bins[(wind_bins >= min_pressure)]
             # print(wind_bins)
-        else:
-            wind_bins = np.arange(config.min_alt, config.max_alt, config.alt_step)
+        if config.type == "ALT":
+            wind_bins = np.arange(min_alt, max_alt, alt_step)
 
         # print("wind bins", wind_bins)
 
-        if not config.by_pressure:
+        if config.type == "ALT":
             column_headers = np.char.mod("%.1f", wind_bins / 1000.)
-        else:
+        if config.type == "PRES":
             pressure_bins = wind_bins
             column_headers = np.char.mod("%.1f", pressure_bins)
 
@@ -295,14 +293,17 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
         if csv_files:
             for csv in csv_files:
                 df = pd.read_csv(data_folder + str(j) + "/" + csv, index_col = 0)
+
                 #df = df.dropna(axis='rows')  #change this to speed
                 df.dropna(subset=['direction', 'speed'], how='all', inplace=True)
 
-                wind_bins, opposing_wind_levels = determine_wind_statistics(df, min_alt=config.min_alt,
-                                                                            max_alt=config.max_alt,
-                                                                            alt_step=config.alt_step,
-                                                                            n_sectors=config.n_sectors,
-                                                                            speed_threshold=config.speed_threshold)
+                wind_bins, opposing_wind_levels = determine_wind_statistics(df, min_alt=min_alt,
+                                                                            max_alt=max_alt,
+                                                                            min_pressure = min_pressure,
+                                                                            max_pressure = max_pressure,
+                                                                            alt_step=alt_step,
+                                                                            n_sectors=n_sectors,
+                                                                            speed_threshold=speed_threshold)
 
                 # there's probably a faster way to do this with numpy.  Or maybe I should change the output of opposing_wind_levels?
                 mask = wind_bins
@@ -316,7 +317,8 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
                 try:
                     df.time = pd.to_datetime(df['time'])
                     date = df.time.iat[0]
-                    print(date)
+                    if config.logging:
+                        print(date)
                     wind_probabilities.loc[date, :] = mask
                 except:
                     print(colored("GOT AN EXCEPTION","yellow"))
@@ -329,31 +331,31 @@ def anaylze_annual_data(FAA, WMO, year, min_alt = 15000, max_alt = 24000, alt_st
             mask[:] = np.nan
             wind_probabilities.loc[date, :] = mask
 
-            print(wind_probabilities)
+            if config.logging:
+                print(wind_probabilities)
 
-        save_wind_probabilties(wind_probabilities, analysis_folder, date)
+        save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date)
 
     return True
 
-def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sectors, speed_threshold):
+def cumulative_batch_analysis(FAA, WMO, year, min_alt = 15000, max_alt = 24000, min_pressure = 20, max_pressure  = 125, alt_step = 500):
     print("============CUMULATIVE WIND PROBABILITY ANALYSIS==============\n")
 
     analysis_folder = get_analysis_folder(FAA, WMO, year)
 
     files = [f for f in listdir(analysis_folder + "dataframes") if f.endswith(".csv")]
 
-    if config.by_pressure:
+    if config.type == "PRES":
         wind_bins = config.era5_pressure_levels[::-1]
-        wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
-        wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
+        wind_bins = wind_bins[(wind_bins <= max_pressure)]
+        wind_bins = wind_bins[(wind_bins >= min_pressure)]
         # print(wind_bins)
-    else:
-        wind_bins = np.arange(config.min_alt, config.max_alt, config.alt_step)
+    if config.type == "ALT":
+        wind_bins = np.arange(min_alt, max_alt, alt_step)
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         column_headers = np.char.mod("%.1f", wind_bins / 1000.)
-    else:
-        #pressure_bins = [300, 250, 225, 200, 175, 150, 125, 100,  70,  50,  30,  20] #LEAVE OFF 10 HPA
+    if config.type == "PRES":
         #reversed for pressure,  but already reversed in the original files.
         column_headers = np.char.mod("%.1f", wind_bins[::-1])
 
@@ -376,14 +378,6 @@ def cumulative_batch_analysis(FAA, WMO, year, min_alt, max_alt, alt_step, n_sect
     print(cumulative)
 
     cumulative = cumulative.apply(pd.to_numeric)
-
-    #Already reversed?
-    #if config.by_pressure:
-    #    #reverse order of dataframes for pressure, since high pressure = low altitude
-    #    cumulative = cumulative.iloc[:,::-1]
-    #    print(cumulative)
-    #    #cumulative = cumulative[cumulative.columns[::-1]]
-
 
     cumulative_styled = cumulative.style.background_gradient(axis=None, vmin=0, vmax=1.0, cmap='RdYlGn')
 
@@ -452,6 +446,52 @@ def check_annual_analyzed(FAA, WMO, year):
     return True
 
 
+
+def analyze(era5,year,WMO,FAA,lat,lon,min_alt,max_alt,min_pressure,max_pressure,alt_step,n_sectors,speed_threshold):
+    if config.mode == "era5":
+        status = anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year, min_alt, max_alt, min_pressure, max_pressure,
+                                          alt_step, n_sectors, speed_threshold)
+
+    if config.mode == "radiosonde":
+        status = anaylze_annual_data(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, min_pressure=min_pressure,
+                                     max_pressure=max_pressure, alt_step=alt_step, n_sectors=n_sectors,
+                                     speed_threshold=speed_threshold)
+        # cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)
+
+
+    if not status:
+        print(colored("Can't perform cumulative analysis because " + str(FAA) + "-" + str(WMO) + "/" + str(
+            year) + " not downloaded.", "red"))
+
+    if not check_annual_analyzed(FAA, WMO, year) and status:
+        cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, min_pressure=min_pressure,
+                                  max_pressure=max_pressure, alt_step=alt_step)
+
+
+def parallelize(era5, stations_df, year,min_alt,max_alt,min_pressure,max_pressure,alt_step,n_sectors,speed_threshold ):
+    '''
+    Parralel the process.  each station downlaod goes on it's own thread.  THis make the downloads much faster.
+
+    Args:
+        stations_df:
+        year:
+
+    Returns:
+
+    '''
+
+    queue = Manager().Queue()
+    procs = [Process(target=analyze, args=(era5,year,  row.WMO, row.FAA, row.lat_era5, row.lon_era5,min_alt,max_alt,min_pressure,max_pressure,alt_step,n_sectors,speed_threshold )) for row in stations_df.itertuples(index=False)]
+    for p in procs: p.start()
+    for p in procs: p.join()
+
+    results = []
+    while not queue.empty():
+        results.append(queue.get)
+
+    return results
+
+
 #mMain
 if __name__=="__main__":
 
@@ -461,7 +501,7 @@ if __name__=="__main__":
     #stations_df = stations_df[-1:]
 
     era5 = ERA5()
-    era5.import_forecast("forecasts/" + "western_hemisphere-2022.nc")
+    era5.import_forecast(config.era_file)
     era5.get_statistics()
 
     stations_df['lat_era5'] = stations_df.apply(lambda x: (-1 * x['  LAT'] if x['N'] == 'S' else 1 * x['  LAT']), axis=1)
@@ -469,7 +509,16 @@ if __name__=="__main__":
 
     print(stations_df)
 
+    # Initialize Variables
+    min_alt = config.min_alt
+    max_alt = config.max_alt
+    min_pressure = config.min_pressure
+    max_pressure = config.max_pressure
+    alt_step = config.alt_step
+    n_sectors = config.n_sectors
+    speed_threshold = config.speed_threshold
 
+    '''
     for row in stations_df.itertuples(index=False):
 
 
@@ -482,6 +531,8 @@ if __name__=="__main__":
         #Initialize Variables
         min_alt = config.min_alt
         max_alt = config.max_alt
+        min_pressure = config.min_pressure
+        max_pressure = config.max_pressure
         alt_step = config.alt_step
         n_sectors = config.n_sectors
         speed_threshold = config.speed_threshold
@@ -489,22 +540,51 @@ if __name__=="__main__":
         #Station downloads
         #year = 2013
         #station = 'SKBO'
+    '''
 
         # DO THE WIND PROBABILTIES ANALYSIS
-        for year in range (2012, 2022 +1):
+    for year in range (config.start_year, config.end_year +1):
 
+        if config.parallelize:
+            print(colored("Downloading Radiosonde Datasets in Parallel [MultiThreading]", "cyan"))
+            parallelize(era5, stations_df, year=year,
+                        min_alt=config.min_alt,
+                        max_alt=config.max_alt,
+                        min_pressure=config.min_pressure,
+                        max_pressure=config.max_pressure,
+                        alt_step=config.alt_step,
+                        n_sectors=config.n_sectors,
+                        speed_threshold=config.speed_threshold)
 
-            # ADD MONTHLY STATUS CHECK AND CUMULATIVE STATUS CHECK BACK IN!
+        else:
+            print(colored("Downloading Radiosonde Datasets in Sequence", "cyan"))
+            for row in stations_df.itertuples(index=False):
+                analyze(era5,year,
+                            WMO = row.WMO,
+                            FAA = row.FAA,
+                            lat = row.lat_era5,
+                            lon = row.lon_era5,
+                            min_alt = config.min_alt,
+                            max_alt = config.max_alt,
+                            min_pressure = config.min_pressure,
+                            max_pressure = config.max_pressure,
+                            alt_step = config.alt_step,
+                            n_sectors = config.n_sectors,
+                            speed_threshold = config.speed_threshold)
 
-            #status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
+    '''
+        # ADD MONTHLY STATUS CHECK AND CUMULATIVE STATUS CHECK BACK IN!
 
-            if config.mode == "era5":
-                status = anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year)
-            if config.mode == "radiosonde":
-                status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
-                #cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)
-            if not status:
-                print(colored("Can't perform cumulative analysis because + " + str(FAA) + "/" + str(WMO) + "/" + str(year) + " not downloaded.", "red"))
+        #status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
 
-            if not check_annual_analyzed(FAA, WMO, year) and status:
-                cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)
+        if config.mode == "era5":
+            status = anaylze_annual_data_era5(era5, lat, lon, FAA, WMO, year, min_alt, max_alt, min_pressure, max_pressure, alt_step, n_sectors, speed_threshold)
+        if config.mode == "radiosonde":
+            status = anaylze_annual_data(FAA, WMO, year, min_alt = min_alt, max_alt = max_alt, min_pressure = min_pressure, max_pressure = max_pressure, alt_step = alt_step, n_sectors = n_sectors, speed_threshold = speed_threshold)
+            #cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, alt_step=alt_step, n_sectors=n_sectors,speed_threshold=speed_threshold)
+        if not status:
+            print(colored("Can't perform cumulative analysis because + " + str(FAA) + "/" + str(WMO) + "/" + str(year) + " not downloaded.", "red"))
+
+        if not check_annual_analyzed(FAA, WMO, year) and status:
+            cumulative_batch_analysis(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt, min_pressure = min_pressure, max_pressure = max_pressure, alt_step=alt_step)
+    '''

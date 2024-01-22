@@ -56,11 +56,11 @@ def determine_calm_winds(df, speed_threshold = 4, alt_step = 500,):
     calm_winds = df[df['speed'] <= config.speed_threshold]
     calm_winds = calm_winds.copy() #this is needed to get rid of the SettingWithCopyWarning
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         calm_winds['height'] = calm_winds.height.apply(lambda x: round(x/ alt_step) * alt_step) #Round calm wind regions to nearest alt_Step size (probably either 500 or 1000 m)
         return np.unique(calm_winds['height'].to_numpy()) #remove duplicate calm wind regions and return the array
 
-    else:
+    if config.type == "PRES":
         #This does not split into bins for radiosondes right now, but it does for ERA5, which is already split into the propper bins
         return np.unique(calm_winds['pressure'].to_numpy()) #remove duplicate calm wind regions and return the array
 
@@ -90,9 +90,9 @@ def determine_opposing_winds(df , wind_bins, n_sectors, speed_threshold = 4):
     #print(wd, pressure, wind_bins)
 
     # Generate a histogram with wind directions and altitudes using windrose.historgram
-    if not config.by_pressure:
+    if config.type == "ALT":
         dir_edges, var_bins, table = windrose.windrose.histogram(wd, alt, bins = wind_bins, nsector=n_sectors)
-    else:
+    if config.type == "PRES":
         dir_edges, var_bins, table = windrose.windrose.histogram(wd, pressure, bins=wind_bins, nsector=n_sectors)
 
     #Determine the sectors (directions) that contain non zero values (altitude levels that have wind)
@@ -147,9 +147,9 @@ def determine_full_winds(df , wind_bins, speed_threshold = 2, by_pressure = Fals
     alt = np.asarray(df['height'])
     pressure = np.asarray(df['pressure'])
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         dir_edges, var_bins, table = windrose.windrose.histogram(wd, alt, bins = wind_bins, nsector=8)
-    else:
+    if config.type == "PRES":
         dir_edges, var_bins, table = windrose.windrose.histogram(wd, pressure, bins=wind_bins, nsector=8)
 
     full_winds = False
@@ -168,7 +168,7 @@ def determine_full_winds(df , wind_bins, speed_threshold = 2, by_pressure = Fals
 
 if __name__=="__main__":
     # Download Individual Raidosnde Sounding from University of Wyoming.
-    date = datetime(2022, 10, 3, 12)
+    date = datetime(2022, 10, 25, 0)
     station = 'PHTO'
 
     print(station, date)
@@ -214,21 +214,22 @@ if __name__=="__main__":
 
     # ================= Filter Data Frame for Opposing WInd Analysis ===================
 
-    if not config.by_pressure:
+    if config.type == "ALT":
         df = df.drop(df[df['height'] < min_alt].index)
         df = df.drop(df[df['height'] > max_alt].index)
         #df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
-    else:
+    if config.type == "PRES":
         df = df.drop(df[df['pressure'] < min_pressure].index)
         df = df.drop(df[df['pressure'] > max_pressure].index)
         #df = df [::-1]
 
-    if config.by_pressure:
+    if config.type == "PRES":
         wind_bins = config.era5_pressure_levels[::-1]
         wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
         wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
-        print(wind_bins)
-    else:
+        if config.logging:
+            print(wind_bins)
+    if config.type == "ALT":
         wind_bins = np.arange(min_alt, max_alt, alt_step)
 
     ws = np.asarray(df['speed'])
@@ -241,45 +242,46 @@ if __name__=="__main__":
     calm_winds = determine_calm_winds(df, alt_step = alt_step)
     full_winds = determine_full_winds(df , wind_bins = wind_bins, speed_threshold = speed_threshold)
 
-    print()
-    print("WIND STATISTICS")
-    print(opposing_wind_levels)
-    print(opposing_wind_directions)
-    if not calm_winds.any() and not opposing_wind_levels.any():
-        print(colored("Wind Diversity FAIL.", "red"))
-    else:
-        if not calm_winds.any():
-            print(colored("No Calm Winds.", "yellow"))
+    if config.logging:
+        print()
+        print("WIND STATISTICS")
+        print(opposing_wind_levels)
+        print(opposing_wind_directions)
+        if not calm_winds.any() and not opposing_wind_levels.any():
+            print(colored("Wind Diversity FAIL.", "red"))
         else:
-            print(colored("Calm Winds.", "green"))
+            if not calm_winds.any():
+                print(colored("No Calm Winds.", "yellow"))
+            else:
+                print(colored("Calm Winds.", "green"))
 
-        if not opposing_wind_levels.any():
-            print(colored("No Opposing Winds.", "yellow"))
-        else:
-            print(colored("Opposing Winds.", "green"))
+            if not opposing_wind_levels.any():
+                print(colored("No Opposing Winds.", "yellow"))
+            else:
+                print(colored("Opposing Winds.", "green"))
 
-        if not full_winds:
-            print(colored("No Full Wind Diversity.", "yellow"))
-        else:
-            print(colored("Full Wind Diversity", "green"))
-
-
-    print()
-    print("Calm Winds Regions:", calm_winds)
-    print("Opposing Wind Levels:", opposing_wind_levels)
+            if not full_winds:
+                print(colored("No Full Wind Diversity.", "yellow"))
+            else:
+                print(colored("Full Wind Diversity", "green"))
 
 
-    ### PLOTING AFTER FILTERING###
-    print(df)
+        print()
+        print("Calm Winds Regions:", calm_winds)
+        print("Opposing Wind Levels:", opposing_wind_levels)
 
-    print(alt)
+
+        ### PLOTING AFTER FILTERING###
+        print(df)
+
+        print(alt)
 
     #Altitude Windrose
     ax = windrose.WindroseAxes.from_ax()
     #ax.bar(wd, ws,  bins=np.arange(0, 50, 5), opening = 1, normed=False, edgecolor="white", nsector = 16) #opening = 0.8
-    if not config.by_pressure:
+    if config.type == "ALT":
         ax.bar(wd, alt, opening = 1, bins=wind_bins, nsector=n_sectors, cmap = cm.rainbow)
-    else:
+    if config.type == "PRES":
         ax.bar(wd, pressure, opening=1, bins=wind_bins, nsector=n_sectors, cmap=cm.rainbow)
     ax.set_legend(loc = 'lower left')
 

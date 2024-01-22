@@ -114,7 +114,7 @@ class ERA5:
         return df
 
 if __name__=="__main__":
-    time = date = '2022-10-25  12:00:00'
+    time = date = '2022-12-18  00:00:00'
 
     #PHTO
     lat = 19.72
