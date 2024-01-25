@@ -1,6 +1,7 @@
 import cartopy.crs as ccrs
 import cartopy.io
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import pandas as pd
 import numpy as np
 import cartopy.feature as cfeature
@@ -19,85 +20,20 @@ import config
 # https://xarray.pydata.org/en/v0.7.0/plotting.html
 
 
-'''
-
-def func(x, y):
-    return x*(1-x)*np.cos(4*np.pi*x) * np.sin(4*np.pi*y**2)**2
-
-
-min_lat = 0
-
-
-
-min_lat = 10
-max_lat = 75
-min_lon = 360-185
-max_lon = 360-20
-
-
-#min_lat = -58
-#max_lat = 85
-#min_lon = 360-180
-#max_lon = 360-30
-res = 1
-
-lons = np.arange(min_lon,max_lon,res)
-lats = np.arange(min_lat,max_lat,res)
-
-grid_x, grid_y = np.meshgrid(lons,
-                             lats)
-
-
-
-rng = np.random.default_rng()
-points = rng.random((1000, 2))
-
-print(points)
-
-#sdfs
-values = func(points[:,0], points[:,1])
-
-print(np.arange(min_lon,max_lon,1))
-print(grid_x.shape)
-print(grid_y.shape)
-print(points.shape)
-print(values.shape)
-
-grid_z0 = griddata(points, values, (grid_x, grid_y), method='nearest')
-
-#print(values)
-print(grid_z0.shape)
-
-#asfa
-'''
-
-
 #--------------------------------------
 #DOWNLOAD THE DATA
 
 #MAP CONFIGURATION STUFF:
 method = 'nearest'
 year = config.start_year
-prefix = "Western_Hemisphere"  #title of the maps that are exported to the MAPS folder
+prefix = "PREDICT_North_America"  #title of the maps that are exported to the MAPS folder
+
 
 #These are the values download from Copernicus for 2022 in degrees
-
-#Western Hemisphere
-min_lat = -65
+min_lat = 0
 max_lat = 75
-min_lon = 360-175
-max_lon = 360-20
-
-'''
-#CONUS
-min_lat = -65
-max_lat = 75
-min_lon = 360-175
-max_lon = 360-20
-'''
-
-
-
+min_lon = 360-160
+max_lon = 360-50
 res = 1 # degrees
 
 lons = np.arange(min_lon,max_lon,res)
@@ -111,16 +47,16 @@ grid_x, grid_y = np.meshgrid(lons, lats)
 
 
 
-continent = "South_America"
+continent = "North_America"
 stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-
+'''
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
-
+'''
 
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
@@ -131,12 +67,38 @@ for row in stations_df.itertuples(index = 'WMO'):
     FAA = row.FAA
     Name = row.Station_Name
 
+    radiosonde_analysis = '/home/schuler/RadioWinds/' + 'radiosonde' + '_ANALYSIS_' + 'PRES' + '/'
+    era5_analysis = '/home/schuler/RadioWinds/' + 'era5' + '_ANALYSIS_' + 'PRES' + '/'
+
     analysis_folder = config.analysis_folder
 
     #file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
-    file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
+    radiosonde = radiosonde_analysis + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
+    era5 = era5_analysis + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
-    df = pd.read_csv(file_name, index_col=0 )
+
+    radiosonde = pd.read_csv(radiosonde, index_col=0 )
+    era5 = pd.read_csv(era5, index_col=0 )
+
+    print(FAA, Name)
+    #print(radiosonde)
+    #print(era5)
+
+    difference = (radiosonde - era5).abs()
+    #print(difference)
+    df = (radiosonde +.01)/(difference+.01) #make sure it's never 0.  Values should never be over 101?
+
+    #df = df/101.
+
+    print()
+    print(df)
+    print(np.nanmax(df))
+    #xcvx
+
+    #asfa
+
+    #sdfs
+
     df = df.T
     df = df.apply(['max'])
     #df.index.max = 'WMO'
@@ -150,7 +112,6 @@ print(stations_df)
 
 
 
-
 #Convert Ranges of Coordinates from stations list for Cartopy
 stations_df[' LONG'] = stations_df.apply(lambda x: (360-x[' LONG'] if x['E'] == 'W' else 1*x[' LONG']), axis = 1)
 stations_df['  LAT'] = stations_df.apply(lambda x: (-1*x['  LAT'] if x['N'] == 'S' else 1*x['  LAT']), axis = 1)
@@ -158,8 +119,6 @@ stations_df['  LAT'] = stations_df.apply(lambda x: (-1*x['  LAT'] if x['N'] == '
 
 #Drop any stations that collected no data for the entire year.
 stations_df.dropna(subset=df.columns[-12:], how = 'all', inplace = True)
-
-
 
 
 
@@ -174,17 +133,6 @@ for month in range (1,12+1):
     lonlat = stations_df[[' LONG','  LAT']]
     points = lonlat.to_numpy()
 
-    '''
-    print("OK HERE IS THE NEW STUFF)")
-    print()
-    print(grid_x.shape)
-    print(grid_y.shape)
-    print(points.shape)
-    print(values.shape)
-    print(lons.shape)
-    print(lats.shape)
-    print()
-    '''
 
     #zi = griddata(points,values,(grid_x, grid_y),method='linear', fill_value=0)
     zi = griddata(points,values,(grid_x, grid_y),method=method)
@@ -198,12 +146,11 @@ for month in range (1,12+1):
     stn_lon = -100
     #extent = [-125 , -70, 20, 50]
 
-
-
-    extent = [-180, 0, -5, 35] # Western Hemisphere
+    extent = [-165, -60, 0, 75]
 
 
 
+    #extent = [-180, 0, -5, 35] # Western Hemisphere
     #extent = [min_lon-10, max_lon + 10, min_lat-10, max_lat +10]
     #extent = [(min_lon -360)-20, (max_lon -360)-15, min_lat - 1, max_lat]
 
@@ -217,9 +164,24 @@ for month in range (1,12+1):
     ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax.set_extent(extent)
 
+    '''
+    log_norm = colors.SymLogNorm(
+        linthresh=.1,
+        linscale=0.01,
+        vmin=0,
+        vmax=100,
+    )
+    '''
+
 
     #ax = plt.axes(projection=ccrs.PlateCarree())
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.8, vmin=0, vmax=1)
+    D = ax.pcolormesh(lons, lats, zi,
+                      transform=ccrs.PlateCarree(),
+                      vmin=0,
+                      vmax=75,
+                      #norm=log_norm,
+                      cmap='RdYlGn', alpha=.8) #, vmin=0, vmax=100)
+    #fig.colorbar(D, ax=ax, extend = 'max', shrink=.5, pad=.01)
     fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
     #fig.colorbar.set_ylim(0, 1)
     #plt.clim(0,1)
@@ -236,7 +198,7 @@ for month in range (1,12+1):
     ax.set_title(prefix + " " + config.mode + "_" + config.type+ "_" + "\n Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
     plt.tight_layout()
 
-    print("generating map for " + prefix + "_" + config.type+ "_" + config.mode +  "-" + str(year) + '-' + str(month))
+    print("generating map for " + prefix + "_" + config.type+ "_" + str(year) + '-' + str(month))
 
     path = config.maps_folder + "/" + str(year)
     isExist = os.path.exists(path)
@@ -244,5 +206,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month))
+    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + str(year) + '-' + str(month))
     #plt.show()

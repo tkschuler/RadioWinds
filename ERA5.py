@@ -52,9 +52,15 @@ class ERA5:
               " max: " + str(self.file.variables['longitude'][self.lon_max_idx - 1]) + " size: " + str(
                   self.lon_max_idx - self.lon_min_idx))
 
+
+        start_datetime = self.time_convert[self.start_time_idx]
+        end_datetime = self.time_convert[self.end_time_idx]
+
         print("TIME RANGE: start time: " + str(self.time_convert[self.start_time_idx]) +
                                 " end time: " + str(self.time_convert[self.end_time_idx]))
         print()
+
+        return start_datetime, end_datetime
 
     def determineRanges(self, netcdf_ranges):
         """

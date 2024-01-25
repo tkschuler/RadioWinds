@@ -6,6 +6,7 @@ from pathlib import Path
 import dataframe_image as dfi
 import os
 from os import listdir
+import sys
 from multiprocessing import Process, Manager
 
 import opposing_wind_wyoming
@@ -495,14 +496,31 @@ def parallelize(era5, stations_df, year,min_alt,max_alt,min_pressure,max_pressur
 #mMain
 if __name__=="__main__":
 
-    continent = "North_America"
+    continent = config.continent
     stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
     #stations_df = stations_df[-1:]
 
     era5 = ERA5()
     era5.import_forecast(config.era_file)
-    era5.get_statistics()
+    start_datetime, end_datetime = era5.get_statistics()
+
+    #Check if ERA5 forecast date range matches config file
+    #Maybe later check if The coordinates are right?
+
+    if config.mode == "era5":
+        if start_datetime != datetime(config.start_year, 1, 1, 00):
+            print(colored("Dates mismatch for analysis. ERA5 start date is " + str(start_datetime) + ". Config file is " +
+                          str(datetime(config.start_year, 1, 1, 00)) , "red"))
+            sys.exit()
+
+        if end_datetime != datetime(config.end_year, 12, 31, 12):
+            print(colored(
+                "Dates mismatch for analysis. ERA5 start date is " + str(end_datetime) + ". Config file is " + str(
+                    datetime(config.end_year, 12, 31, 12)), "red"))
+            sys.exit()
+
+
 
     stations_df['lat_era5'] = stations_df.apply(lambda x: (-1 * x['  LAT'] if x['N'] == 'S' else 1 * x['  LAT']), axis=1)
     stations_df['lon_era5'] = stations_df.apply(lambda x: (-1* x[' LONG'] if x['E'] == 'W' else 1 * x[' LONG']), axis=1)

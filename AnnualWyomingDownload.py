@@ -106,7 +106,7 @@ def parallelize(stations_df, year):
 
 if __name__=="__main__":
 
-    continent = "North_America"
+    continent = config.continent
     stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
     #stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
     #stations_df = stations_df.drop_duplicates(subset=['FAA'])
