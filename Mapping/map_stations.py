@@ -5,6 +5,11 @@ import pandas as pd
 import numpy as np
 import iris
 import xarray
+import glob
+import os
+import sys
+sys.path.insert(0, sys.path[0] + '/../') #add config from 1 directory up.
+import utils
 
 
 import xarray as xr
@@ -30,8 +35,14 @@ gridlats = temperature.coord('grid_latitude').contiguous_bounds()
 temperature = temperature.data
 
 
-continent = "North_America"
-stations_df = pd.read_csv('Radisonde_String_Parsing/CLEANED/' + continent + ".csv")
+path = 'Radisonde_Stations_Info/CLEANED/'
+all_files = glob.glob(os.path.join(path, "*.csv"))
+
+stations_df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
+
+
+#continent = "North_America"
+#stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
 
 print(stations_df)
 print(stations_df.columns)
@@ -49,36 +60,43 @@ ax.coastlines()
 points = list(cartopy.io.shapereader.Reader(fname).geometries())
 '''
 
-central_lat = 37.5
-central_lon = -96
-extent = [-180, -20, 0, 45]
+#central_lat = 37.5
+#central_lon = -96
+#extent = [-180, -20, 0, 45]
+#central_lon = np.mean(extent[:2])
+#central_lat = np.mean(extent[2:])
+
+central_lat = 0
+central_lon = 0
+extent = [-180, 180, -90, 90]
 central_lon = np.mean(extent[:2])
 central_lat = np.mean(extent[2:])
 
-plt.figure(figsize=(12, 12))
+#plt.figure()
+plt.figure(figsize=(10, 7))
 #ax = plt.axes(projection=ccrs.AlbersEqualArea(central_lon, central_lat))
 ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=central_lon))
 ax.set_extent(extent)
 
 ax.add_feature(cartopy.feature.OCEAN)
-ax.add_feature(cartopy.feature.STATES, edgecolor='black', linewidth=0.5)
-ax.add_feature(cartopy.feature.LAND, edgecolor='black')
-ax.add_feature(cartopy.feature.LAKES, edgecolor='black')
-ax.add_feature(cartopy.feature.RIVERS)
+#ax.add_feature(cartopy.feature.STATES, edgecolor='black', linewidth=0.5)
+ax.add_feature(cartopy.feature.BORDERS, edgecolor='black', linewidth=0.5)
+ax.add_feature(cartopy.feature.LAND, color = 'white', edgecolor='black')
+#ax.add_feature(cartopy.feature.LAKES, edgecolor='black')
+#ax.add_feature(cartopy.feature.RIVERS)
 ax.gridlines()
 
+#Convert Station Coordinates for mapping
+stations_df = utils.convert_stations_coords(stations_df)
 
-da = xarray.DataArray(np.random.random((100,100)),
-                     coords=[
-                         ('lat', np.linspace(-90,90,num=100, endpoint=False)+18/2),
-                         ('lon', np.linspace(0,360,num=100, endpoint=False)),
-                     ])
+stations_df_used =  stations_df[stations_df.Continent.isin(['North_America',"South_America"])]
+stations_df_notused =  stations_df[~stations_df.Continent.isin(['North_America',"South_America"])]
 
-#ax.pcolormesh(da.lon, da.lat, da, transform=ccrs.PlateCarree())
-
-ax.scatter(360 - stations_df[' LONG'], stations_df['  LAT'], c = "red", transform = ccrs.Geodetic())
+ax.scatter(stations_df_notused['lon_era5'], stations_df_notused['lat_era5'], c = "blue", s= 2, transform = ccrs.Geodetic())
+ax.scatter(stations_df_used['lon_era5'], stations_df_used['lat_era5'], c = "red", s= 2, transform = ccrs.Geodetic())
 
 rotated_pole = ccrs.RotatedPole(pole_longitude=177.5, pole_latitude=37.5)
-plt.pcolormesh(gridlons, gridlats, temperature, alpha = .5,  transform=ccrs.PlateCarree(central_longitude=central_lon))
 
+#plt.title("Launch Sites in University of Wyoming Global Radiosonde Archive")
+plt.tight_layout()
 plt.show()

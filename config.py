@@ -1,13 +1,17 @@
 import numpy as np
 
-type = "PRES" #ALT or PRES"
-mode = "era5" # or radiosonde or era5
-continent = "South_America"
+type = "ALT" #ALT or PRES"
+mode = "radiosonde" # or radiosonde or era5
+continent = "North_America"
+mapping_mode = mode #or "diff"
 
-parent_folder =  '/home/schuler/RadioWinds/SOUNDINGS_DATA/' # add in a slash here
+base_directory = '/mnt/d/RadioWinds/' #Windows 11
+#base_directory = '/home/schuler/RadioWinds/' #Linux
+
+parent_folder =  base_directory + 'SOUNDINGS_DATA/' # add in a slash here
 #analysis_folder = '/home/schuler/RadioWinds/ERA5_ANALYSIS3/'
-analysis_folder = '/home/schuler/RadioWinds/' + mode + '_ANALYSIS_ZONAL_' + type + '/'
-maps_folder =  '/home/schuler/RadioWinds/MAPS/' # add in a slash here
+analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '/'
+maps_folder =  base_directory + 'MAPS/' # add in a slash here
 
 #Default is blowing to for path planning
 blowing_to = True # -1 FOR (typical wind rose),  1 for TO (where balloon will drift to)
@@ -18,12 +22,12 @@ g = 9.80665
 #########FOR BATCH ANALYSIS ####################
 era_file = "forecasts/" + "western_hemisphere-2012-SOUTH.nc"
 #For downloading Radiosonde datasets in parralel or sequence
-parallelize = True
+parallelize = False
 #by_pressure = False # True or False
 logging = False
 
 start_year = 2012
-end_year = 2023
+end_year = 2012
 
 ############################################
 

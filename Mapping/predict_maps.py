@@ -24,7 +24,7 @@ import config
 #DOWNLOAD THE DATA
 
 #MAP CONFIGURATION STUFF:
-method = 'nearest'
+method = 'linear'
 year = config.start_year
 prefix = "PREDICT_North_America"  #title of the maps that are exported to the MAPS folder
 
@@ -67,8 +67,8 @@ for row in stations_df.itertuples(index = 'WMO'):
     FAA = row.FAA
     Name = row.Station_Name
 
-    radiosonde_analysis = '/home/schuler/RadioWinds/' + 'radiosonde' + '_ANALYSIS_' + 'PRES' + '/'
-    era5_analysis = '/home/schuler/RadioWinds/' + 'era5' + '_ANALYSIS_' + 'PRES' + '/'
+    radiosonde_analysis = config.base_directory + 'radiosonde' + '_ANALYSIS_' + 'PRES' + '/'
+    era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'PRES' + '/'
 
     analysis_folder = config.analysis_folder
 
@@ -81,23 +81,20 @@ for row in stations_df.itertuples(index = 'WMO'):
     era5 = pd.read_csv(era5, index_col=0 )
 
     print(FAA, Name)
-    #print(radiosonde)
-    #print(era5)
 
-    difference = (radiosonde - era5).abs()
+    #difference = (radiosonde - era5).abs()
     #print(difference)
-    df = (radiosonde +.01)/(difference+.01) #make sure it's never 0.  Values should never be over 101?
+    #(radiosonde +.01)/(difference+.01) #make sure it's never 0.  Values should never be over 101?
 
-    #df = df/101.
+    if config.mapping_mode == "radiosonde":
+        df = radiosonde
+    elif config.mapping_mode == "era5":
+        df = era5
+    elif config.mapping_mode == "era5":
+        df = radiosonde - era5
 
-    print()
+
     print(df)
-    print(np.nanmax(df))
-    #xcvx
-
-    #asfa
-
-    #sdfs
 
     df = df.T
     df = df.apply(['max'])
@@ -128,11 +125,6 @@ for month in range (1,12+1):
     values = stations_df.loc[:,month].to_numpy()
     lonlat = stations_df[[' LONG','  LAT']]
     points = lonlat.to_numpy()
-
-    values = stations_df.loc[:,month].to_numpy()
-    lonlat = stations_df[[' LONG','  LAT']]
-    points = lonlat.to_numpy()
-
 
     #zi = griddata(points,values,(grid_x, grid_y),method='linear', fill_value=0)
     zi = griddata(points,values,(grid_x, grid_y),method=method)
@@ -178,7 +170,7 @@ for month in range (1,12+1):
     D = ax.pcolormesh(lons, lats, zi,
                       transform=ccrs.PlateCarree(),
                       vmin=0,
-                      vmax=75,
+                      vmax=1,
                       #norm=log_norm,
                       cmap='RdYlGn', alpha=.8) #, vmin=0, vmax=100)
     #fig.colorbar(D, ax=ax, extend = 'max', shrink=.5, pad=.01)
@@ -195,10 +187,10 @@ for month in range (1,12+1):
 
     ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
 
-    ax.set_title(prefix + " " + config.mode + "_" + config.type+ "_" + "\n Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
+    ax.set_title(prefix + " " + config.mode + "_" + config.mode + "_" + config.type+ "_" + "\n Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
     plt.tight_layout()
 
-    print("generating map for " + prefix + "_" + config.type+ "_" + str(year) + '-' + str(month))
+    print("generating map for " + prefix + "_" + config.mode + "_" + config.type + "_" + str(year) + '-' + str(month))
 
     path = config.maps_folder + "/" + str(year)
     isExist = os.path.exists(path)
@@ -206,5 +198,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + str(year) + '-' + str(month))
+    plt.savefig(path +"/" +  prefix + "_" + config.mode + "_" + config.type+ "_" + str(year) + '-' + str(month))
     #plt.show()

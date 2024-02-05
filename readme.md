@@ -21,6 +21,10 @@ siphon
 matplotlib
 dataframe_image
 ```
+For easy install use:
+```
+pip install -r requirements.txt
+```
 
 **!IMORTANT: In Siphon, for downloading individual soundings, download the latest version of Wyoming.py from siphon Github,  newer than the 0.9 release.** This takes care of the occasional height folding issue. We take care of it in ``SiphonMulti.py``.
 
