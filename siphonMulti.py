@@ -13,7 +13,11 @@ from siphon._tools import get_wind_components
 
 
 class SiphonMulti(WyomingUpperAir):
-    """Download and parse data from the University of Wyoming's upper air archive."""
+    """Download and parse data from the University of Wyoming's upper air archive.
+
+    This class extended Siphon to Download a month's data at a time, instead of
+    only one timestamp,  saving a lot of time for bulk downloads
+    """
 
 
     def __init__(self):
@@ -216,7 +220,9 @@ class SiphonMulti(WyomingUpperAir):
 #main
 if __name__=="__main__":
 
-    station = '74794'
+    #An Example of downloading a month's worth of data at a time from University of Wyoming
+
+    station = '71816'
     year = 2017
     month = 4
     df_list = SiphonMulti.request_data(year, month, station)

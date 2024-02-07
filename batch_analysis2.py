@@ -481,16 +481,24 @@ def parallelize(era5, stations_df, year,min_alt,max_alt,min_pressure,max_pressur
 
     '''
 
-    queue = Manager().Queue()
-    procs = [Process(target=analyze, args=(era5,year,  row.WMO, row.FAA, row.lat_era5, row.lon_era5,min_alt,max_alt,min_pressure,max_pressure,alt_step,n_sectors,speed_threshold )) for row in stations_df.itertuples(index=False)]
-    for p in procs: p.start()
-    for p in procs: p.join()
+    try:
+        queue = Manager().Queue()
+        procs = [Process(target=analyze, args=(era5,year,  row.WMO, row.FAA, row.lat_era5, row.lon_era5,min_alt,max_alt,min_pressure,max_pressure,alt_step,n_sectors,speed_threshold )) for row in stations_df.itertuples(index=False)]
+        for p in procs: p.start()
+        for p in procs: p.join()
 
-    results = []
-    while not queue.empty():
-        results.append(queue.get)
+        results = []
+        while not queue.empty():
+            results.append(queue.get)
 
-    return results
+        return results
+
+    # If There's a keyboard interrupt, terminate multiprocessing in Python, and exit program
+    except KeyboardInterrupt:
+        print("Caught KeyboardInterrupt, terminating workers")
+        for p in procs: p.terminate()
+        sys.exit()
+
 
 
 #mMain
