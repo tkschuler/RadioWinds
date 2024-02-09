@@ -35,7 +35,7 @@ gridlats = temperature.coord('grid_latitude').contiguous_bounds()
 temperature = temperature.data
 
 
-path = 'Radisonde_Stations_Info/CLEANED/'
+path = 'Radiosonde_Stations_Info/CLEANED/'
 all_files = glob.glob(os.path.join(path, "*.csv"))
 
 stations_df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
@@ -97,6 +97,6 @@ ax.scatter(stations_df_used['lon_era5'], stations_df_used['lat_era5'], c = "red"
 
 rotated_pole = ccrs.RotatedPole(pole_longitude=177.5, pole_latitude=37.5)
 
-#plt.title("Launch Sites in University of Wyoming Global Radiosonde Archive")
+plt.title("Launch Sites in University of Wyoming Global Radiosonde Archive")
 plt.tight_layout()
 plt.show()

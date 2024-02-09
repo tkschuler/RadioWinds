@@ -15,6 +15,13 @@ then parsing into individual flights .csv's).
 .. note:: 
         This script takes a while to run (up to an hour) depending on how many 
         stations and years are being downloaded
+
+.. tip:: 
+        If the download script hangs:
+            *End it
+            * run checkRadiosondeDownload.py
+            * Delete any [year] folders for that station that output red text
+            * Run again    
         
 .. important:: 
         Currently, this script checks to see if a year folder already exists for the
