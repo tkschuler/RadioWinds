@@ -78,19 +78,16 @@ def determine_wind_statistics(df, min_alt=15000, max_alt=28000, min_pressure=20,
         df = df.drop(df[df['pressure'] < min_pressure].index)
         df = df.drop(df[df['pressure'] > max_pressure].index)
 
-    # Determine Wind Statistics
-    opposing_wind_directions, opposing_wind_levels = opposing_wind_wyoming.determine_opposing_winds(df,
-                                                                                                    wind_bins=wind_bins,
-                                                                                                    n_sectors=n_sectors,
-                                                                                                    speed_threshold=speed_threshold)
+
     calm_winds = opposing_wind_wyoming.determine_calm_winds(df, alt_step=alt_step)
-    full_winds = opposing_wind_wyoming.determine_full_winds(df, wind_bins=wind_bins, speed_threshold=speed_threshold)
 
     if config.logging:
-        opposing_wind_wyoming.print_wind_statistics(opposing_wind_directions, opposing_wind_levels,
-                                                    calm_winds, full_winds)
+        if len(calm_winds) != 0:
+            print(colored("Calm Winds Regions.", "green"))
+        else:
+            print(colored("No Calm Winds Regions.", "red"))
 
-    return wind_bins, opposing_wind_levels
+    return wind_bins, calm_winds
 
 
 def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
@@ -101,7 +98,7 @@ def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
     wind_probabilities = pd.concat([wind_probabilities, wind_probabilities.apply(['average'])])
 
     print(colored(
-        "Processing data for Station-" + str(FAA) + " - " + str(WMO) +
+        "Processing Calm Winds data for Station-" + str(FAA) + " - " + str(WMO) +
         " Year-" + str(date.year) + " Month-" + str(date.month),
         "cyan"))
 
@@ -111,9 +108,9 @@ def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
 
     utils.export_colored_dataframes(wind_probabilities,
                                     title='Opposing Wind Probabilities for Station ' + str(FAA) + " - " + str(WMO) +
-                                          ' in Month ' + str(date.month) + ' 12Z ' + str(date.year),
+                                          ' in Month ' + str(date.month) + ' - ' + str(date.year),
                                     path=analysis_folder,
-                                    suffix=str(FAA) + " - " + str(WMO) + "-" + str(date.year) + "-" + str(date.month),
+                                    suffix=str(FAA) + " - " + str(WMO) + "-" + str(date.year) + "-" + str(date.month) + "-CALM",
                                     export_color=config.monthly_export_color)
 
 
@@ -209,74 +206,6 @@ def anaylze_monthly_data(FAA, WMO, year, min_alt=15000, max_alt=28000, min_press
     return True
 
 
-def anaylze_monthly_data_era5(era5, lat, lon, FAA, WMO, year, min_alt=15000, max_alt=28000,
-                             min_pressure=20, max_pressure=125, alt_step=500, n_sectors=16, speed_threshold=2):
-    """
-    Very similar to the function above, with some slight tweaks to use an ERA5 forecast instead of Radiosonde data.
-    """
-
-    current_month = 1
-
-    analysis_folder = utils.get_analysis_folder(FAA, WMO, year)
-
-    # Reinitialize dataframes
-    wind_bins, wind_probabilities = reinitializeProbabilities()
-
-    # Check if monthly sounding data has already been analyzed.  If so, skip
-    if utils.check_analyzed(FAA, WMO, year,
-                            path=utils.get_analysis_folder(FAA, WMO, year),
-                            category="monthly"):
-        return True
-
-    for time in era5.time_convert:
-        station = era5.get_station(time, lat, lon)
-
-        month = time.month
-        day = time.day
-        hour = time.hour
-
-        station.dropna(subset=['direction', 'speed'], how='all', inplace=True)
-
-        wind_bins, opposing_wind_levels = determine_wind_statistics(station, min_alt=min_alt, max_alt=max_alt,
-                                                                    min_pressure=min_pressure, max_pressure=max_pressure,
-                                                                    alt_step=alt_step, n_sectors=n_sectors,
-                                                                    speed_threshold=speed_threshold)
-
-        if config.logging:
-            print("opposing_wind_levels", opposing_wind_levels)
-        # Double check this when full forecast is downloaded
-
-        # Do I need to do this again?
-        if month != current_month or (month == 12 and day== 31 and hour == 12):
-            if config.logging:
-                print(wind_probabilities)
-            save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date)
-            current_month += 1
-
-            # reinitialize dataframes
-            wind_bins, wind_probabilities = reinitializeProbabilities()
-
-        # there's probably a faster way to do this with numpy.
-        # Or maybe I should change the output of opposing_wind_levels?
-        mask = wind_bins
-        for k in range(len(mask)):
-            if wind_bins[k] in opposing_wind_levels:
-                mask[k] = 1
-            else:
-                mask[k] = 0
-
-        # Need to check if Dataframe is empty after dropping nan values was done on direction and speed
-
-        # station.time = station['time']
-        date = station.time.iat[0]
-        if config.logging:
-            print()
-            print(date)
-        wind_probabilities.loc[date, :] = mask
-
-    return True
-
-
 def analyze_annual_data(FAA, WMO, year, min_alt=15000, max_alt=28000,
                         min_pressure=20, max_pressure=125, alt_step=500):
 
@@ -319,7 +248,7 @@ def analyze_annual_data(FAA, WMO, year, min_alt=15000, max_alt=28000,
                                     title='Opposing Wind Probabilities for Station ' + str(FAA) + " - " + str(
                                         WMO) + ' 12Z in ' + str(year),
                                     path=config.analysis_folder + str(FAA) + " - " + str(WMO) + "/",
-                                    suffix="analysis_" + str(year) + '-wind_probabilities-TOTAL',
+                                    suffix="analysis_" + str(year) + '-wind_probabilities-CALM',
                                     export_color=config.annual_export_color)
 
 
@@ -333,9 +262,8 @@ def batch_analysis(era5, year, WMO, FAA, lat, lon, min_alt, max_alt,
         2. Generate the annual probabilty table from the average [month] wind probabilities
     """
     if config.mode == "era5":
-        monthly_analyzed_status = anaylze_monthly_data_era5(era5, lat, lon, FAA, WMO, year,
-                                                           min_alt, max_alt, min_pressure, max_pressure,
-                                                           alt_step, n_sectors, speed_threshold)
+        print(colored("ERA5 forecasts not supported for calm winds batchy analysis", "red"))
+        sys.exit()
 
     if config.mode == "radiosonde":
         monthly_analyzed_status = anaylze_monthly_data(FAA, WMO, year, min_alt=min_alt, max_alt=max_alt,
@@ -346,7 +274,7 @@ def batch_analysis(era5, year, WMO, FAA, lat, lon, min_alt, max_alt,
     # Check if Annual Data for a station and year has already been analyzed by checking if the directory exists.
     annual_analyzed_status = utils.check_analyzed(FAA, WMO, year,
                                                   path=utils.get_analysis_folder(FAA, WMO, year)[:-14] + "analysis_" +
-                                                                                 str(year) + '-wind_probabilities-TOTAL.csv',
+                                                                                 str(year) + '-wind_probabilities-CALM.csv',
                                                   category="annual")
 
     if not annual_analyzed_status and monthly_analyzed_status:

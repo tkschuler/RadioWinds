@@ -48,7 +48,7 @@ def check_analyzed(FAA, WMO, year, path, category):
 
 
 def export_colored_dataframes(df, title, path, suffix, precision=2, export_color=True,
-                              vmin=0.0, vmax=1.0, cmap='RdYlGn', mode="selenium"):
+                              vmin=0.0, vmax=1.0, cmap='RdYlGn', mode=config.dfi_mode):
 
     """
     Exports up to 2 dataframes:
@@ -90,7 +90,7 @@ def export_colored_dataframes(df, title, path, suffix, precision=2, export_color
     if export_color:
         filepath_image = Path(path + '/' + suffix + '.png')
         filepath_image.parent.mkdir(parents=True, exist_ok=True)
-        dfi.export(df_styled, filepath_image, max_rows=-1, table_conversion=mode)
+        dfi.export(df_styled, filepath_image, max_rows=-1, max_cols=-1, table_conversion=mode)
 
     filepath_dataframe = Path(path + '/' + suffix + '.csv')
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)

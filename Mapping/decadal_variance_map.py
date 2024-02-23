@@ -53,12 +53,12 @@ grid_x, grid_y = np.meshgrid(lons, lats)
 
 #--------------------------
 continent = "North_America"
-stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
+stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
 
 continent2 = "South_America"
-stations_df2 = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
+stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
 
@@ -77,13 +77,13 @@ for row in stations_df.itertuples(index = 'WMO'):
 
     df = pd.read_csv(file_name, index_col=0 )
     df = df.T
-    df = df.drop("mean")
+    df = df.drop("std")
     #df = df.apply(['max'])
 
     #print(df)
     #sdfsd
     #df.index.max = 'WMO'
-    df = df.rename(index={'std': WMO})
+    df = df.rename(index={'mean': WMO})
     df.index.set_names('WMO', level=None, inplace=True)
 
     df_probabilities = pd.concat([df_probabilities, df], ignore_index=False)
@@ -132,8 +132,8 @@ for month in range (1,12+1):
     # ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.set_extent(extent)
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
-    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
+    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
     fig.colorbar(D, ax=ax, shrink=.5, pad=.01, extend='max')
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=2)
     ax.add_feature(cfeature.STATES.with_scale('50m'))
@@ -145,8 +145,11 @@ for month in range (1,12+1):
     ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
 
     #ax.set_title(prefix + " " + config.mode + "_" + config.type+ "_" + "\n Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
-    ax.set_title(str(month) + "-" + str(year))
-    plt.tight_layout()
+    Months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    ax.set_title(Months[month], fontsize = 30)
+    #plt.tight_layout()
+    #plt.subplots_adjust(hspace=0)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
     print("generating map for " + str(month))
 
@@ -156,5 +159,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  "DECADAL-STD-"+ str(month))
+    plt.savefig(path +"/" +  "DECADAL-MEAN-"+ str(month), bbox_inches='tight')
     #plt.show()

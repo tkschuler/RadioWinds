@@ -3,8 +3,10 @@ from datetime import datetime
 import numpy as np
 
 
-infile = "/home/schuler/Downloads/raob_soundings36764.cdf"
-infile = "/home/schuler/Downloads/raob_soundings59511.cdf"
+#infile = "/home/schuler/Downloads/raob_soundings36764.cdf"
+#infile = "/home/schuler/Downloads/raob_soundings59511.cdf"
+
+infile = "raob_soundings40282.cdf"
 ds = xr.open_dataset(infile, engine="netcdf4", decode_times=False)
 
 
@@ -28,16 +30,29 @@ ds['synTime'] = ds.synTime.astype('datetime64[s]')
 date = datetime(2023, 11, 1, 00)
 
 print(np.datetime64(date))
+print()
 
+#asda
+
+#Only Keep Hilo Hawaii Station
 ds2 = ds.where((ds.staName == b'ITO   ') , drop = True)
 
-#print(ds2)
-ds2 = ds2.where(ds2.synTime > np.datetime64(date) , drop = True)
+print(ds2)
+#ds2 = ds2.where(ds2.synTime > np.datetime64(date) , drop = True)
 
 print(ds2)
 
+
 print(ds2.synTime[dict(recNum=[0])])
 print(ds2.htMan[dict(recNum=[0])])
+print()
+print()
+
+print(ds2.htMan)
+print(ds2.wdSigT)
+#print(ds2.wdSigW)
+#print(ds2.wdMaxW)
+#print(ds2.wdMan)
 
 asda
 #print(ds2.wdSigT[dict(recNum=[0])])

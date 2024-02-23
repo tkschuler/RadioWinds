@@ -241,6 +241,8 @@ if __name__ == "__main__":
     alt = np.asarray(df['height'])
     pressure = np.asarray(df['pressure'])
 
+    print(ws)
+
     ax2 = windrose.WindroseAxes.from_ax()
     ax2.bar(wd, ws, opening=.8, bins=np.arange(0, 50, 5), nsector=n_sectors, cmap=cm.cool_r)
     ax2.set_legend()

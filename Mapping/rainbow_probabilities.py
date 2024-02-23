@@ -1,11 +1,9 @@
 import cartopy.crs as ccrs
-import cartopy.io
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import cartopy.feature as cfeature
 from scipy.interpolate import griddata
-import calendar
 import sys
 sys.path.insert(0, sys.path[0] + '/../') #add config from 1 directory up.
 import os
@@ -54,13 +52,14 @@ grid_x, grid_y = np.meshgrid(lons, lats)
 #--------------------------
 continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
-#stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-
+# Uncomment this if South America has been downloaded and Analyzed as well
+#'''
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
+#'''
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
 df_probabilities = pd.DataFrame(columns=[i for i in range(1,12)])
@@ -74,13 +73,31 @@ for row in stations_df.itertuples(index = 'WMO'):
 
     #file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
     file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
+    #file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-CALM.csv'
 
     df = pd.read_csv(file_name, index_col=0 )
+
+
+    # Opposing Winds
+    #'''
     df = df.T
     df = df.apply(['max'])
-    #df.index.max = 'WMO'
     df = df.rename(index={'max': WMO})
     df.index.set_names('WMO', level=None, inplace=True)
+    #'''
+
+    # Calm Winds
+    '''
+    #Not sure how to get rid of this future warning, So going to leave as is for now
+    #if not df.isnull().values.all(): #to handle deprecation warning
+    df["alt"] = pd.to_numeric(df.idxmax(axis=1))
+    df[df['alt'] < 15] = -99. # remove altitudes under
+    df = df.T
+    df = df.query("index == 'alt'")
+    df = df.rename(index={'alt': WMO})
+    df.index.set_names('WMO', level=None, inplace=True)
+    '''
+
 
     df_probabilities = pd.concat([df_probabilities, df], ignore_index=False)
 
@@ -127,8 +144,30 @@ for month in range (1,12+1):
     # ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.set_extent(extent)
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.8, vmin=0, vmax=1)
+
+    # Calm Winds Altitude Levels:
+    '''
+    #cmap = plt.cm.get_cmap('rainbow')
+    #cmap = matplotlib.colormaps['rainbow']
+    cmap = plt.colormaps['rainbow']
+    cmap.set_under('black')
+    cmap.set_bad('white', 1.)
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap=cmap, alpha=.8, vmin=15, vmax=28, shading='auto')
+    '''
+
+    '''
+    # Calm Winds Probabilities:
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.8, vmin=0, vmax=1., shading='auto')
     fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+    '''
+
+    # Opposing Winds:
+    #'''
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.8, vmin=0, vmax=1., shading='auto')
+    fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+    #'''
+
+
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=2)
     ax.add_feature(cfeature.STATES.with_scale('50m'))
 
@@ -144,11 +183,14 @@ for month in range (1,12+1):
 
     print("generating map for " + prefix + "_" + config.type+ "_" + config.mode +  "-" + str(year) + '-' + str(month))
 
-    path = config.maps_folder + "/" + str(year)
+    path = config.maps_folder + str(year) + "/"
     isExist = os.path.exists(path)
     if not isExist:
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month))
+    #Weird windows bug where this doesn't overwrite teh saved fig date, but the file changes?
+    #plt.savefig(path + prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month)+ "-CALM")
+    plt.savefig(path + prefix + "_" + config.type + "_" + config.mode + "-" + str(year) + '-' + str(month))
+    plt.close()
     #plt.show()
