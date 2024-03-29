@@ -19,17 +19,19 @@ import utils
 # https://pbett.wordpress.com/datafun/plotting-maps/
 # https://xarray.pydata.org/en/v0.7.0/plotting.html
 
+
+#Configuration stuff
+#--------------------------------------
 font = {'size'   : 22}
 plt.rc('font', **font)
 
-
-#--------------------------------------
-#DOWNLOAD THE DATA
 
 #MAP CONFIGURATION STUFF:
 method = 'nearest'
 year = config.start_year
 prefix = "Western_Hemisphere"  #title of the maps that are exported to the MAPS folder
+
+type = 'std'  # 'mean' or 'std'
 
 #These are the values download from Copernicus for 2022 in degrees
 
@@ -65,6 +67,8 @@ stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".
 
 stations_df = pd.concat([stations_df, stations_df2])
 
+#--------------------------------------
+
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
 df_probabilities = pd.DataFrame(columns=[i for i in range(1,12)])
 
@@ -74,31 +78,24 @@ for row in stations_df.itertuples(index = 'WMO'):
     Name = row.Station_Name
 
     analysis_folder = config.analysis_folder
-
-    #file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
     file_name = analysis_folder + str(FAA) + " - " + str(WMO) + '/analysis-wind_probabilities-DECADAL-STATISTICS.csv'
 
     df = pd.read_csv(file_name, index_col=0 )
     df = df.T
-    df = df.drop("mean")
-    #df = df.apply(['max'])
 
-    #print(df)
-    #sdfsd
-    #df.index.max = 'WMO'
-    df = df.rename(index={'std': WMO})
+    if type == 'mean':
+        df = df.drop("std")
+        #df = df.apply(['max'])
+        df = df.rename(index={'mean': WMO})
+    elif type == 'std':
+        df = df.drop("mean")
+        #df = df.apply(['max'])
+        df = df.rename(index={'std': WMO})
+
     df.index.set_names('WMO', level=None, inplace=True)
-
     df_probabilities = pd.concat([df_probabilities, df], ignore_index=False)
-    #print(df_probabilities)
 
 stations_df = stations_df.join(df_probabilities)
-print(stations_df)
-
-
-#Convert Ranges of Coordinates from stations list for Cartopy
-#stations_df[' LONG'] = stations_df.apply(lambda x: (360-x[' LONG'] if x['E'] == 'W' else 1*x[' LONG']), axis = 1)
-#stations_df['  LAT'] = stations_df.apply(lambda x: (-1*x['  LAT'] if x['N'] == 'S' else 1*x['  LAT']), axis = 1)
 
 #Convert Station Coordinates for mapping
 stations_df = utils.convert_stations_coords(stations_df)
@@ -106,7 +103,6 @@ stations_df = utils.convert_stations_coords(stations_df)
 
 #Drop any stations that collected no data for the entire year.
 stations_df.dropna(subset=df.columns[-12:], how = 'all', inplace = True)
-
 
 
 # Make a new plot for each month
@@ -135,11 +131,15 @@ for month in range (1,12+1):
     # ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.set_extent(extent)
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
-    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
-    #fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
 
-    fig.colorbar(D, ax=ax, shrink=.5, pad=.01, extend = 'max')
+    if type == 'mean':
+        D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
+        fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+    elif type == 'std':
+        D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
+        fig.colorbar(D, ax=ax, shrink=.5, pad=.01, extend='max')
+
+
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=2)
     ax.add_feature(cfeature.STATES.with_scale('50m'))
 
@@ -149,11 +149,8 @@ for month in range (1,12+1):
 
     ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
 
-    #ax.set_title(prefix + " " + config.mode + "_" + config.type+ "_" + "\n Opposing Winds Probabilities\n Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
     Months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     ax.set_title(Months[month], fontsize = 30)
-    #plt.tight_layout()
-    #plt.subplots_adjust(hspace=0)
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
     print("generating map for " + str(month))
@@ -164,5 +161,8 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  "DECADAL-STD-NEW-"+ str(month), bbox_inches='tight')
-    #plt.show()
+    if type == 'mean':
+        plt.savefig(path +"/" +  "DECADAL-MEAN-NEW-"+ str(month), bbox_inches='tight')
+    elif type == 'std':
+        plt.savefig(path + "/" + "DECADAL-MEAN-NEW-" + str(month), bbox_inches='tight')
+
