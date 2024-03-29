@@ -86,7 +86,11 @@ It's also important to note IGRA2 and UofWy have some data discrepencies for the
 
 For this project we use UofWY because the dataset is easier to work with.  You can download an individual sounding or up to a month by modifying the URL,  whereas with IGRA2 you have to download a huge file of every sounding that station ever had and then parse through all the raw text to find the sounding you're looking for. 
 
-## Main File Descriptions
+## Primary File Summaries
+
+To run properly, and have the scripts be able to find other directories, always run from the main RadioWinds directory. For example:
+``python3 analysis/batchAnalysis.py`` Running rom within the other directory might cause issues finding data sources and exporting plots and maps. 
+
 
 ``config.py`` The main configuration file for many of the scripts below.
 
@@ -235,17 +239,7 @@ coming soon....
 * Pressure is not linear like altitude,  so binning to the mandatory levels may not be the best method for radiosonde data.  Because higher altitudes will have a lot more readings assigned to the pressure levels since they are more spaced out. 
 * Altitude is tough to compare between radiosonde and ERA5 forecasts because of the geopotential to height conversion.  (The heights are not the same level for every location and time of year).  Therefore pressure makes more sense to compare,  however the pressure bins are huge altitude gaps, so that doesn't tell the full story either. 
 * Wind transition regions between 2 opposing wind altitudes levels have the most variability and calm winds.  Many commercial balloon navigators try to avoid these regions because they're unpredictable 
-
-
-## TODO Future Plots
-* Graph with degree variations (for full wind diversity)  in an altitude region (pressure bins?)
-    *Also include pie charts with this diversity
-* 3D colormesh plot, volume surface. Probably have to turn it into a sliced GIF. 
-* Power cycle (Diurnal Wind effects)
-* QBO analysis
-* Craig's Cross Section Plots with variations (Radiosonde, ERA5, Radiosonde vs ERA5, 00z vs 12Z)
-* Radiosonde vs ERA5 SKEW-T plot comparison.  Or winds comparison. 
-* 
+* The UofWy maps where we downloaded the continent stations lists from, changes from day to day, based on launches for that day.  So there's a good chance our station lists are missing a few.
 
 ## Authors
 
@@ -255,4 +249,3 @@ coming soon....
 ## Acknowledgments
 
 Hat Tip to [Raven Aerostar](https://www.dropbox.com/s/l5t9zw653nywuqh/Mike%20Smith%20-%20Mike_Smith_Presentation_2021.pdf?dl=0), who did similar analysis in the past and presented at the [2021 Scientific Ballooning Technologies Workshop](https://sites.google.com/umn.edu/2021-scientific-ballooning-tec)
-

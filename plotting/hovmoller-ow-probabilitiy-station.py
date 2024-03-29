@@ -1,3 +1,7 @@
+"""
+This script generates a decadal hovmoller plot of opposing wind probabilities by date and altitude for an individual station.
+"""
+
 import config
 from os import listdir
 import os
@@ -11,9 +15,10 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import MonthLocator, YearLocator, WeekdayLocator, DateFormatter
 import matplotlib.ticker as ticker
 
-FAA = "SCCI"
+FAA = "SLC"
 WMO = utils.lookupWMO(FAA)
-print(WMO)
+Station_Name = utils.lookupStationName(FAA)
+print(WMO, FAA, Station_Name)
 
 def getDecadalMonthlyMeans(FAA, WMO):
     decadal_df = None
@@ -25,32 +30,26 @@ def getDecadalMonthlyMeans(FAA, WMO):
     print(analysis_folder)
     print(files)
     for file in files:
-        year = int(file[9:-29])
-        print(year)
-        #sdfs
-        df = pd.read_csv(analysis_folder+file, index_col=0)
-        #df = df.drop(['average'])
-        #print(df)
-        #df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
-        #df.index = pd.to_datetime(df.index)
-        df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
+        print(file)
+        try:
+            year = int(file[9:-29])
+            print(year)
+            df = pd.read_csv(analysis_folder + file, index_col=0)
+            df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
 
-        #print(df)
+            if decadal_df is None:
+                decadal_df = df.copy()
+            else:
+                decadal_df = pd.concat([decadal_df, df])
 
-        if decadal_df is None:
-            print("here")
-            decadal_df = df.copy()
-            #print("asdasd")
-        else:
-            decadal_df = pd.concat([decadal_df, df])
-        #print(df)
+        except:
+            pass #skip for decadal analysis files.
 
-    return(decadal_df)
+    return (decadal_df)
 
 
 decadal_df = getDecadalMonthlyMeans(FAA, WMO)
 print(decadal_df)
-
 
 opposing_wind_probability = decadal_df.to_numpy()
 #Create timestamps for plotting, that match dataset
@@ -65,33 +64,16 @@ fig, ax = plt.subplots(1, 1 , figsize=(18,3))
 im = ax.contourf(decadal_df.index, decadal_df.columns, opposing_wind_probability, levels=np.linspace(0, 1., 11), cmap='RdYlGn', vmin=0., vmax=1.)
 
 #plt.title("Fairbanks, Alaska USA (65$^\circ$N)" +
-#plt.title("Pittsburgh, Pennsylvania USA (40$^\circ$N)" +
-#plt.title("Hilo, Hawaii USA (15$^\circ$N)" +
-plt.title("Punta Arenas, Chile (53$^\circ$S)" +
+plt.title(Station_Name +
           "\nDecadal Opposing Winds Probability for " + FAA +  " [2012-2023]", fontsize=12)
 plt.ylabel('Altitude')
 plt.xlabel('Date')
-#fig.colorbar(im)
 
 
 divider = make_axes_locatable(plt.gca())
 cax = divider.append_axes("right", "1%", pad="3%")
-#plt.colorbar(im, cax=cax)
-#im.set_array(opposing_wind_probability)
 im.set_clim(0.,1.)
 fig.colorbar(im, cax=cax, boundaries=np.linspace(0, 1, 11))
-
-
-
-'''
-# make labels centered
-ax.xaxis.set_major_locator(MonthLocator())
-ax.xaxis.set_minor_locator(MonthLocator(bymonth=12))
-
-ax.xaxis.set_major_formatter(ticker.NullFormatter())
-ax.xaxis.set_minor_formatter(DateFormatter('%b'))
-
-'''
 
 ax.xaxis.set_minor_locator(YearLocator(1))
 ax.xaxis.set_minor_formatter(DateFormatter('%Y'))

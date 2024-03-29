@@ -1,18 +1,25 @@
+'''
+This script produces decadal mean and standard deviation maps for opposing winds
+
+Soundings data needs to already be downloaded (AnnualWyomingDownload.py) and analyzed (batchAnalysis.py).
+So does decadal mean and std analysis (decadal_ow_analysis.py)
+
+Many parameters can be modified in the configuration parameters below.
+'''
+
+
 import cartopy.crs as ccrs
-import cartopy.io
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import cartopy.feature as cfeature
 from scipy.interpolate import griddata
-import calendar
 import sys
 sys.path.insert(0, sys.path[0] + '/../') #add config from 1 directory up.
 import os
 import config
 import utils
 
-#Example stuff ---------------------
 #GRID DATA EXAMPLES
 # https://scitools.org.uk/cartopy/docs/v0.13/matplotlib/advanced_plotting.html
 # https://climate-cms.org/posts/2020-09-22-wrapping-pcolormesh.html
@@ -20,20 +27,17 @@ import utils
 # https://xarray.pydata.org/en/v0.7.0/plotting.html
 
 
-#Configuration stuff
+#MAP CONFIGURATION:
 #--------------------------------------
 font = {'size'   : 22}
 plt.rc('font', **font)
 
+type = 'mean'  # 'mean' or 'std'
 
-#MAP CONFIGURATION STUFF:
+
 method = 'nearest'
 year = config.start_year
-prefix = "Western_Hemisphere"  #title of the maps that are exported to the MAPS folder
-
-type = 'std'  # 'mean' or 'std'
-
-#These are the values download from Copernicus for 2022 in degrees
+prefix = "Western_Hemisphere"  #title of the maps that are exported to the MAPS folder=
 
 #Western Hemisphere
 min_lat = -65
@@ -50,17 +54,13 @@ max_lon = 360-20
 '''
 
 res = 1 # degrees
-
 lons = np.arange(min_lon,max_lon,res)
 lats = np.arange(min_lat,max_lat,res)
-
 grid_x, grid_y = np.meshgrid(lons, lats)
 
 #--------------------------
 continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
-#stations_df = stations_df.loc[stations_df["CO"] == "US"]
-
 
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
@@ -121,14 +121,10 @@ for month in range (1,12+1):
     # Western Hemisphere
     extent = [-170, -20, -25, 40]
 
-
     central_lon = np.mean(extent[:2])
     central_lat = np.mean(extent[2:])
 
     fig = plt.figure(figsize=(12, 12))
-
-    # ax = plt.axes(projection=ccrs.AlbersEqualArea(central_lon, central_lat))
-    # ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.set_extent(extent)
 
@@ -164,5 +160,4 @@ for month in range (1,12+1):
     if type == 'mean':
         plt.savefig(path +"/" +  "DECADAL-MEAN-NEW-"+ str(month), bbox_inches='tight')
     elif type == 'std':
-        plt.savefig(path + "/" + "DECADAL-MEAN-NEW-" + str(month), bbox_inches='tight')
-
+        plt.savefig(path + "/" + "DECADAL-STD-NEW-" + str(month), bbox_inches='tight')

@@ -8,9 +8,8 @@ import dataframe_image as dfi
 import os
 from os import listdir
 
-import opposing_wind_wyoming
+from analysis import opposing_wind_wyoming
 
-from multiprocessing import Process, Manager
 
 def get_sounding(station, date):
     filepath_sounding = Path(folder + str(station) + "-" + str(date.year) + "-" + str(

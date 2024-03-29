@@ -1,31 +1,34 @@
+'''
+This script analyzes monthly zonal wind means from radiosonde data at user specified mandatory pressure levels
+
+pressure can be any of the following  [20, 30, 50, 70, or 100]
+
+
+NOTE: THIS PROGRAM ASSUMES ALL RADIOSONDES HAVE BEEN DOWNLOADED IN THE
+ PROPER ORGANIZATION STRUCTURE USING ANNUALWYOMINGDOWNLOAD.PY.  IF MONTHS ARE MISSING FROM THE DOWNLOAD
+ YOU MUST RE-DOWNLOAD FOR THAT STATION OR INCLUDE EMPTY FOLDERS. OTHERWISE THIS PROGRAM WILL NOT COMPLETE.
+
+ Before running you can check if everything is organized correctly with checkRadiosondeDownloads.py
+
+ This script has a significant runtime, especially if many stations are being analyzed.
+ '''
+
 import pandas as pd
-import sys
 import config
 import os
 from termcolor import colored
 import numpy as np
 
-'''NOTE: THIS PROGRAM ASSUMES ALL RADIOSONDES HAVE BEEN DOWNLOADED IN THE
- PROPER ORGANIZATION STRUCTURE USING ANNUALWYOMINGDOWNLOAD.PY.  IF MONTHS ARE MISSING FROM THE DOWNLOAD
- YOU MUST RE-DOWNLOAD FOR THAT STATION OR INCLUDE EMPTY FOLDERS. OTHERWISE THIS PROGRAM WILL NOT COMPLETE.
- 
- Before running you can check if everything is organized correctly with checkRadiosondeDownloads.py'''
+#CONFIGURATION:
+pres = 70
 
-
-
-#x = date
-#y = latitude
-#z = zonal windrose
-
-# Detemine zonal wind
+#------------------------------
 
 def get_analysis_folder(FAA, WMO, year):
     return config.analysis_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "_analysis_ZONAL/"
 
 def get_data_folder(FAA, WMO, year):
     return config.parent_folder + str(FAA) + " - " + str(WMO) + "/" + str(year) + "/"
-
-
 
 def filter_pres_bins(df):
     pres_bins = [100., 70., 50., 30., 20.]
@@ -36,8 +39,6 @@ def filter_pres_bins(df):
         #Some radiosonde flights have duplicate mandatory pressure levels, which creates a weird bug with averaging
         df = df.drop_duplicates(subset=['pressure'])
 
-        #print(df)
-
         #Create empty dataframe to merge filtered values with, in case any pressure values were not recorded by radiosonde
         df2 = pd.DataFrame(columns=['pressure', 'speed', 'u_wind', 'v_wind'])
         df2['pressure'] = pres_bins
@@ -46,20 +47,12 @@ def filter_pres_bins(df):
         mask = df['pressure'].isin(pres_bins)
         df3 = df[mask]
 
-        #print(df3)
-        #drop duplicate rows, only keep 1
-
-
-        #print(df3)
-
         #Create new merged dataframe that has all pressure_bins,  and Nan's for rows not recorded.
         df4 = df2.merge(df3, on='pressure', how='outer', suffixes=('_y', ''))
         df4.drop(df4.filter(regex='_y$').columns, axis=1, inplace=True)
     else:
         df4 = pd.DataFrame(columns=['pressure', 'speed', 'u_wind', 'v_wind'])
         df4['pressure'] = pres_bins
-
-    #print(df4)
 
     return df4
 
@@ -80,7 +73,6 @@ def getZonalWinds(year, FAA, WMO):
             #raise ValueError
         csv_files = list(filter(lambda f: f.endswith('.csv'), all_files))
         csv_files.sort() #sort the list of CSVs to have the table in the right order
-
 
         df_list = []
 
@@ -108,54 +100,29 @@ def getZonalWinds(year, FAA, WMO):
             avg_list.append(avg)
             #print(avg)
 
-
-
-
     avg_annual = pd.concat(avg_list, axis=1)
-
-
     return avg_annual
-                #100, 70, 50, 30, 20
-
-
 
 #Main
 if __name__=="__main__":
     #continent = config.continent
     #stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
 
-    continent = "North_America"
-    stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv")
+    continent = "Antarctica"
+    stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv")
     # stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-    continent2 = "South_America"
-    stations_df2 = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent2 + ".csv")
+    #continent2 = "South_America"
+    #stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv")
 
-    stations_df = pd.concat([stations_df, stations_df2])
+    #stations_df = pd.concat([stations_df, stations_df2])
     stations_df = stations_df.drop_duplicates(subset=['WMO'])
     stations_df = stations_df.reset_index()
-
-    #print(stations_df)
 
     stations_df['lat_era5'] = stations_df.apply(lambda x: (-1 * x['  LAT'] if x['N'] == 'S' else 1 * x['  LAT']),
                                                 axis=1)
     stations_df['lon_era5'] = stations_df.apply(lambda x: (-1 * x[' LONG'] if x['E'] == 'W' else 1 * x[' LONG']),
                                                 axis=1)
-
-    #pres_bins = [100., 70., 50., 30., 20.]
-    #for pres in pres_bins:
-
-
-
-
-
-
-
-    pres = 70
-    print(stations_df)
-    #print(stations_df)
-
-    #stations_df= stations_df[:2]
 
     stations_df_pres = stations_df.copy()
 
@@ -165,7 +132,6 @@ if __name__=="__main__":
             avg_annual = getZonalWinds(year,
                             WMO = row.WMO,
                             FAA = row.FAA)
-            #print(avg_annual)
 
             #only need to do this the first time a new year
             if i == 0:
@@ -179,6 +145,5 @@ if __name__=="__main__":
 
         print(stations_df_pres)
         stations_df = stations_df_pres.copy()
-        #asda
 
-    stations_df_pres.to_csv('stations_df_' + str(pres) + '.csv', index=False)
+    stations_df_pres.to_csv('QBO-Decadal-Means/stations_df_' + str(pres) + '.csv', index=False)

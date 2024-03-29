@@ -1,3 +1,7 @@
+"""
+This script generates a QBO hovmoller plots (by specified pressure level) by date and altitude for all stations analyzed (by analyzeMonthlyMeans-Zonal-QBO.py).
+"""
+
 import config
 from os import listdir
 import pandas as pd
@@ -12,10 +16,10 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 #Plotting Variables:
-pres = 10
+pres = 70
 
 
-df = pd.read_csv('stations_df_' + str(pres) + '.csv')
+df = pd.read_csv('QBO-Decadal-Means/stations_df_' + str(pres) + '.csv')
 df_lat = df.iloc[:0]
 print(df)
 

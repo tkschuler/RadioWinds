@@ -9,8 +9,9 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import opposing_wind_wyoming
 import config
-from plot3DWindrose import polar_interpolated_scatter_plot
+from plotting.plot3DWindrose import polar_interpolated_scatter_plot
 import windrose
+import sys
 
 class ERA5:
     def __init__(self):
@@ -116,6 +117,7 @@ class ERA5:
         df = df[::-1].reset_index(drop=True)
         return df
 
+# An Example
 if __name__=="__main__":
     time = date = '2022-12-18  00:00:00'
 
@@ -123,30 +125,9 @@ if __name__=="__main__":
     lat = 19.72
     lon = -155
 
-    #BUF
-    #lat = 42.9
-    #lon = -78.7
-
-    #SLC
-    #lat = 40.6
-    #lon = -111.9
-
-    #TBW
-    #lat = 27.7
-    #lon = -82.6
-
-    #BIS
-    #lat = 46.8
-    #lon = -100.8
-
-    #SBBV
-    #lat = 2.8206
-    #lon = -60.6738
-
-
     era5 = ERA5()
     #era5.import_forecast("forecasts/" + "western_hemisphere-08-08-23.nc")
-    era5.import_forecast("forecasts/" + "western_hemisphere-2022.nc")
+    era5.import_forecast(config.era_file)
     era5.get_statistics()
 
     df = era5.get_station(time, lat, lon)
@@ -180,7 +161,7 @@ if __name__=="__main__":
 
         # ================= Filter Data Frame for Opposing WInd Analysis ===================
 
-    if not config.by_pressure:
+    if config.type == 'ALT':
         df = df.drop(df[df['height'] < min_alt].index)
         df = df.drop(df[df['height'] > max_alt].index)
         # df = df.drop(df[df['speed'] < 2].index) #we'll ad this in later on'
@@ -189,7 +170,7 @@ if __name__=="__main__":
         df = df.drop(df[df['pressure'] > max_pressure].index)
         # df = df [::-1]
 
-    if config.by_pressure:
+    if config.type == 'PRES':
         wind_bins = config.era5_pressure_levels[::-1]
         wind_bins = wind_bins[(wind_bins <= config.max_pressure)]
         wind_bins = wind_bins[(wind_bins >= config.min_pressure)]
@@ -223,7 +204,7 @@ if __name__=="__main__":
     #Determine Wind Statistics
     opposing_wind_directions, opposing_wind_levels = opposing_wind_wyoming.determine_opposing_winds(df, wind_bins = wind_bins, n_sectors = n_sectors, speed_threshold = speed_threshold)
     calm_winds = opposing_wind_wyoming.determine_calm_winds(df, alt_step = alt_step)
-    full_winds = opposing_wind_wyoming.determine_full_winds(df , wind_bins = wind_bins, speed_threshold = speed_threshold)
+    full_winds = opposing_wind_wyoming.determine_full_winds(df, wind_bins = wind_bins, speed_threshold = speed_threshold)
 
     print()
     print(df)
@@ -262,7 +243,7 @@ if __name__=="__main__":
 
     #Altitude Windrose
     ax = windrose.WindroseAxes.from_ax()
-    if not config.by_pressure:
+    if config.type == 'ALT':
         ax.bar(wd, alt, opening=1, bins=wind_bins, nsector=n_sectors, cmap=cm.rainbow)
     else:
         ax.bar(wd, pressure, opening=1, bins=wind_bins, nsector=n_sectors, cmap=cm.rainbow)

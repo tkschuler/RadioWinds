@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import matplotlib.cm as cm
-from plot3DWindrose import polar_interpolated_scatter_plot
+from plotting.plot3DWindrose import polar_interpolated_scatter_plot
 import config
 
 """

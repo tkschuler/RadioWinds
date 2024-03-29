@@ -1,3 +1,10 @@
+'''
+This script analyzes the decadal mean and standard deviation for opposing wind probabilities.
+
+Soundings data needs to already be downloaded (AnnualWyomingDownload.py) and analyzed (batchAnalysis.py).
+
+'''
+
 import pandas as pd
 import numpy as np
 import os
@@ -9,7 +16,6 @@ overall_max = 0
 overall_min = 1
 
 for dir in os.listdir(config.analysis_folder):
-    #dir = "PABR - 70026"
     path = config.analysis_folder + dir # path should be where opposing winds analysis is stored
     print(path)
     files = glob.glob(os.path.join(path, "*TOTAL.csv"))  # only include total probabilities maps

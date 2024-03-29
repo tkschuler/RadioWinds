@@ -3,9 +3,9 @@ import os
 
 # **************** DOWNLOAD AND ANALYSIS ************************
 
-type = "ALT"                    # ALT or PRES
+type = "PRES"                    # ALT or PRES
 mode = "radiosonde"             # or radiosonde or era5
-continent = "North_America"            #
+continent = "South_America"     #
 mapping_mode = mode             # or "diff"
 
 # Multithreading can be finicky and run out of memory on Windows (it also seems slower)
@@ -13,8 +13,8 @@ mapping_mode = mode             # or "diff"
 parallelize = True              # It's recommended to change logging to False if parallelize is True.
 logging = False                 # Displays extra debugging and status text in the Terminal
 
-start_year = 2012
-end_year = 2023
+start_year = 2022
+end_year = 2022
 
 monthly_export_color = False
 annual_export_color = False
@@ -37,9 +37,10 @@ max_pressure = 125 + 13
 base_directory = os.getcwd() + '/'  # The default is the RadioWinds directory
 parent_folder = base_directory + 'SOUNDINGS_DATA/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-CALM' + '/'
+#analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-FULL' + '/'
+#analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-BURST' + '/'
 analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '/'
 maps_folder = base_directory + 'MAPS/'
-
 
 # ****************** OTHER STUFF *********************************
 
@@ -50,10 +51,7 @@ g = 9.80665
 
 # ************************ ERA5 **********************************
 combined = False
-era_file = "forecasts/" + "western_hemisphere-2014-SOUTH.nc"
-#era_file = "forecasts/" + "western_hemisphere-2022-NORTH.nc"
-#era_file = "forecasts/" + "Western-Hemisphere-2023-U.nc"
-#era_file =  "forecasts/" + "Western-Hemisphere-2023-COMBINED.nc"
+era_file = "forecasts/" + "western_hemisphere-2022-South.nc"
 
 # Mandatory pressure levels downloaded from ERA5  (~9.5km - 31km?)
 era5_pressure_levels = np.asarray([300, 250, 225, 200, 175, 150, 125, 100, 70, 50,  30,  20, 10])

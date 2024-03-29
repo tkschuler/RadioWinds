@@ -21,6 +21,17 @@ def lookupWMO(FAA):
 
     return df.loc[df['FAA'] == FAA]['WMO'].iloc[0]
 
+def lookupStationName(FAA):
+    path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
+    all_stations = glob.glob(os.path.join(path, "*.csv"))
+
+    df = pd.concat((pd.read_csv(f) for f in all_stations), ignore_index=True)
+    df = df.drop_duplicates(subset=['WMO'])
+
+    df = df.drop_duplicates()
+
+    return df.loc[df['FAA'] == FAA]['Station_Name'].iloc[0]
+
 
 def getWorldStations():
     path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
