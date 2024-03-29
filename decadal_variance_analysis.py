@@ -10,7 +10,8 @@ overall_min = 1
 
 for dir in os.listdir(config.analysis_folder):
     #dir = "PABR - 70026"
-    path = config.analysis_folder + dir
+    path = config.analysis_folder + dir # path should be where opposing winds analysis is stored
+    print(path)
     files = glob.glob(os.path.join(path, "*TOTAL.csv"))  # only include total probabilities maps
     dfs = [pd.read_csv(f, low_memory=False, index_col=0) for f in files]
     print(dir)
@@ -18,6 +19,8 @@ for dir in os.listdir(config.analysis_folder):
     #Take the max of each month's opposing winds probability
     for df in dfs:
         df['max'] = df.max(axis = 1)
+
+    print(dfs)
 
     #Calculate Decadal Mean for Each month in a stack of 10 annual dataframes
     decadal_mean = (

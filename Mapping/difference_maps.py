@@ -24,9 +24,9 @@ import config
 #DOWNLOAD THE DATA
 
 #MAP CONFIGURATION STUFF:
-method = 'linear'
+method = 'nearest'
 year = config.start_year
-prefix = "DIFF_North_America"  #title of the maps that are exported to the MAPS folder
+prefix = "DIFF_Western_Hemisphere"  #title of the maps that are exported to the MAPS folder
 
 
 #These are the values download from Copernicus for 2022 in degrees
@@ -34,6 +34,13 @@ min_lat = 0
 max_lat = 75
 min_lon = 360-160
 max_lon = 360-50
+res = 1 # degrees
+
+
+min_lat = -75
+max_lat = 75
+min_lon = 360-160
+max_lon = 360-30
 res = 1 # degrees
 
 lons = np.arange(min_lon,max_lon,res)
@@ -48,15 +55,15 @@ grid_x, grid_y = np.meshgrid(lons, lats)
 
 
 continent = "North_America"
-stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
+stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-'''
+
 continent2 = "South_America"
-stations_df2 = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
+stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
-'''
+
 
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
@@ -146,11 +153,11 @@ for month in range (1,12+1):
     stn_lon = -100
     #extent = [-125 , -70, 20, 50]
 
-    extent = [-165, -60, 0, 75]
+    #extent = [-165, -60, 0, 75]
 
 
 
-    #extent = [-180, 0, -5, 35] # Western Hemisphere
+    extent = [-170, -20, -25, 40] # Western Hemisphere
     #extent = [min_lon-10, max_lon + 10, min_lat-10, max_lat +10]
     #extent = [(min_lon -360)-20, (max_lon -360)-15, min_lat - 1, max_lat]
 
@@ -181,9 +188,11 @@ for month in range (1,12+1):
 
     ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
 
+    '''
     ax.set_title(" % Error between Radiosonde and Forecasts \n " +
                  "Opposing Winds Probabilities\n "
                  "Alt:{15-25 km} in " + calendar.month_name[month] + " " + str(year), fontsize=24)
+    '''
     plt.tight_layout()
 
     print("generating map for " + prefix + "_" + config.type+ "_" + config.mode +  "-" + str(year) + '-' + str(month))
@@ -194,5 +203,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month))
+    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month), bbox_inches='tight')
     #plt.show()

@@ -19,6 +19,9 @@ import utils
 # https://pbett.wordpress.com/datafun/plotting-maps/
 # https://xarray.pydata.org/en/v0.7.0/plotting.html
 
+font = {'size'   : 22}
+plt.rc('font', **font)
+
 
 #--------------------------------------
 #DOWNLOAD THE DATA
@@ -77,13 +80,13 @@ for row in stations_df.itertuples(index = 'WMO'):
 
     df = pd.read_csv(file_name, index_col=0 )
     df = df.T
-    df = df.drop("std")
+    df = df.drop("mean")
     #df = df.apply(['max'])
 
     #print(df)
     #sdfsd
     #df.index.max = 'WMO'
-    df = df.rename(index={'mean': WMO})
+    df = df.rename(index={'std': WMO})
     df.index.set_names('WMO', level=None, inplace=True)
 
     df_probabilities = pd.concat([df_probabilities, df], ignore_index=False)
@@ -132,9 +135,11 @@ for month in range (1,12+1):
     # ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=stn_lon))
     ax = plt.axes(projection=ccrs.PlateCarree())
     ax.set_extent(extent)
-    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
-    fig.colorbar(D, ax=ax, shrink=.5, pad=.01, extend='max')
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='cool', alpha=.9, vmin=0.0, vmax=0.3)
+    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.9, vmin=0.0, vmax=1)
+    #fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+
+    fig.colorbar(D, ax=ax, shrink=.5, pad=.01, extend = 'max')
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=2)
     ax.add_feature(cfeature.STATES.with_scale('50m'))
 
@@ -159,5 +164,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  "DECADAL-MEAN-"+ str(month), bbox_inches='tight')
+    plt.savefig(path +"/" +  "DECADAL-STD-NEW-"+ str(month), bbox_inches='tight')
     #plt.show()

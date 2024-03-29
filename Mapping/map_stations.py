@@ -10,6 +10,7 @@ import os
 import sys
 sys.path.insert(0, sys.path[0] + '/../') #add config from 1 directory up.
 import utils
+import config
 
 
 import xarray as xr
@@ -73,7 +74,7 @@ central_lon = np.mean(extent[:2])
 central_lat = np.mean(extent[2:])
 
 #plt.figure()
-plt.figure(figsize=(10, 7))
+plt.figure(figsize=(15, 8))
 #ax = plt.axes(projection=ccrs.AlbersEqualArea(central_lon, central_lat))
 ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=central_lon))
 ax.set_extent(extent)
@@ -92,11 +93,19 @@ stations_df = utils.convert_stations_coords(stations_df)
 stations_df_used =  stations_df[stations_df.Continent.isin(['North_America',"South_America"])]
 stations_df_notused =  stations_df[~stations_df.Continent.isin(['North_America',"South_America"])]
 
-ax.scatter(stations_df_notused['lon_era5'], stations_df_notused['lat_era5'], c = "blue", s= 2, transform = ccrs.Geodetic())
-ax.scatter(stations_df_used['lon_era5'], stations_df_used['lat_era5'], c = "red", s= 2, transform = ccrs.Geodetic())
+ax.scatter(stations_df_notused['lon_era5'], stations_df_notused['lat_era5'], c = "blue", s= 8, transform = ccrs.Geodetic())
+ax.scatter(stations_df_used['lon_era5'], stations_df_used['lat_era5'], c = "red", s= 8, transform = ccrs.Geodetic())
 
 rotated_pole = ccrs.RotatedPole(pole_longitude=177.5, pole_latitude=37.5)
 
-plt.title("Launch Sites in University of Wyoming Global Radiosonde Archive")
+path = config.maps_folder + str(config.end_year) + "/"
+isExist = os.path.exists(path)
+if not isExist:
+    # Create a new directory because it does not exist
+    os.makedirs(path)
+
+#plt.title("Launch Sites in University of Wyoming Global Radiosonde Archive")
 plt.tight_layout()
+plt.savefig(path + 'UofWy-Radiosonde-World_map', bbox_inches='tight')
+
 plt.show()

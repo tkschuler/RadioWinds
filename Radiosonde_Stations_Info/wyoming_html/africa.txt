@@ -1,5 +1,6 @@
 <area coords="204,9,5" shape="CIRCLE" href="javascript:g('16429')" title="16429  Trapani/Birgi (LICT)">
 <area coords="187,0,5" shape="CIRCLE" href="javascript:g('16546')" title="16546  Decimomannu (LIED)">
+<area coords="263,24,5" shape="CIRCLE" href="javascript:g('16754')" title="16754  Heraklion (Airport) (LGIR)">
 <area coords="256,9,5" shape="CIRCLE" href="javascript:g('16716')" title="16716  Athinai (Airport) (LGAT)">
 <area coords="311,4,5" shape="CIRCLE" href="javascript:g('17196')" title="17196  Kayseri (LTAU)">
 <area coords="272,6,5" shape="CIRCLE" href="javascript:g('17220')" title="17220  Izmir/Guzelyali">
@@ -7,10 +8,17 @@
 <area coords="310,14,5" shape="CIRCLE" href="javascript:g('17351')" title="17351  Adana/Bolge">
 <area coords="308,42,5" shape="CIRCLE" href="javascript:g('40179')" title="40179  Bet Dagan">
 <area coords="360,62,5" shape="CIRCLE" href="javascript:g('40373')" title="40373  Al-Qaisumah (OEPA)">
+<area coords="316,62,5" shape="CIRCLE" href="javascript:g('40375')" title="40375  Tabuk (OETB)">
 <area coords="340,67,5" shape="CIRCLE" href="javascript:g('40394')" title="40394  Hail (OEHL)">
 <area coords="377,72,5" shape="CIRCLE" href="javascript:g('40417')" title="40417  K.F.I.A.-Dammam (OEDF)">
 <area coords="330,81,5" shape="CIRCLE" href="javascript:g('40430')" title="40430  Al-Madinah (OEMA)">
+<area coords="365,30,5" shape="CIRCLE" href="javascript:g('40766')" title="40766  Kermanshah (OICC)">
+<area coords="386,40,5" shape="CIRCLE" href="javascript:g('40800')" title="40800  Esfahan (OIFM)">
+<area coords="390,56,5" shape="CIRCLE" href="javascript:g('40848')" title="40848  Shiraz (OISS)">
+<area coords="429,56,5" shape="CIRCLE" href="javascript:g('40856')" title="40856  Zahedan (OIZH)">
+<area coords="408,68,5" shape="CIRCLE" href="javascript:g('40875')" title="40875  Bandarabbass (OIKB)">
 <area coords="363,80,5" shape="CIRCLE" href="javascript:g('40437')" title="40437  King Khaled Intl Arpt (OERK)">
+<area coords="351,35,5" shape="CIRCLE" href="javascript:g('40650')" title="40650  Baghdad (ORBB)">
 <area coords="361,8,5" shape="CIRCLE" href="javascript:g('40706')" title="40706  Tabriz (OITT)">
 <area coords="399,15,5" shape="CIRCLE" href="javascript:g('40738')" title="40738  Gorgan (OING)">
 <area coords="384,22,5" shape="CIRCLE" href="javascript:g('40754')" title="40754  Tehran-Mehrabad (OIII)">
@@ -18,10 +26,27 @@
 <area coords="410,52,5" shape="CIRCLE" href="javascript:g('40841')" title="40841  Kerman (OIKK)">
 <area coords="328,96,5" shape="CIRCLE" href="javascript:g('41024')" title="41024  Jeddah (King Abdul Aziz) (OEJN)">
 <area coords="344,113,5" shape="CIRCLE" href="javascript:g('41112')" title="41112  Abha (OEAB)">
+<area coords="386,78,5" shape="CIRCLE" href="javascript:g('41169')" title="41169  Hamad Intl Airport (OTHH)">
 <area coords="400,82,5" shape="CIRCLE" href="javascript:g('41217')" title="41217  Abu Dhabi Inter Arpt (OMAA)">
+<area coords="417,86,5" shape="CIRCLE" href="javascript:g('41256')" title="41256  Seeb, Intl Airport (OOMS)">
 <area coords="70,61,5" shape="CIRCLE" href="javascript:g('60018')" title="60018  Guimar-Tenerife">
+<area coords="111,34,5" shape="CIRCLE" href="javascript:g('60155')" title="60155  Casablanca (GMMC)">
+<area coords="161,16,5" shape="CIRCLE" href="javascript:g('60390')" title="60390  Dar-El-Beida (DAAG)">
+<area coords="136,45,5" shape="CIRCLE" href="javascript:g('60571')" title="60571  Bechar (DAOR)">
+<area coords="172,90,5" shape="CIRCLE" href="javascript:g('60680')" title="60680  Tamanrasset">
+<area coords="184,32,5" shape="CIRCLE" href="javascript:g('60760')" title="60760  Tozeur (DTTZ)">
+<area coords="156,136,5" shape="CIRCLE" href="javascript:g('61052')" title="61052  Niamey-Aero (DRRN)">
+<area coords="272,46,5" shape="CIRCLE" href="javascript:g('62306')" title="62306  Mersa Matruh (HEMM)">
+<area coords="298,84,5" shape="CIRCLE" href="javascript:g('62414')" title="62414  Asswan (HESN)">
+<area coords="72,86,5" shape="CIRCLE" href="javascript:g('60096')" title="60096  Dakhla (GSVO)">
+<area coords="183,119,5" shape="CIRCLE" href="javascript:g('61024')" title="61024  Agadez (DRZA)">
+<area coords="156,136,5" shape="CIRCLE" href="javascript:g('61052')" title="61052  Niamey-Aero (DRRN)">
 <area coords="120,274,5" shape="CIRCLE" href="javascript:g('61901')" title="61901  St. Helena Is.">
 <area coords="404,221,5" shape="CIRCLE" href="javascript:g('63985')" title="63985  Seychelles(Rawinsonde) (FSSS)">
+<area coords="201,221,5" shape="CIRCLE" href="javascript:g('64400')" title="64400  Pointe-Noire (FCPP)">
+<area coords="245,337,5" shape="CIRCLE" href="javascript:g('68424')" title="68424  Upington (FAUP)">
+<area coords="291,343,5" shape="CIRCLE" href="javascript:g('68592')" title="68592  King Shaka (FALE)">
+<area coords="216,142,5" shape="CIRCLE" href="javascript:g('64700')" title="64700  Ndjamena (FTTJ)">
 <area coords="111,165,5" shape="CIRCLE" href="javascript:g('65548')" title="65548  Man (DIMN)">
 <area coords="128,175,5" shape="CIRCLE" href="javascript:g('65578')" title="65578  Abidjan (DIAP)">
 <area coords="277,324,5" shape="CIRCLE" href="javascript:g('68263')" title="68263  Pretoria (Irene) (FAIR)">
@@ -29,3 +54,4 @@
 <area coords="229,343,5" shape="CIRCLE" href="javascript:g('68512')" title="68512  Springbok (FASB)">
 <area coords="233,367,5" shape="CIRCLE" href="javascript:g('68816')" title="68816  Cape Town Intnl. Arport">
 <area coords="265,367,5" shape="CIRCLE" href="javascript:g('68842')" title="68842  Port Elizabeth (FAPE)">
+

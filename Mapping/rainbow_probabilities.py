@@ -24,16 +24,16 @@ import utils
 #MAP CONFIGURATION STUFF:
 method = 'nearest'
 year = config.start_year
-prefix = "Western_Hemisphere"  #title of the maps that are exported to the MAPS folder
+prefix = "World-Opposing"  #title of the maps that are exported to the MAPS folder
 
 #These are the values download from Copernicus for 2022 in degrees
-
+'''
 #Western Hemisphere
 min_lat = -65
 max_lat = 75
 min_lon = 360-175
 max_lon = 360-20
-
+'''
 '''
 #CONUS
 min_lat = -65
@@ -41,6 +41,12 @@ max_lat = 75
 min_lon = 360-175
 max_lon = 360-20
 '''
+
+# World
+min_lat = -90
+max_lat = 90
+min_lon = 0
+max_lon = 360
 
 res = 1 # degrees
 
@@ -58,7 +64,7 @@ stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".cs
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
-stations_df = pd.concat([stations_df, stations_df2])
+stations_df = utils.getWorldStations() #pd.concat([stations_df, stations_df2])
 #'''
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
@@ -72,8 +78,9 @@ for row in stations_df.itertuples(index = 'WMO'):
     analysis_folder = config.analysis_folder
 
     #file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
-    file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
+    #file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
     #file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-CALM.csv'
+    file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
     df = pd.read_csv(file_name, index_col=0 )
 
@@ -132,7 +139,10 @@ for month in range (1,12+1):
     #extent = [-125 , -70, 20, 50]
 
     # Western Hemisphere
-    extent = [-170, -20, -25, 40]
+    #extent = [-170, -20, -25, 40]
+
+    # World
+    extent = [-180, 180, -90, 90]
 
 
     central_lon = np.mean(extent[:2])
@@ -167,6 +177,13 @@ for month in range (1,12+1):
     fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
     #'''
 
+    # Full Winds:
+    '''
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='RdYlGn', alpha=.8, vmin=1, vmax=16.,
+                      shading='auto')
+    fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+    '''
+
 
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=2)
     ax.add_feature(cfeature.STATES.with_scale('50m'))
@@ -191,6 +208,6 @@ for month in range (1,12+1):
 
     #Weird windows bug where this doesn't overwrite teh saved fig date, but the file changes?
     #plt.savefig(path + prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month)+ "-CALM")
-    plt.savefig(path + prefix + "_" + config.type + "_" + config.mode + "-" + str(year) + '-' + str(month))
+    plt.savefig(path + prefix + "_" + config.type + "_" + config.mode + "-" + str(year) + '-' + str(month), bbox_inches='tight')
     plt.close()
     #plt.show()

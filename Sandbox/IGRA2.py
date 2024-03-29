@@ -2,8 +2,8 @@ from datetime import datetime
 from siphon.simplewebservice.igra2 import IGRAUpperAir
 import pandas as pd
 
-date = datetime(2023, 11, 1, 00)
-station = 'USM00091285'
+date = datetime(2022, 10, 1, 00)
+station = 'USM00072293'
 
 print("Downloading data...")
 df, header = IGRAUpperAir.request_data(date, station)

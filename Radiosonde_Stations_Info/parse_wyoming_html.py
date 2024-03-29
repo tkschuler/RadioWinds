@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-file1 = open('wyoming_html/' + 'antarctica.txt', 'r')
-continent = "Antarctica"
+file1 = open('wyoming_html/' + 'north_america.txt', 'r')
+continent = "North_America"
 Lines = file1.readlines()
 
 df = pd.DataFrame(columns=['WMO', 'FAA', 'Station_Name', 'Continent'])
@@ -11,6 +11,7 @@ count = 0
 
 # Strips the newline character
 for line in Lines:
+    print(line)
     line  = line.strip()
     sub1 = line.split(":g('")
     sub2 = sub1[1].split("')\" ")
@@ -30,7 +31,7 @@ for line in Lines:
     df.loc[count, :] = [WMO , FAA, name, continent]
     count +=1
 
-df['WMO'] = df['WMO'].astype(np.int)
+df['WMO'] = df['WMO'].astype(int)
 #df = df.replace('None', np.NAN)
 print(df)
 

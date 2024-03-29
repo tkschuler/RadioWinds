@@ -115,6 +115,8 @@ def determine_opposing_winds(df, wind_bins, n_sectors, speed_threshold = 4):
 
     #Determine the sectors (directions) that contain non zero values (altitude levels that have wind)
     df = pd.DataFrame(table)
+
+
     altitude_lookup_idxs = df.apply(np.flatnonzero, axis=0) # altitude can be pressure or height, depending on by_pressure variable
 
     opposing_wind_levels = np.array([])
@@ -139,6 +141,41 @@ def determine_opposing_winds(df, wind_bins, n_sectors, speed_threshold = 4):
     opposing_wind_directions = np.sort(np.unique(opposing_wind_directions))
 
     return opposing_wind_directions, opposing_wind_levels
+
+
+def getNumofSectors(table):
+    """
+        Takes a 2D histogram table and calculates how many sectors have wind data in the altitude region of interest.
+
+    """
+    sector_count = 0
+    for i in range(0,len(table[0])):
+        column_sum = np.sum(table, axis=0)[i]
+        #print(row_sum)
+        if column_sum >= 1:
+            sector_count += 1
+
+    #print("sector_count", sector_count)
+
+    return sector_count
+
+
+
+def determine_full_winds_new(df, wind_bins, speed_threshold=config.speed_threshold, by_pressure=False):
+    df = df.drop(df[df['speed'] < speed_threshold].index)
+
+    wd = np.asarray(df['direction'])
+    alt = np.asarray(df['height'])
+    pressure = np.asarray(df['pressure'])
+
+    if config.type == "ALT":
+        dir_edges, var_bins, table = windrose.windrose.histogram(wd, alt, bins=wind_bins, nsector=16)
+    if config.type == "PRES":
+        dir_edges, var_bins, table = windrose.windrose.histogram(wd, pressure, bins=wind_bins, nsector=16)
+
+    sector_count = getNumofSectors(table)
+
+    return sector_count
 
 
 def determine_full_winds(df, wind_bins, speed_threshold=2, by_pressure=False):
@@ -207,8 +244,8 @@ def print_wind_statistics(opposing_wind_directions, opposing_wind_levels, calm_w
 
 if __name__ == "__main__":
     # Download Individual radiosonde Sounding from University of Wyoming.
-    date = datetime(2022, 10, 25, 0)
-    station = 'PHTO'
+    date = datetime(2023, 5, 27, 12)
+    station = 'SBBV'
 
     print(station, date)
 

@@ -4,11 +4,32 @@ import dataframe_image as dfi
 from pathlib import Path
 import os
 from termcolor import colored
+import glob
 
 """
 utils.py contains multiple helper and utility functions that are used across multiple other scripts in RadioWinds.
 """
 
+def lookupWMO(FAA):
+    path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
+    all_stations = glob.glob(os.path.join(path, "*.csv"))
+
+    df = pd.concat((pd.read_csv(f) for f in all_stations), ignore_index=True)
+    df = df.drop_duplicates(subset=['WMO'])
+
+    df = df.drop_duplicates()
+
+    return df.loc[df['FAA'] == FAA]['WMO'].iloc[0]
+
+
+def getWorldStations():
+    path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
+    all_stations = glob.glob(os.path.join(path, "*.csv"))
+
+    df = pd.concat((pd.read_csv(f,  index_col=1) for f in all_stations))
+    #df = df.drop_duplicates(subset=['WMO'])
+
+    return df
 
 def convert_stations_coords(stations_df):
     """

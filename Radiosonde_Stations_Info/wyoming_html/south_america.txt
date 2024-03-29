@@ -7,14 +7,19 @@
 <area coords="146,36,5" shape="CIRCLE" href="javascript:g('80094')" title="80094  Palonegro (SKBG)">
 <area coords="141,47,5" shape="CIRCLE" href="javascript:g('80222')" title="80222  Bogota/Eldorado (SKBO)">
 <area coords="131,53,5" shape="CIRCLE" href="javascript:g('80259')" title="80259  Alfonso Bonilla Aragon (SKCL)">
+<area coords="136,66,5" shape="CIRCLE" href="javascript:g('80371')" title="80371  Tres Esquinas (SKTQ)">
 <area coords="163,91,5" shape="CIRCLE" href="javascript:g('80398')" title="80398  Leticia/Vasquez Cobo (SKLT)">
 <area coords="205,56,5" shape="CIRCLE" href="javascript:g('82022')" title="82022  Boa Vista (SBBV)">
 <area coords="251,70,5" shape="CIRCLE" href="javascript:g('82099')" title="82099  Macapa (SBMQ)">
+<area coords="228,58,5" shape="CIRCLE" href="javascript:g('82026')" title="82026  Tirios">
+<area coords="175,76,5" shape="CIRCLE" href="javascript:g('82107')" title="82107  Sao Gabriel Da Cachoeira,">
+<area coords="263,76,5" shape="CIRCLE" href="javascript:g('82193')" title="82193  Belem (Aeroporto) (SBBE)">
 <area coords="234,81,5" shape="CIRCLE" href="javascript:g('82244')" title="82244  Santarem,">
 <area coords="209,85,5" shape="CIRCLE" href="javascript:g('82332')" title="82332  Manaus (Aeroporto) (SBMN)">
 <area coords="340,88,5" shape="CIRCLE" href="javascript:g('82400')" title="82400  Fernando De Noronha (SBFN)">
 <area coords="163,87,5" shape="CIRCLE" href="javascript:g('82411')" title="82411  Tabatinga,">
 <area coords="203,97,5" shape="CIRCLE" href="javascript:g('82532')" title="82532  Manicore">
+<area coords="326,98,5" shape="CIRCLE" href="javascript:g('82599')" title="82599  Natal Aeroporto (SBNT)">
 <area coords="148,106,5" shape="CIRCLE" href="javascript:g('82705')" title="82705  Cruzerio Do Sul">
 <area coords="190,112,5" shape="CIRCLE" href="javascript:g('82824')" title="82824  Porto Velho (Aeroporto) (SBPV)">
 <area coords="172,118,5" shape="CIRCLE" href="javascript:g('82917')" title="82917  Rio Branco">
@@ -24,6 +29,7 @@
 <area coords="265,161,5" shape="CIRCLE" href="javascript:g('83525')" title="83525  Uberlandia (SBUL)">
 <area coords="220,162,5" shape="CIRCLE" href="javascript:g('83554')" title="83554  Corumba">
 <area coords="287,165,5" shape="CIRCLE" href="javascript:g('83566')" title="83566  Confis Intnl Arpt">
+<area coords="234,169,5" shape="CIRCLE" href="javascript:g('83612')" title="83612  Campo Grande (Aero) (SBCG)">
 <area coords="302,168,5" shape="CIRCLE" href="javascript:g('83649')" title="83649  Vitoria">
 <area coords="288,181,5" shape="CIRCLE" href="javascript:g('83746')" title="83746  Galeao (SBGL)">
 <area coords="251,184,5" shape="CIRCLE" href="javascript:g('83768')" title="83768  Londrina (SBLO)">
@@ -34,6 +40,7 @@
 <area coords="223,218,5" shape="CIRCLE" href="javascript:g('83928')" title="83928  Uruguaniana (SBUG)">
 <area coords="239,218,5" shape="CIRCLE" href="javascript:g('83937')" title="83937  Santa Maria (SBSM)">
 <area coords="251,219,5" shape="CIRCLE" href="javascript:g('83971')" title="83971  Porto Alegre (Aero) (SBPA)">
+<area coords="159,184,5" shape="CIRCLE" href="javascript:g('85442')" title="85442  Antofagasta (SCFA)">
 <area coords="153,240,5" shape="CIRCLE" href="javascript:g('85586')" title="85586  Santo Domingo (SCSN)">
 <area coords="146,286,5" shape="CIRCLE" href="javascript:g('85799')" title="85799  Puerto Montt (SCTE)">
 <area coords="157,368,5" shape="CIRCLE" href="javascript:g('85934')" title="85934  Punta Arenas (SCCI)">
@@ -43,3 +50,4 @@
 <area coords="188,257,5" shape="CIRCLE" href="javascript:g('87623')" title="87623  Santa Rosa Aero (SAZR)">
 <area coords="170,271,5" shape="CIRCLE" href="javascript:g('87715')" title="87715  Neuquen Aero (SAZN)">
 <area coords="173,315,5" shape="CIRCLE" href="javascript:g('87860')" title="87860  Comodoro Rivadavia Aero (SAVC)">
+<area coords="173,315,5" shape="CIRCLE" href="javascript:g('88889')" title="88889  MOUNT PLEASANT ARPT (EGYP)">

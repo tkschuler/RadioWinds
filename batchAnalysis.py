@@ -93,12 +93,35 @@ def determine_wind_statistics(df, min_alt=15000, max_alt=28000, min_pressure=20,
     return wind_bins, opposing_wind_levels
 
 
+def add_average_row(df):
+    averages = []
+    for column in df.columns:
+        not_nan_count = df[column].notna().sum()
+        if not_nan_count >= len(df) / 2:
+            column_average = df[column].mean()
+        else:
+            column_average = np.nan
+        averages.append(column_average)
+    df.loc['average'] = averages
+    return df
+
+
 def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
     """
     Saves the opposing wind probabilities for a station a month of radiosonde flights
     """
 
-    wind_probabilities = pd.concat([wind_probabilities, wind_probabilities.apply(['average'])])
+    #Sort datetime index in ascending order
+    wind_probabilities = wind_probabilities.sort_index()
+
+    #apply an average to the end of the table, for opposing wind probabilities at each altitude level
+    #wind_probabilities = pd.concat([wind_probabilities, wind_probabilities.apply(['average'], skipna=False)])
+
+    #wind_probabilities.loc["average"] = wind_probabilities.mean(axis=0)
+
+    #wind_probabilities.loc["nan"] = wind_probabilities.isnull().sum(axis=0)
+
+    wind_probabilities = add_average_row(wind_probabilities)
 
     print(colored(
         "Processing data for Station-" + str(FAA) + " - " + str(WMO) +
@@ -109,9 +132,11 @@ def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
         # Reverse order of dataframes for pressure, since high pressure = low altitude
         wind_probabilities = wind_probabilities.iloc[:, ::-1]
 
+
+
     utils.export_colored_dataframes(wind_probabilities,
                                     title='Opposing Wind Probabilities for Station ' + str(FAA) + " - " + str(WMO) +
-                                          ' in Month ' + str(date.month) + ' 12Z ' + str(date.year),
+                                          ' in Month ' + str(date.month) + ' ' + str(date.year),
                                     path=analysis_folder,
                                     suffix=str(FAA) + " - " + str(WMO) + "-" + str(date.year) + "-" + str(date.month),
                                     export_color=config.monthly_export_color)
@@ -183,6 +208,34 @@ def anaylze_monthly_data(FAA, WMO, year, min_alt=15000, max_alt=28000, min_press
                         mask[k] = 1
                     else:
                         mask[k] = 0
+
+                #'''
+                #print()
+                #print(date)
+                #print(mask)
+
+                # Need to add nans if the data doesn't exist.
+                #max_alt = df['height'].max()
+                max_alt_index = ((df['height'].max()-config.min_alt)/config.alt_step)
+
+                try:
+                    max_alt_index = int(max_alt_index) + 1
+                    mask = mask.astype(float)
+
+                    #If balloon pops before minimum altitude, then entire row is nan
+                    if max_alt_index < 0:
+                        mask[:] = np.NAN
+                    else:
+                        for i in range(max_alt_index,len(mask)):
+                            mask[i] = np.NAN
+
+
+                except:
+                    print(colored("MASKING EXCEPTION", "yellow"))
+                #'''
+                #print(df)
+                #print(mask)
+
 
                 # Need to check if Dataframe is empty after dropping nan values was done on direction and speed
                 try:

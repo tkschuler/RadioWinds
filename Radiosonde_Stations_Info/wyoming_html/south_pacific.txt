@@ -4,6 +4,7 @@
 <area coords="115,19,5" shape="CIRCLE" href="javascript:g('47945')" title="47945  Minamidaitojima (ROMD)">
 <area coords="166,12,5" shape="CIRCLE" href="javascript:g('47971')" title="47971  Chichijima (RJAO)">
 <area coords="220,27,5" shape="CIRCLE" href="javascript:g('47991')" title="47991  Minamitorishima (RJAM)">
+<area coords="6,48,5" shape="CIRCLE" href="javascript:g('48839')" title="48839  Bach Longvi">
 <area coords="8,68,5" shape="CIRCLE" href="javascript:g('48855')" title="48855  Da Nang (VVDN)">
 <area coords="1,93,5" shape="CIRCLE" href="javascript:g('48900')" title="48900  Ho Chi Minh (VVTS)">
 <area coords="437,38,5" shape="CIRCLE" href="javascript:g('91165')" title="91165  Lihue, HI (PHLI)">
@@ -14,16 +15,34 @@
 <area coords="301,110,5" shape="CIRCLE" href="javascript:g('91376')" title="91376  Majuro/Marshall Is (PKMJ)">
 <area coords="130,109,5" shape="CIRCLE" href="javascript:g('91408')" title="91408  Babeldaob (PTRO)">
 <area coords="147,99,5" shape="CIRCLE" href="javascript:g('91413')" title="91413  Yap (PTYA)">
+<area coords="308,137,5" shape="CIRCLE" href="javascript:g('91610')" title="91610  Tarawa (NGTA)">
+<area coords="337,183,5" shape="CIRCLE" href="javascript:g('91643')" title="91643  Funafuti (NGFU)">
 <area coords="329,227,5" shape="CIRCLE" href="javascript:g('91680')" title="91680  Nadi Airport (NFFN)">
+<area coords="384,210,5" shape="CIRCLE" href="javascript:g('91765')" title="91765  Pago Pago/Int.Airp. (NSTU)">
 <area coords="113,201,5" shape="CIRCLE" href="javascript:g('94120')" title="94120  Darwin Airport, NT (YPDN)">
+<area coords="73,228,5" shape="CIRCLE" href="javascript:g('94203')" title="94203  Broome Amo, WE (YBRM)">
 <area coords="202,220,5" shape="CIRCLE" href="javascript:g('94299')" title="94299  Willis Island, QU">
 <area coords="35,249,5" shape="CIRCLE" href="javascript:g('94302')" title="94302  Learmonth Airport, WE (YPLM)">
+<area coords="127,257,5" shape="CIRCLE" href="javascript:g('94326')" title="94326  Alice Springs Aero, NT (YBAS)">
+<area coords="153,241,5" shape="CIRCLE" href="javascript:g('94332')" title="94332  Mount Isa Amo, QU (YBMA)">
+<area coords="38,283,5" shape="CIRCLE" href="javascript:g('94403')" title="94403  Geraldton Amo, WE (YPGN)">
+<area coords="56,271,5" shape="CIRCLE" href="javascript:g('94430')" title="94430  Meekatharra Amo, WE (YPMR)">
 <area coords="101,263,5" shape="CIRCLE" href="javascript:g('94461')" title="94461  Giles, WE">
+<area coords="185,270,5" shape="CIRCLE" href="javascript:g('94510')" title="94510  Charleville Amo, QU (YBCV)">
 <area coords="216,275,5" shape="CIRCLE" href="javascript:g('94578')" title="94578  Brisbane Airport Aero, QU (YBBN)">
 <area coords="44,299,5" shape="CIRCLE" href="javascript:g('94610')" title="94610  Perth Airport, WE (YPPH)">
+<area coords="69,293,5" shape="CIRCLE" href="javascript:g('94637')" title="94637  Kalgoorlie-Boulder Amo, WE (YPKG)">
+<area coords="72,310,5" shape="CIRCLE" href="javascript:g('94638')" title="94638  Esperance Mo, WE">
+<area coords="141,295,5" shape="CIRCLE" href="javascript:g('94659')" title="94659  Woomera Aerodrome Mo, SA (YPWR)">
 <area coords="149,316,5" shape="CIRCLE" href="javascript:g('94672')" title="94672  Adelaide Airport, SA (YPAD)">
+<area coords="183,297,5" shape="CIRCLE" href="javascript:g('94711')" title="94711  Cobar Mo, NW">
+<area coords="210,304,5" shape="CIRCLE" href="javascript:g('94776')" title="94776  Williamtown Amo Raaf, NW (YSWM)">
+<area coords="159,332,5" shape="CIRCLE" href="javascript:g('94821')" title="94821  Mount Gambier Aero, SA (YMMG)">
 <area coords="178,332,5" shape="CIRCLE" href="javascript:g('94866')" title="94866  Melbourne Airport, VC (YMML)">
 <area coords="190,363,5" shape="CIRCLE" href="javascript:g('94975')" title="94975  Hobart Airport, TA (YMHB)">
+<area coords="244,297,5" shape="CIRCLE" href="javascript:g('94995')" title="94995  Lord Howe Island">
+<area coords="285,284,5" shape="CIRCLE" href="javascript:g('94996')" title="94996  Norfolk Island Aero (YSNF)">
+<area coords="187,236,5" shape="CIRCLE" href="javascript:g('95282')" title="95282  Woodstock, QU">
 <area coords="9,125,5" shape="CIRCLE" href="javascript:g('96147')" title="96147  Ranai (WION)">
 <area coords="18,136,5" shape="CIRCLE" href="javascript:g('96413')" title="96413  Kuching (WBGG)">
 <area coords="51,128,5" shape="CIRCLE" href="javascript:g('96509')" title="96509  Tarakan/Juwata (WRLR)">
@@ -44,3 +63,44 @@
 <area coords="57,98,5" shape="CIRCLE" href="javascript:g('98618')" title="98618  Puerto Princesa (RPVP)">
 <area coords="81,95,5" shape="CIRCLE" href="javascript:g('98646')" title="98646  Mactan (RPMT)">
 <area coords="89,110,5" shape="CIRCLE" href="javascript:g('98753')" title="98753  Davao Airport (RPMD)">
+<area coords="384,210,5" shape="CIRCLE" href="javascript:g('91765')" title="91765  Pago Pago/Int.Airp. (NSTU)">
+<area coords="241,352,5" shape="CIRCLE" href="javascript:g('48601')" title="48601  Penang/Bayan Lepas (WMKP)">
+<area coords="253,373,5" shape="CIRCLE" href="javascript:g('48650')" title="48650  Sepang">
+<area coords="278,231,5" shape="CIRCLE" href="javascript:g('48820')" title="48820  Ha Noi (VVNB)">
+<area coords="298,266,5" shape="CIRCLE" href="javascript:g('48855')" title="48855  Da Nang (VVDN)">
+<area coords="290,306,5" shape="CIRCLE" href="javascript:g('48900')" title="48900  Ho Chi Minh (VVTS)">
+<area coords="228,366,5" shape="CIRCLE" href="javascript:g('96035')" title="96035  Medan/Polonia (WIMM)">
+<area coords="308,360,5" shape="CIRCLE" href="javascript:g('96147')" title="96147  Ranai (WION)">
+<area coords="242,404,5" shape="CIRCLE" href="javascript:g('96163')" title="96163  Padang/Tabing (WIMG)">
+<area coords="293,413,5" shape="CIRCLE" href="javascript:g('96237')" title="96237  Pangkal Pinang (WIKK)">
+<area coords="260,430,5" shape="CIRCLE" href="javascript:g('96253')" title="96253  Bengkulu/Padang Kemiling (WIPL)">
+<area coords="326,378,5" shape="CIRCLE" href="javascript:g('96413')" title="96413  Kuching (WBGG)">
+<area coords="30,128,5" shape="CIRCLE" href="javascript:g('96441')" title="96441  Bintulu (WBGB)">
+<area coords="44,115,5" shape="CIRCLE" href="javascript:g('96471')" title="96471  Kota Kinabalu (WBKK)">
+<area coords="53,123,5" shape="CIRCLE" href="javascript:g('96481')" title="96481  Tawau (WBKW)">
+<area coords="383,354,5" shape="CIRCLE" href="javascript:g('96509')" title="96509  Tarakan/Juwata (WRLR)">
+<area coords="320,393,5" shape="CIRCLE" href="javascript:g('96581')" title="96581  Pontianak/Supadio (WIOO)">
+<area coords="29,156,5" shape="CIRCLE" href="javascript:g('96645')" title="96645  Pangkalan Bun/Iskandar (WRBI)">
+<area coords="370,415,5" shape="CIRCLE" href="javascript:g('96685')" title="96685  Banjarmasin/Syamsudin (WRBB)">
+<area coords="300,448,5" shape="CIRCLE" href="javascript:g('96749')" title="96749  Jakarta/Soekarno-Hatta (WIII)">
+<area coords="12,179,5" shape="CIRCLE" href="javascript:g('96805')" title="96805  Cilacap (WIIL)">
+<area coords="358,454,5" shape="CIRCLE" href="javascript:g('96935')" title="96935  Surabaya/Juanda (WRSJ)">
+<area coords="447,354,5" shape="CIRCLE" href="javascript:g('97014')" title="97014  Menado/ Sam Ratulangi (WAMM)">
+<area coords="408,383,5" shape="CIRCLE" href="javascript:g('97072')" title="97072  Palu/Mutiara (WAML)">
+<area coords="61,167,5" shape="CIRCLE" href="javascript:g('97180')" title="97180  Ujung Pandang/Hasanuddin (WAAA)">
+<area coords="40,184,5" shape="CIRCLE" href="javascript:g('97230')" title="97230  Denpasar/Ngurah Rai (WRRR)">
+<area coords="464,459,5" shape="CIRCLE" href="javascript:g('97372')" title="97372  Kupang/Eltari (WRKK)">
+<area coords="114,147,5" shape="CIRCLE" href="javascript:g('97502')" title="97502  Sorong/Jefman (WASS)">
+<area coords="137,148,5" shape="CIRCLE" href="javascript:g('97560')" title="97560  Biak/Frans Kaisiepo (WABB)">
+<area coords="158,155,5" shape="CIRCLE" href="javascript:g('97690')" title="97690  Jayapura/Sentani (WAJJ)">
+<area coords="100,160,5" shape="CIRCLE" href="javascript:g('97724')" title="97724  Ambon/Pattimura (WAPP)">
+<area coords="115,180,5" shape="CIRCLE" href="javascript:g('97900')" title="97900  Saumlaki/Olilit (WAPI)">
+<area coords="157,182,5" shape="CIRCLE" href="javascript:g('97980')" title="97980  Merauke/Mopah (WAKK)">
+<area coords="381,236,5" shape="CIRCLE" href="javascript:g('98223')" title="98223  Laoag (RPLI)">
+<area coords="384,249,5" shape="CIRCLE" href="javascript:g('98328')" title="98328  Baguio (RPUB)">
+<area coords="393,261,5" shape="CIRCLE" href="javascript:g('98433')" title="98433  Tanay">
+<area coords="80,82,5" shape="CIRCLE" href="javascript:g('98444')" title="98444  Legaspi (RPMP)">
+<area coords="382,301,5" shape="CIRCLE" href="javascript:g('98618')" title="98618  Puerto Princesa (RPVP)">
+<area coords="420,287,5" shape="CIRCLE" href="javascript:g('98646')" title="98646  Mactan (RPMT)">
+<area coords="84,104,5" shape="CIRCLE" href="javascript:g('98747')" title="98747  Cagayan De Oro">
+<area coords="440,308,5" shape="CIRCLE" href="javascript:g('98753')" title="98753  Davao Airport (RPMD)">

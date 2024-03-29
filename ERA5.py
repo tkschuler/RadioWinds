@@ -20,8 +20,6 @@ class ERA5:
         self.file = netCDF4.Dataset(filepath)
 
         self.ds = xr.open_dataset(filepath, engine="netcdf4", decode_times=True)
-        #print(self.ds)
-
 
     def get_statistics(self):
         #print(self.file)
@@ -70,6 +68,7 @@ class ERA5:
 
         """
 
+        print(netcdf_ranges.shape)
         results = np.all(~netcdf_ranges.mask)
         if results == False:
             timerange, latrange, lonrange = np.nonzero(~netcdf_ranges.mask)
@@ -83,7 +82,10 @@ class ERA5:
         else:  # Typically this for ERA5 because they don't mask data, right?
             self.start_time_idx = 0
             self.end_time_idx = len(self.time_convert) - 1
-            lati, loni = netcdf_ranges.shape
+            if config.combined:
+                levelsi, lati, loni = netcdf_ranges.shape
+            else:
+                lati, loni = netcdf_ranges.shape
             # THese are backwards???
             self.lat_min_idx = lati
             self.lat_max_idx = 0
@@ -92,14 +94,9 @@ class ERA5:
 
     def get_station(self, time, lat, lon):
         station_ds = self.ds.sel(time=time, longitude=lon, latitude=lat, method = "nearest")
-        #print(alt)
-        #print(alt.latitude, alt.longitude)
 
         station_df = self.get_dataframe(station_ds, time)
 
-        #print(station_ds.z/config.g)
-
-        #sdfs
 
         return station_df
 

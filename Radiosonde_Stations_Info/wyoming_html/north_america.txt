@@ -5,6 +5,7 @@
 <area coords="195,14,5" shape="CIRCLE" href="javascript:g('70026')" title="70026  Barrow/W. Post W.Rogers, AK (PABR)">
 <area coords="168,29,5" shape="CIRCLE" href="javascript:g('70133')" title="70133  Kotzebue, Ralph Wien, AK (PAOT)">
 <area coords="153,36,5" shape="CIRCLE" href="javascript:g('70200')" title="70200  Nome, AK (PAOM)">
+<area coords="147,60,5" shape="CIRCLE" href="javascript:g('70219')" title="70219  Bethel/Bethel Airport, AK (PABE)">
 <area coords="169,59,5" shape="CIRCLE" href="javascript:g('70231')" title="70231  Mcgrath, AK (PAMC)">
 <area coords="192,60,5" shape="CIRCLE" href="javascript:g('70261')" title="70261  Fairbanks/Int, AK (PAFA)">
 <area coords="177,77,5" shape="CIRCLE" href="javascript:g('70273')" title="70273  Anchorage/Int, AK (PANC)">
@@ -29,7 +30,9 @@
 <area coords="351,160,5" shape="CIRCLE" href="javascript:g('71845')" title="71845  Pickle Lake, ON (WPL)">
 <area coords="313,150,5" shape="CIRCLE" href="javascript:g('71867')" title="71867  The Pas, MB (YQD)">
 <area coords="408,104,5" shape="CIRCLE" href="javascript:g('71906')" title="71906  Kuujjuaq, QB (YVP)">
+<area coords="380,112,5" shape="CIRCLE" href="javascript:g('71907')" title="71907  Inukjuak, QB (WPH)">
 <area coords="241,144,5" shape="CIRCLE" href="javascript:g('71908')" title="71908  Prince George, BC (ZXS)">
+<area coords="395,73,5" shape="CIRCLE" href="javascript:g('71909')" title="71909  Iqaluit, NT (YFB)">
 <area coords="333,121,5" shape="CIRCLE" href="javascript:g('71913')" title="71913  Churchill, MB (YYQ)">
 <area coords="318,21,5" shape="CIRCLE" href="javascript:g('71924')" title="71924  Resolute, NT (YRB)">
 <area coords="300,59,5" shape="CIRCLE" href="javascript:g('71925')" title="71925  Cambridge Bay, NT (YCB)">
@@ -53,6 +56,7 @@
 <area coords="335,265,5" shape="CIRCLE" href="javascript:g('72249')" title="72249  Ft Worth, TX (FWD)">
 <area coords="338,303,5" shape="CIRCLE" href="javascript:g('72250')" title="72250  Brownsville Intl, TX (BRO)">
 <area coords="337,293,5" shape="CIRCLE" href="javascript:g('72251')" title="72251  Corpus Christi Intl, TX (CRP)">
+<area coords="320,285,5" shape="CIRCLE" href="javascript:g('72261')" title="72261  Del Rio/Int, TX (DRT)">
 <area coords="313,271,5" shape="CIRCLE" href="javascript:g('72265')" title="72265  Midland/Midland Reg, TX (MAF)">
 <area coords="272,269,5" shape="CIRCLE" href="javascript:g('72274')" title="72274  Tucson, AZ (TUS)">
 <area coords="244,263,5" shape="CIRCLE" href="javascript:g('72293')" title="72293  San Diego/Miramar, CA (NKX)">
@@ -107,6 +111,8 @@
 <area coords="434,179,5" shape="CIRCLE" href="javascript:g('74389')" title="74389  Gray, ME (GYX)">
 <area coords="358,214,5" shape="CIRCLE" href="javascript:g('74455')" title="74455  Davenport, IA (DVN)">
 <area coords="365,221,5" shape="CIRCLE" href="javascript:g('74560')" title="74560  Lincoln, IL (ILX)">
+<area coords="333,244,5" shape="CIRCLE" href="javascript:g('74646')" title="74646  Lamont Oklahoma, OK (LMN)">
+<area coords="295,290,5" shape="CIRCLE" href="javascript:g('76225')" title="76225  Chihuahua, Chih.">
 <area coords="418,274,5" shape="CIRCLE" href="javascript:g('74794')" title="74794  Cape Kennedy, FL (XMR)">
 <area coords="271,293,5" shape="CIRCLE" href="javascript:g('76256')" title="76256  Empalme, Son.">
 <area coords="272,314,5" shape="CIRCLE" href="javascript:g('76405')" title="76405  La Paz, B.C.S.">
@@ -117,6 +123,8 @@
 <area coords="382,326,5" shape="CIRCLE" href="javascript:g('76644')" title="76644  Aerop.Internacional Yuc (MMMD)">
 <area coords="303,344,5" shape="CIRCLE" href="javascript:g('76654')" title="76654  Manzanillo, Col.">
 <area coords="332,341,5" shape="CIRCLE" href="javascript:g('76679')" title="76679  Aerop. Intl Mexico, D.F.">
+<area coords="349,341,5" shape="CIRCLE" href="javascript:g('76692')" title="76692  Hacienda Ylang Ylang Ver">
+<area coords="481,227,5" shape="CIRCLE" href="javascript:g('78016')" title="78016  Bermuda Nvl Stn Kindley (TXKF)">
 <area coords="428,326,5" shape="CIRCLE" href="javascript:g('78384')" title="78384  Owen Roberts Arpt (MWCR)">
 <area coords="455,326,5" shape="CIRCLE" href="javascript:g('78397')" title="78397  Kingston/Norman Manley (MKJP)">
 <area coords="490,310,5" shape="CIRCLE" href="javascript:g('78486')" title="78486  Santo Domingo (MDSD)">
@@ -124,8 +132,10 @@
 <area coords="393,345,5" shape="CIRCLE" href="javascript:g('78583')" title="78583  Phillip Goldston Intl. (MZBZ)">
 <area coords="525,296,5" shape="CIRCLE" href="javascript:g('78866')" title="78866  Juliana Airport (TNCM)">
 <area coords="557,312,5" shape="CIRCLE" href="javascript:g('78954')" title="78954  Grantley Adams (TBPB)">
+<area coords="555,331,5" shape="CIRCLE" href="javascript:g('78970')" title="78970  Piarco Int. Airport (TTPP)">
 <area coords="509,342,5" shape="CIRCLE" href="javascript:g('78988')" title="78988  Hato Airport, Curacao (TNCC)">
 <area coords="437,365,5" shape="CIRCLE" href="javascript:g('80001')" title="80001  San Andres Isl (SKSP)">
+<area coords="496,398,5" shape="CIRCLE" href="javascript:g('80222')" title="80222  Bogota/Eldorado (SKBO)">
 <area coords="582,373,5" shape="CIRCLE" href="javascript:g('82022')" title="82022  Boa Vista (SBBV)">
 <area coords="28,241,5" shape="CIRCLE" href="javascript:g('91165')" title="91165  Lihue, HI (PHLI)">
 <area coords="40,265,5" shape="CIRCLE" href="javascript:g('91285')" title="91285  Hilo/Gen, HI (PHTO)">
