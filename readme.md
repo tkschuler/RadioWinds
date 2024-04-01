@@ -167,7 +167,7 @@ Setting **monthly_export_color** or **annual_export_color** to *True* will gener
 dataframe tables like below.  Generating colored tables, significantly increases processing time.
 
 ![alt text](Pictures/MonthlyWindProbability.png)
-![alt text](Pictures/AnnualWindProbability.png)
+![alt text](Pictures/AnnualWindProbability3.png)
 
 ### 2a. Batch Analyze ERA Data for Wind Diversity
 
@@ -203,34 +203,55 @@ which includes the right timestamp, geographic region, pressure levels [300-10hP
 geopotential, u-wind, v-wind, and temperature.
 
 
-### 3. Plotting and Mapping for 1 year
-The following scripts should run standalone if all dependencies were properly installed. 
-* ``plot3DWindrose.py``
-* ``plot_wind_quadrants.py``
+### 3a. Plotting and Mapping for 1 Station
 
-If all radiosondes for "North_America" and "South_America" for a desired **year** have been downloaded and analyzed 
-the following scripts should work without errors:
-
-TODO: I need to clean up this code and write a lot of comments.  So this is just a preview:
-* ``Mapping/map_stations.py``
-* ``Mapping/rainbow_probabilities.py``
-
-
+* ``plot3DWindrose.py``:
 ![alt text](Pictures/Hilo-Hodograph.png)
+* ``plot_wind_quadrants.py``
+* ``skew-T.py`` [TODO]
+* ``diurnal.py`` [TODO]
+
+
+### 3b. Plotting and Mapping for 1 Station
+The following scripts generate plots and maps of monthyl and annual wind diverstiy trends. These plots assume all the radiosonde
+data for the desired **year** and **continent** have been downloaded (``AnnualWyomingDownload.py``).  As well as the
+corresponding analysis scripts (``batchAnalysis.py``,``batchAnalysis-Calm.py``, ``batchAnalysis-Burst.py``)
+
+
+Annual Plotting and Mapping Scripts:
+* ``Mapping/map_stations.py``:
 ![alt text](Pictures/UofWyRadisondeMapColored.png)
+* ``Mapping/burst_map.py``:
+![alt text](Maps/2023/World-BURST-2023_ALT_radiosonde-2023-AVERAGE.png)
+* ``plotting/hovmoller-full-wind-station.py``:
+![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
+* ``Mapping/rainbow_probabilities.py``:
 ![alt text](Pictures/gifs/opposing-winds-western-hemisphere-2023.gif)
+* ``Mapping/difference_maps.py``:
+![alt text](Pictures/gifs/radiosonde_era5_difference-2022.gif)
+* ``Mapping/era5scatterplot.py``:
+![alt text](Pictures/radiosonde_vs_era5_mean_lat_opposing_wind_trend.png)
 
 
+### 4. Decadal Analysis, Plotting, and Mapping
 
-### 4. Multi Year Analysis, Plotting, and Mapping
+First, make sure the analysis files in step 3 have been run for the **years** and **regions** of interest 
+before trying to run decadal analysis scripts.  Some plots and maps require running an additional decadal analysis script.
 
-If multi year data has been downloaded:
+Decadal Analysis scripts:
+* ``decadal_ow_analysis.py``
+* ``analyzeMonthlyMeans-Zonal-QBO.py``
 
-coming soon....
+Decadal Plotting and Mapping Scripts:
+* ``decadal_variance_map.py``
+![alt text](Pictures/gifs/decadal_std.gif)
+* ``colormesh-CW.py``
+![alt text](Pictures/gifs/calm-winds-decadal-contour.gif)
+* ``hovmoller-ow-probability-station.py``
+![alt text](Pictures/Hovmoller/PHTO.png)
+* ``hovmoller_qbo.py``
+![alt text](Pictures/Hovmoller/qbo/70mb.png)
 
-
-
-**Note:** This file can take a few hours to run, depending on how many soundings need to be analyzed.  
 
 ## Notes/Discussion
 * While not the same, we assume geopotential height and geometric height are the same for this analysis.  At stratospheric altitudes, the difference is usually 100-200m of difference. 

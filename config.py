@@ -3,25 +3,25 @@ import os
 
 # **************** DOWNLOAD AND ANALYSIS ************************
 
-type = "PRES"                    # ALT or PRES
+type = "ALT"                    # ALT or PRES
 mode = "radiosonde"             # or radiosonde or era5
-continent = "South_America"     #
+continent = "North_America"     #
 mapping_mode = mode             # or "diff"
 
 # Multithreading can be finicky and run out of memory on Windows (it also seems slower)
 # I have no memory issues on WSL or Ubuntu.
-parallelize = True              # It's recommended to change logging to False if parallelize is True.
-logging = False                 # Displays extra debugging and status text in the Terminal
+parallelize = False             # It's recommended to change logging to False if parallelize is True.
+logging = True                  # Displays extra debugging and status text in the Terminal
 
-start_year = 2022
-end_year = 2022
+start_year = 2023
+end_year = 2024
 
 monthly_export_color = False
 annual_export_color = False
 dfi_mode = "selenium"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
 alt_step = 500                  # m
-min_alt = 15000                  # m
+min_alt = 15000                 # m
 max_alt = 28000 + alt_step-1    # m  The +alt_step -1 is to include all data points above the max - the next step size.
 n_sectors = 16                  # m
 speed_threshold = 4             # knots for Radiosonde,  m/s for ERA5
@@ -34,8 +34,11 @@ max_pressure = 125 + 13
 
 # ******************** DIRECTORY SETUP **************************
 
+
 base_directory = os.getcwd() + '/'  # The default is the RadioWinds directory
 parent_folder = base_directory + 'SOUNDINGS_DATA/'
+
+# Best to Change the analysis folders depending on which type of analsi you're doing
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-CALM' + '/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-FULL' + '/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-BURST' + '/'
@@ -58,5 +61,3 @@ era5_pressure_levels = np.asarray([300, 250, 225, 200, 175, 150, 125, 100, 70, 5
 
 if mode == "era5":
     speed_threshold = speed_threshold / 2.  # to roughly convert from knots to m/s since forecasts aren't in decimals
-
-
