@@ -6,6 +6,7 @@ import os
 from os import listdir
 import sys
 from multiprocessing import Process, Manager
+import copy
 
 # RadioWinds Imports
 import config
@@ -128,11 +129,6 @@ def save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date):
         " Year-" + str(date.year) + " Month-" + str(date.month),
         "cyan"))
 
-    if config.type == "PRES":
-        # Reverse order of dataframes for pressure, since high pressure = low altitude
-        wind_probabilities = wind_probabilities.iloc[:, ::-1]
-
-
 
     utils.export_colored_dataframes(wind_probabilities,
                                     title='Opposing Wind Probabilities for Station ' + str(FAA) + " - " + str(WMO) +
@@ -202,40 +198,40 @@ def anaylze_monthly_data(FAA, WMO, year, min_alt=15000, max_alt=28000, min_press
 
                 # There's probably a faster way to do this with numpy.
                 # Or maybe I should change the output of opposing_wind_levels?
-                mask = wind_bins
+                mask = copy.deepcopy(wind_bins)
                 for k in range(len(mask)):
                     if wind_bins[k] in opposing_wind_levels:
                         mask[k] = 1
                     else:
                         mask[k] = 0
 
-                #'''
-                #print()
-                #print(date)
-                #print(mask)
 
-                # Need to add nans if the data doesn't exist.
-                #max_alt = df['height'].max()
-                max_alt_index = ((df['height'].max()-config.min_alt)/config.alt_step)
+
 
                 try:
+                    # Determine index values of missing data for PRessure and altitude in case of early burst
+                    difference_array = np.absolute(wind_bins - df['pressure'].min())
+                    min_pres_index = difference_array.argmin()
+
+                    max_alt_index = ((df['height'].max() - config.min_alt) / config.alt_step)
                     max_alt_index = int(max_alt_index) + 1
+
                     mask = mask.astype(float)
 
-                    #If balloon pops before minimum altitude, then entire row is nan
+                    # If balloon pops before minimum altitude, then entire row is nan
                     if max_alt_index < 0:
                         mask[:] = np.NAN
+                    # Otherwise fill in nan values for the indecies with missing values
                     else:
-                        for i in range(max_alt_index,len(mask)):
-                            mask[i] = np.NAN
-
+                        if config.type == "ALT":
+                            for i in range(max_alt_index,len(mask)):
+                                mask[i] = np.NAN
+                        if config.type == "PRES":
+                            for i in range(0,min_pres_index):
+                                mask[i] = np.NAN
 
                 except:
                     print(colored("MASKING EXCEPTION", "yellow"))
-                #'''
-                #print(df)
-                #print(mask)
-
 
                 # Need to check if Dataframe is empty after dropping nan values was done on direction and speed
                 try:
@@ -256,6 +252,10 @@ def anaylze_monthly_data(FAA, WMO, year, min_alt=15000, max_alt=28000, min_press
 
             if config.logging:
                 print(wind_probabilities)
+
+        if config.type == "PRES":
+            # Reverse order of dataframes for pressure, since high pressure = low altitude
+            wind_probabilities = wind_probabilities.iloc[:, ::-1]
 
         save_wind_probabilties(FAA, WMO, wind_probabilities, analysis_folder, date)
 
@@ -351,6 +351,11 @@ def analyze_annual_data(FAA, WMO, year, min_alt=15000, max_alt=28000,
 
     wind_bins, annual_probabilities = reinitializeProbabilities()
 
+    #Reverse order of column headers, since monthly probabilities already took care of that.  Don't want to reverse twice.
+    if config.type == "PRES":
+        # Reverse order of dataframes for pressure, since high pressure = low altitude
+        annual_probabilities = annual_probabilities.iloc[:, ::-1]
+
 
     for csv in files:
         # read csv for each month of individual station
@@ -365,7 +370,9 @@ def analyze_annual_data(FAA, WMO, year, min_alt=15000, max_alt=28000,
             continue
 
     annual_probabilities.sort_index(inplace=True, ascending=True)
+
     print(annual_probabilities)
+
 
     # Export the annual charts in the station folder as well, for quicker inspection.
     utils.export_colored_dataframes(annual_probabilities,

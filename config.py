@@ -14,10 +14,10 @@ parallelize = False             # It's recommended to change logging to False if
 logging = True                  # Displays extra debugging and status text in the Terminal
 
 start_year = 2023
-end_year = 2024
+end_year = 2023
 
 monthly_export_color = False
-annual_export_color = False
+annual_export_color = True
 dfi_mode = "selenium"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
 alt_step = 500                  # m
@@ -33,7 +33,6 @@ min_pressure = 20  - 3
 max_pressure = 125 + 13
 
 # ******************** DIRECTORY SETUP **************************
-
 
 base_directory = os.getcwd() + '/'  # The default is the RadioWinds directory
 parent_folder = base_directory + 'SOUNDINGS_DATA/'

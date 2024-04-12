@@ -63,6 +63,7 @@
 <area coords="433,163,5" shape="CIRCLE" href="javascript:g('47945')" title="47945  Minamidaitojima (ROMD)">
 <area coords="241,352,5" shape="CIRCLE" href="javascript:g('48601')" title="48601  Penang/Bayan Lepas (WMKP)">
 <area coords="253,373,5" shape="CIRCLE" href="javascript:g('48650')" title="48650  Sepang">
+<area coords="443,313,5" shape="CIRCLE" href="javascript:g('48698')" title="48698  Singapore (WSSS)">
 <area coords="278,231,5" shape="CIRCLE" href="javascript:g('48820')" title="48820  Ha Noi (VVNB)">
 <area coords="298,266,5" shape="CIRCLE" href="javascript:g('48855')" title="48855  Da Nang (VVDN)">
 <area coords="290,306,5" shape="CIRCLE" href="javascript:g('48900')" title="48900  Ho Chi Minh (VVTS)">

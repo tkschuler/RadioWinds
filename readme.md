@@ -1,7 +1,7 @@
 [![Python 3.9](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-390/)
 
 # RadioWinds
-This codebase includes multiple python scripts for analyzing historical winds from public archived sounding data and reanalysis forecasts.  This includes batch downloading the soundings to a local machine for faster and repeatable analysis as well as the analysis itself
+RadioWinds provides methods for analyzing historical wind diversity trends from public archived sounding data and reanalysis forecasts (University of Wyoming Upper Air Sounding Archive and ECWMF Reanalysis Forecasts).  The sounding and forecast data is not included with this software since it is publicly available, instead a script is included for batch downloading the soundings locally  for faster and repeatable analysis.  Additionally, several plotting examples are included to visualize historical trends by station monthly, annually, and decadal as well as the ability to do regional trends monthly or annually in the form of colored maps. 
 
 ## Dependencies
 

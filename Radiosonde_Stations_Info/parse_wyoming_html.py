@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-file1 = open('wyoming_html/' + 'north_america.txt', 'r')
-continent = "North_America"
+file1 = open('wyoming_html/' + 'sea.txt', 'r')
+continent = "SEA"
 Lines = file1.readlines()
 
 df = pd.DataFrame(columns=['WMO', 'FAA', 'Station_Name', 'Continent'])
