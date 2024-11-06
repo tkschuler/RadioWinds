@@ -13,7 +13,7 @@ from matplotlib.dates import YearLocator,  DateFormatter
 import config
 import utils
 
-FAA = "SBBV"
+FAA = "SLC"
 WMO = utils.lookupWMO(FAA)
 Station_Name = utils.lookupStationName(FAA)
 print(WMO, FAA, Station_Name)

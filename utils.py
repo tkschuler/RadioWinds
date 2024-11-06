@@ -127,3 +127,19 @@ def export_colored_dataframes(df, title, path, suffix, precision=2, export_color
     filepath_dataframe = Path(path + '/' + suffix + '.csv')
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(filepath_dataframe)
+
+if __name__ == '__main__':
+    import dataframe_image as dfi
+
+    # Create a sample DataFrame
+    df = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]})
+
+    print(df)
+
+    # Style the DataFrame (optional)
+    df_styled = df.style.set_properties(**{'background-color': 'lightblue',
+                                            'color': 'black',
+                                            'border-color': 'black'})
+
+    # Export the DataFrame as an image
+    dfi.export(df_styled, 'dataframe.png', table_conversion='chrome')

@@ -18,7 +18,7 @@ end_year = 2023
 
 monthly_export_color = False
 annual_export_color = True
-dfi_mode = "selenium"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
+dfi_mode = "chrome"  # Default is "chrome," "selenium has worked in the past. Matplotlib doesn not support custom css
 
 alt_step = 500                  # m
 min_alt = 15000                 # m
