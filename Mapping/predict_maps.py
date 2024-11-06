@@ -1,3 +1,10 @@
+"""
+This script requries both ERA5 and radiosonde data to have been downloaded and
+analyzed for the region of interest
+
+At default it will run with North America for one year (2023)
+"""
+
 import cartopy.crs as ccrs
 import cartopy.io
 import matplotlib.pyplot as plt

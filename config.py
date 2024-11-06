@@ -13,8 +13,8 @@ mapping_mode = mode             # or "diff"
 parallelize = False             # It's recommended to change logging to False if parallelize is True.
 logging = True                  # Displays extra debugging and status text in the Terminal
 
-start_year = 2023
-end_year = 2023
+start_year = 2022
+end_year = 2022
 
 monthly_export_color = False
 annual_export_color = True
@@ -53,7 +53,7 @@ g = 9.80665
 
 # ************************ ERA5 **********************************
 combined = False
-era_file = "forecasts/" + "western_hemisphere-2022-South.nc"
+era_file = "forecasts/" + "western_hemisphere-2022-NORTH.nc"
 
 # Mandatory pressure levels downloaded from ERA5  (~9.5km - 31km?)
 era5_pressure_levels = np.asarray([300, 250, 225, 200, 175, 150, 125, 100, 70, 50,  30,  20, 10])

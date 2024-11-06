@@ -1,5 +1,11 @@
-import cartopy.crs as ccrs
-import cartopy.io
+"""
+This produces maps of probability differences between era5 and radiosonde analysis.
+Recommended to use PRES levels instead of Alt (because ERA5 comes with PRES levels)
+
+Therefore era5 and radiosonde for the region of interest must already be downloaded and analyzed
+"""
+
+ cartopy.io
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 import pandas as pd
@@ -58,12 +64,12 @@ continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-
+'''
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
-
+'''
 
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)

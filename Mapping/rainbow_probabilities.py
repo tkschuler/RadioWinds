@@ -1,3 +1,11 @@
+"""
+Shows an example of how to map opposing wind probabilties.
+
+This assume the region of interest has already been downloaded and analyzed.
+
+For the default version of this script, download and analyze (OW) North and South America
+"""
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -60,12 +68,15 @@ continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 
 # Uncomment this if South America has been downloaded and Analyzed as well
-#'''
+'''
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
-stations_df = utils.getWorldStations() #pd.concat([stations_df, stations_df2])
-#'''
+
+#alteratively you can do stations_df = utils.getWorldStations()
+#However you will need to download and analyze ALL stations
+stations_df =  pd.concat([stations_df, stations_df2]) #utils.getWorldStations()
+'''
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
 df_probabilities = pd.DataFrame(columns=[i for i in range(1,12)])
@@ -77,8 +88,6 @@ for row in stations_df.itertuples(index = 'WMO'):
 
     analysis_folder = config.analysis_folder
 
-    #file_name = analysis_folder[:-14]  + "analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
-    #file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
     #file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-CALM.csv'
     file_name = analysis_folder + str(FAA) + " - " + str(WMO) + "/analysis_" + str(year) + '-wind_probabilities-TOTAL.csv'
 
@@ -111,19 +120,11 @@ for row in stations_df.itertuples(index = 'WMO'):
 stations_df = stations_df.join(df_probabilities)
 print(stations_df)
 
-
-#Convert Ranges of Coordinates from stations list for Cartopy
-#stations_df[' LONG'] = stations_df.apply(lambda x: (360-x[' LONG'] if x['E'] == 'W' else 1*x[' LONG']), axis = 1)
-#stations_df['  LAT'] = stations_df.apply(lambda x: (-1*x['  LAT'] if x['N'] == 'S' else 1*x['  LAT']), axis = 1)
-
 #Convert Station Coordinates for mapping
 stations_df = utils.convert_stations_coords(stations_df)
 
-
 #Drop any stations that collected no data for the entire year.
 stations_df.dropna(subset=df.columns[-12:], how = 'all', inplace = True)
-
-
 
 # Make a new plot for each month
 for month in range (1,12+1):
@@ -136,13 +137,13 @@ for month in range (1,12+1):
 
 
     # North America
-    #extent = [-125 , -70, 20, 50]
+    extent = [-125 , -70, 20, 50]
 
     # Western Hemisphere
     #extent = [-170, -20, -25, 40]
 
     # World
-    extent = [-180, 180, -90, 90]
+    #extent = [-180, 180, -90, 90]
 
 
     central_lon = np.mean(extent[:2])

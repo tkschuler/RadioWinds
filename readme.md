@@ -28,7 +28,7 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt -y install ./google-chrome-stable_current_amd64.deb
 ```
 
-or 
+or
 
 ```
 sudo snap install firefox
@@ -125,7 +125,7 @@ To run properly, and have the scripts be able to find other directories, always 
 
 ``analysis/batchAnalysis.py``  this script does opposing wind anaylsis for a year of soundings per station.  Currently, we assume that the soundings were downloaded properly and in full by ``AnnualWyomingDownload.py.``  (If the script finished running everything should be downloaded for the parameters). We should add some error handling for incomplete downloads. The script then generates binary opposing wind charts organized by date and altitude level (500m increments) for each month.  After all 12 months are analyzed and saved,  a final annual probability chart is saved by taking the max probability from each altitude level per month.
 
-``analysis/ERA5.py`` This script creates a *radiosonde-like* dataframe for running ``opposing_wind_wyoming.py`` with ERA5 forecasts.  Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=form which includes the right timestamp, geographic region, pressure levels [300-10hPa], geopotential, u-wind, v-wind, and temperature.
+``analysis/ERA5.py`` This script creates a *radiosonde-like* dataframe for running ``opposing_wind_wyoming.py`` with ERA5 forecasts.  Download a netcdf ERA5 forecast from [ECWMF Copernicus CDS](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview) which includes the right timestamp, geographic region, pressure levels [300-10hPa], geopotential, u-wind, v-wind, and temperature.
 
 
 ## Getting Started
@@ -190,6 +190,8 @@ dataframe tables like below.  Generating colored tables, significantly increases
 ![alt text](Pictures/MonthlyWindProbability.png)
 ![alt text](Pictures/AnnualWindProbability3.png)
 
+The station probability images will be saved in the `analysis_folder` within the station directory of interest
+
 ### 2a. Batch Analyze ERA Data for Wind Diversity
 
 Another parameter in ``config.py`` is the **mode**, which can be *"radiosonde"* or *"era5"*. The default is to use radiosonde data for wind diversity, because of the significantly higher vertical resolution.
@@ -223,34 +225,58 @@ Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/
 which includes the right timestamp, geographic region, pressure levels [300-10hPa],
 geopotential, u-wind, v-wind, and temperature.
 
+  [TODO] Write a tutorial on what variables are required when downloading ERA5 forecasts
 
-### 3a. Plotting and 1 Sounding Launch
 
-* ``plotting/plot3DWindrose.py``:
+### 3a. Plotting 1 Sounding Launch
+**Pre-requisites**: requires a sounding downloaded, or stored in the proper format.  
+Best way is to run ``AnnualWyomingDownload.py``
+
+* ``plotting/plot3DWindrose.py``: Default plots for Hilo, Hawaii (PHTO) in 2023
 ![alt text](Pictures/Hilo-Hodograph.png)
 * ``plot_wind_quadrants.py``
 * ``skew-T.py`` [TODO]
 * ``diurnal.py`` [TODO]
 
 
-### 3b. Plotting and Mapping for 1 Station
-The following scripts generate plots and maps of monthly and annual wind diversity trends. These plots assume all the radiosonde
-data for the desired **year** and **continent** have been downloaded (``AnnualWyomingDownload.py``).  As well as the
-corresponding analysis scripts (``batchAnalysis.py``,``batchAnalysis-Calm.py``, ``batchAnalysis-Burst.py``)
+### 3b. Annual Plotting and Mapping
+The following scripts generate plots and maps of monthly and annual wind diversity trends.
+These plots assume the proper data has been downloaded and analyzed for the desired
+ **year** and **continent** (may be multiple years and continents)
 
 
-Annual Plotting and Mapping Scripts:
-* ``Mapping/map_stations.py``:
+* ``plotting/hovmoller-full-wind-station.py``
+**Default Run Pre-requisites**: Produces an annual full wind directionality Hovmoller plot for a particular station (ex: SLC)
+   * Download Radiosondes for `North_America` in `2023`
+ ![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
+
+* ``Mapping/map_stations.py``: Produces a plot of all stations in the UofWy Dataset
 ![alt text](Pictures/UofWyRadisondeMapColored.png)
-* ``Mapping/burst_map.py``:
+
+* ``Mapping/burst_map.py``: Produces a map of annual burst averages for each station in the downloaded and burst analyzed regions
+**Default Run Pre-requisites**:
+  * Download Radiosondes for `North_America` in `2023`
+  * Run ``Analysis/batchAnalysis-Burst.py`` for `North_America` in `2023` with type `ALT`
 ![alt text](Maps/2023/World-BURST-2023_ALT_radiosonde-2023-AVERAGE.png)
-* ``plotting/hovmoller-full-wind-station.py``:
-![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
-* ``Mapping/rainbow_probabilities.py``:
+
+* ``Mapping/rainbow_probabilities.py``: Produces Monthly Opposing Winds Probability Maps (ex. North_America in 2023)
+**Default Run Pre-requisites**:
+  * Download Radiosondes for `North_America` in `2023`
+  * Run ``Analysis/batchAnalysis.py`` for `North_America` and  in `2023` with type `ALT`
 ![alt text](Pictures/gifs/opposing-winds-western-hemisphere-2023.gif)
-* ``Mapping/difference_maps.py``:
+
+* ``Mapping/difference_maps.py``: Produces a map of OW probability differences between ERA5 and radiosondes
+**Default Run Pre-requisites**:
+  * Download Radiosondes for `North_America` in `2023`
+  * Download ERA5 forecast for `North_America` in `2023`
+  * Run (2) ``Analysis/batchAnalysis.py`` for `North_America` in `2023` with type `PRES` for both mode `era5` and mode `radiosonde`
 ![alt text](Pictures/gifs/radiosonde_era5_difference-2022.gif)
-* ``Mapping/era5scatterplot.py``:
+
+* ``plotting/era5scatterplot.py``: Produces 2D and 3D scatter plots and overall trend lines for ERA5 vs Radiosdone OW analysis.
+**Default Run Pre-requisites**:
+  * Download Radiosondes for `North_America` in `2023`
+  * Download ERA5 forecast for `North_America` in `2023`
+  * Run (2) ``Analysis/batchAnalysis.py`` for `North_America` in `2023` with type `PRES` for both mode `era5` and mode `radiosonde`
 ![alt text](Pictures/radiosonde_vs_era5_mean_lat_opposing_wind_trend.png)
 
 
