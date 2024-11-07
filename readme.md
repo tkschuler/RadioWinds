@@ -225,8 +225,6 @@ Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/
 which includes the right timestamp, geographic region, pressure levels [300-10hPa],
 geopotential, u-wind, v-wind, and temperature.
 
-  [TODO] Write a tutorial on what variables are required when downloading ERA5 forecasts
-
 
 ### 3a. Plotting 1 Sounding Launch
 **Pre-requisites**: requires a sounding downloaded, or stored in the proper format.  
@@ -246,6 +244,7 @@ These plots assume the proper data has been downloaded and analyzed for the desi
 
 
 * ``plotting/hovmoller-full-wind-station.py``
+
 **Default Run Pre-requisites**: Produces an annual full wind directionality Hovmoller plot for a particular station (ex: SLC)
    * Download Radiosondes for `North_America` in `2023`
  ![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
@@ -254,18 +253,21 @@ These plots assume the proper data has been downloaded and analyzed for the desi
 ![alt text](Pictures/UofWyRadisondeMapColored.png)
 
 * ``Mapping/burst_map.py``: Produces a map of annual burst averages for each station in the downloaded and burst analyzed regions
+
 **Default Run Pre-requisites**:
   * Download Radiosondes for `North_America` in `2023`
   * Run ``Analysis/batchAnalysis-Burst.py`` for `North_America` in `2023` with type `ALT`
 ![alt text](Maps/2023/World-BURST-2023_ALT_radiosonde-2023-AVERAGE.png)
 
 * ``Mapping/rainbow_probabilities.py``: Produces Monthly Opposing Winds Probability Maps (ex. North_America in 2023)
+
 **Default Run Pre-requisites**:
   * Download Radiosondes for `North_America` in `2023`
   * Run ``Analysis/batchAnalysis.py`` for `North_America` and  in `2023` with type `ALT`
 ![alt text](Pictures/gifs/opposing-winds-western-hemisphere-2023.gif)
 
 * ``Mapping/difference_maps.py``: Produces a map of OW probability differences between ERA5 and radiosondes
+
 **Default Run Pre-requisites**:
   * Download Radiosondes for `North_America` in `2023`
   * Download ERA5 forecast for `North_America` in `2023`
@@ -273,6 +275,7 @@ These plots assume the proper data has been downloaded and analyzed for the desi
 ![alt text](Pictures/gifs/radiosonde_era5_difference-2022.gif)
 
 * ``plotting/era5scatterplot.py``: Produces 2D and 3D scatter plots and overall trend lines for ERA5 vs Radiosdone OW analysis.
+
 **Default Run Pre-requisites**:
   * Download Radiosondes for `North_America` in `2023`
   * Download ERA5 forecast for `North_America` in `2023`
