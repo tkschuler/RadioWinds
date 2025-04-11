@@ -11,14 +11,14 @@ from plotting.plot3DWindrose import polar_interpolated_scatter_plot
 import config
 
 """
-This script determines the wind diversity statistics for one radiosonde launch. THey are classified under 4 categories. 
+This script determines the wind diversity statistics for one radiosonde launch. THey are classified under 4 categories.
 
 Fail :                            No Opposing Winds or Calm Winds
 Calm Wind Station Keeping:        There is a region with winds under speed threshold (default is 1 m/s)
 Opposing Wind Station Keeping:    There is a region with opposing winds
 Full Winds Station Keeping:       There are 4 quadrants with opposing winds for full navigation
 
-The main function downloads a radiosonde from UofWy, determines the statistics, and provides some additional plots. 
+The main function downloads a radiosonde from UofWy, determines the statistics, and provides some additional plots.
 
 The configurable config parameters that this script relies on are:
 
@@ -34,17 +34,17 @@ The configurable config parameters that this script relies on are:
 .. note:
 
     WMO is a 5 digit unique identifier and consistent between different data sources.
-    WBAN is a U.S. only 5 digit unique identifier. I'm not sure if it is consistent with WMO.  
-    I suggest we use WMO because it includes U.S. + International. 
-      
+    WBAN is a U.S. only 5 digit unique identifier. I'm not sure if it is consistent with WMO.
+    I suggest we use WMO because it includes U.S. + International.
+
     University of Wyoming uses FAA Airport Codes (no K) and WMO
-    
+
     RAOBS uses FAA Airport Codes (no K) and WMO
-    
+
     IGRA2 uses WMO
-    
+
     # Use WMO code or Airport Abbreviation/Nickname. Abbreviation is not consistent between UWY, IGRA2, and RAOBS but WMO code is.
-    
+
     Additional References:
     https://rucsoundings.noaa.gov/raob.short
     https://www1.ncdc.noaa.gov/pub/data/igra/igra2-station-list.txt
@@ -113,11 +113,22 @@ def determine_opposing_winds(df, wind_bins, n_sectors, speed_threshold = 4):
     if config.type == "PRES":
         dir_edges, var_bins, table = windrose.windrose.histogram(wd, pressure, bins=wind_bins, nsector=n_sectors)
 
+
+    #print(table)
+    #sdfsRsdf
     #Determine the sectors (directions) that contain non zero values (altitude levels that have wind)
     df = pd.DataFrame(table)
 
 
     altitude_lookup_idxs = df.apply(np.flatnonzero, axis=0) # altitude can be pressure or height, depending on by_pressure variable
+
+
+    #print(df)
+    #print(wind_bins)
+    #print(altitude_lookup_idxs)
+    #print(np.sum(table,axis=0))
+    #sdfs
+
 
     opposing_wind_levels = np.array([])
     opposing_wind_directions = np.array([])
@@ -130,6 +141,7 @@ def determine_opposing_winds(df, wind_bins, n_sectors, speed_threshold = 4):
         if np.sum(table, axis=0)[i] != 0 and np.sum(table, axis=0)[i+int(n_sectors/2)] != 0:
             for idx in altitude_lookup_idxs[i]:
                 opposing_wind_levels = np.append(opposing_wind_levels, var_bins[idx])
+                print(var_bins[idx])
                 opposing_wind_directions = np.append(opposing_wind_directions, i)
             for idx in altitude_lookup_idxs[i+int(n_sectors/2)]:
                 #print(var_bins[idx])
@@ -139,6 +151,8 @@ def determine_opposing_winds(df, wind_bins, n_sectors, speed_threshold = 4):
     # sort the opposing wind altitudes and direction idxs (format later) in ascending order and remove duplicates
     opposing_wind_levels = np.sort(np.unique(opposing_wind_levels))
     opposing_wind_directions = np.sort(np.unique(opposing_wind_directions))
+
+    #print(opposing_wind_levels)
 
     return opposing_wind_directions, opposing_wind_levels
 
@@ -278,7 +292,7 @@ if __name__ == "__main__":
     alt = np.asarray(df['height'])
     pressure = np.asarray(df['pressure'])
 
-    print(ws)
+    #print(ws)
 
     ax2 = windrose.WindroseAxes.from_ax()
     ax2.bar(wd, ws, opening=.8, bins=np.arange(0, 50, 5), nsector=n_sectors, cmap=cm.cool_r)
@@ -329,8 +343,8 @@ if __name__ == "__main__":
         print("Opposing Wind Levels:", opposing_wind_levels)
 
         # PLOTTING AFTER FILTERING
-        print(df)
-        print(alt)
+        #print(df)
+        #print(alt)
 
     # Altitude Windrose
     ax = windrose.WindroseAxes.from_ax()

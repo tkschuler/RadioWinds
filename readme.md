@@ -1,13 +1,11 @@
 [![Python 3.9](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-390/)
 
 # RadioWinds
-RadioWinds provides methods for analyzing historical wind diversity trends from public archived sounding data and reanalysis forecasts (University of Wyoming Upper Air Sounding Archive and ECWMF Reanalysis Forecasts).  The sounding and forecast data is not included with this software since it is publicly available, instead a script is included for batch downloading the soundings locally  for faster and repeatable analysis.  Additionally, several plotting examples are included to visualize historical trends by station monthly, annually, and decadal as well as the ability to do regional trends monthly or annually in the form of colored maps.
+RadioWinds provides methods for analyzing historical wind diversity trends from public archived sounding data and reanalysis forecasts (University of Wyoming Upper Air Sounding Archive and ECMWF Reanalysis Forecasts).  The sounding and forecast data is not included with this software since it is publicly available, instead a script is included for batch downloading the soundings locally  for faster and repeatable analysis.  Additionally, several plotting examples are included to visualize historical trends by station monthly, annually, and decadal as well as the ability to do regional trends monthly or annually in the form of colored maps. 
 
 ## Dependencies
 
-It is highly recommended to use WSL2 if using Windows.  Several of these python
-libraries are untested on Windows, but have been tested to run with WSL Ubuntu
-22.04 running on Windows 11.
+It is highly reccomended to use WSL2 if using Windows.  Several of these python libraries are untested on Windows, but have been tested to run with WSL Ubuntu 22.04 running on Windows 11. 
 If still wanting to run directly on windows, see troubleshooting tips below.
 
 For easy install on WSL and Ubuntu use:
@@ -18,25 +16,6 @@ pip install -r requirements.txt
 For easy install on Windows use:
 ```
 python3 -m pip install -r requirements-Windows.txt
-```
-
-Additionally, you will need to install Chrome (default) or Firefox websdriver
-to use `dfi_image` package to generate colored probability tables
-
-```
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt -y install ./google-chrome-stable_current_amd64.deb
-```
-
-or
-
-```
-sudo snap install firefox
-```
-
-Next install RadioWinds:
-```
- pip3 install -e .
 ```
 
 Tested to work on Windows 11 with the following:
@@ -61,25 +40,25 @@ OLD Windows debug stuff
 * Install [UDUNITS 2.2.28](https://docs.unidata.ucar.edu/udunits/current/index.html#Windows:~:text=the%20source%20directory.-,3.3.2%20Installing%20from%20source%20on%20Windows,-Download%20the%20source)
   manually im Powershell using Chocolatey for make
     * With Chocolatey, instead of `make install all` use `choco install make`
-    * If trouble with Expat when using cmake, see this [help thread](https://github.com/Unidata/UDUNITS-2/issues/16)
+    * If trouble with Expat when using cmake, see this [help thread](https://github.com/Unidata/UDUNITS-2/issues/16) 
 -->    
 
-**!IMPORTANT: In Siphon, for downloading individual soundings, download the latest version of
-Wyoming.py from siphon Github,  newer than the 0.9 release.** This takes care of the occasional
+**!IMPORTANT: In Siphon, for downloading individual soundings, download the latest version of 
+Wyoming.py from siphon Github,  newer than the 0.9 release.** This takes care of the occasional 
 height folding issue. We take care of it in ``SiphonMulti.py`` starting on line 131.
 
 
 ## Downloading Historical Sounding Data
 
-There are 3 main sources for acquiring sounding data
+There are 3 main sources for aaqquiring sounding data
 * https://weather.uwyo.edu/upperair/sounding.html
 * https://ruc.noaa.gov/raobs/
 * https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C00975
 
 
-We determined that RAOBs is missing wind data outside of the mandatory pressure levels both for ASCII and netcdf format.
+We determined that RAOBs is missing wind data outside of the mandatory pressure levels both for ASCII and netcdf format. 
 
-It's also important to note IGRA2 and UofWy have some data discrepancies for the same soundings.  Below is an explanation:
+It's also important to note IGRA2 and UofWy have some data discrepencies for the same soundings.  Below is an explanation:
 
 
 > "
@@ -105,53 +84,53 @@ It's also important to note IGRA2 and UofWy have some data discrepancies for the
 
 
 
-For this project we use UofWY because the dataset is easier to work with.  You can download an individual sounding or up to a month by modifying the URL,  whereas with IGRA2 you have to download a huge file of every sounding that station ever had and then parse through all the raw text to find the sounding you're looking for.
+For this project we use UofWY because the dataset is easier to work with.  You can download an individual sounding or up to a month by modifying the URL,  whereas with IGRA2 you have to download a huge file of every sounding that station ever had and then parse through all the raw text to find the sounding you're looking for. 
 
 ## Primary File Summaries
 
 To run properly, and have the scripts be able to find other directories, always run from the main RadioWinds directory. For example:
-``python3 analysis/batchAnalysis.py`` Running from within the other directory might cause issues finding data sources and exporting plots and maps.
+``python3 analysis/batchAnalysis.py`` Running rom within the other directory might cause issues finding data sources and exporting plots and maps. 
 
 
 ``config.py`` The main configuration file for many of the scripts below.
 
 ``utils.py`` Common repeated functions that are used across multiple scripts
 
-``analysis/SiphonMulti.py`` This script extends the Siphon Library to be able to download a month of data from UofWy rather than only one sounding at a time.  This greatly speeds up the ability to bulk download soundings
+``SiphonMulti.py`` This script extends the Siphon Library to be able to download a month of data from UofWy rather than only one sounding at a time.  This greatly speeds up the ability to bulk download soundings 
 
-``analysis/AnnualWyomingDownload.py`` This script batch downloads soundings for an entire year locally and organizes the soundings by *year/month/sounding.csv*.  To automate this process we use *continent.csv* in *Radiosonde_String_Parsing/Cleaned/** for a lists of soundings to download from, and then do that for every year.  We use multiprocessing to asyncronously download [multiple stations by month] simultaneously rather than [one station one month] at a time.  
+``AnnualWyomingDownload.py`` This script batch downloads soundings for an entire year locally and organizes the soundings by *year/month/sounding.csv*.  To automate this process we use *continent.csv* in *Radiosonde_String_Parsing/Cleaned/** for a lists of soundings to download from, and then do that for every year.  We use multiprocessing to asyncronously download [multiple stations by month] simultaneously rather than [one station one month] at a time.  
 
-``analysis/opposing_wind_wyoming.py`` This script analyzes the wind diversity for an individual sounding.  It checks for 4 categories:  Fail, Calm Winds, Opposings Winds, and Full Wind Diversity. if running this file standalone, it all produces windrose plots of the sounding.
+``opposing_wind_wyoming.py`` This script analyzes the wind diversity for an individual sounding.  It checks for 4 categories:  Fail, Calm Winds, Opposings Winds, and Full Wind Diversity. if running this file standalone, it all produces windrose plots of the sounding.
 
-``analysis/batchAnalysis.py``  this script does opposing wind anaylsis for a year of soundings per station.  Currently, we assume that the soundings were downloaded properly and in full by ``AnnualWyomingDownload.py.``  (If the script finished running everything should be downloaded for the parameters). We should add some error handling for incomplete downloads. The script then generates binary opposing wind charts organized by date and altitude level (500m increments) for each month.  After all 12 months are analyzed and saved,  a final annual probability chart is saved by taking the max probability from each altitude level per month.
+``batchAnalysis.py``  this script does opposing wind anaylsis for a year of soundings per station.  Currently, we assume that the soundings were downloaded properly and in full by ``AnnualWyomingDownload.py.``  (If the script finished running everything should be downloaded for the parameters). We should add some error handling for incomplete downloads. The script then generates binary opposing wind charts organized by date and altitude level (500m increments) for each month.  After all 12 months are analyzed and saved,  a final annual probability chart is saved by taking the max probability from each altitude level per month.
 
-``analysis/ERA5.py`` This script creates a *radiosonde-like* dataframe for running ``opposing_wind_wyoming.py`` with ERA5 forecasts.  Download a netcdf ERA5 forecast from [ECWMF Copernicus CDS](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview) which includes the right timestamp, geographic region, pressure levels [300-10hPa], geopotential, u-wind, v-wind, and temperature.
+``ERA5.py`` This script creates a *radiosonde-like* dataframe for running ``opposing_wind_wyoming.py`` with ERA5 forecasts.  Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=form which includes the right timestamp, geographic region, pressure levels [300-10hPa], geopotential, u-wind, v-wind, and temperature. 
 
 
 ## Getting Started
 
 ### 1. Download Radiosonde Data Locally
-To begin using RadioWinds first you need to have monthly radiosonde data locally downloaded by running ``AnnualWyomingDownload.py``.
+To begin using RadioWinds first you need to have monthly radiosonde data locally downloaded by running ``AnnualWyomingDownload.py``. 
 
 The main function gives an example of providing a list of station to download, from a region of interest ("continent").
 The script should run as is with the current ``config.py`` variables.
 
-The `continent`, `start_year`, `end_year`, and directories can be modified in ``config.py``
+The continent, start_year, end_year, and directories can be modified in ``config.py``
 Radiosonde_station_Info/CLEANED gives nice continents to chose as a starting list to download.
 
-These continent csv's were generated by scraping the html from UofWy's Upper Sounding page and generating a csv of the station's info for that region
+These continent csvs were generated by scraping the html from UofWy's Upper Sounding page and generating a csv of the station's info for that region
 logging shows additional information text when downloading
-parallelizing downloads each station's data for a year in it's on thread, greatly speeding up the download process.
+parralelizing downloads each station's data for a year in it's on thread, greatly speeding up the download process.
 Note: If downloading hangs, follow the instructions at the top ``AnnualWyomingDownload.py``
 
-Several saved data folders will appear as nan - 00000.  This is because several stations don't have an FAA identifier. However the 5 digit code is an active WMO identifier.
+Several saved data folders will appear as nan - 00000.  This is because several stations don't have an FAA identifier. However the 5 digit code is an active WMO identifier. 
 
-After downloading, run ``checkRadiosondeDownloads.py`` to make sure everything downloaded properly.  If everything downloaded properly, no red text should be output.
+After downloading, run ``checkRadiosondeDownloads.py`` to make sure everything downloaded properly.  If everything downloaded properly, no red text should be output. 
 If there is error text, follow the instructions at the top of ``AnnualWyomingDownload.py``.
 
 
 ### 2. Batch Analyze the Radiosonde Data for Wind Diversity
-``opposing_wind_wyoming.py`` gives an example of determining wind diversity for an individual sounding and generates some nice plots.
+``opposing_wind_wyoming.py`` gives an example of determining wind diversity for an individual sounding and generates some nice plots. 
 I recommend running this first to get an idea of what batch analysis is going to do.
 The configurable config parameters that this script relies on are:
 
@@ -168,11 +147,11 @@ The configurable config parameters that this script relies on are:
 ![alt text](Pictures/wind-bins2.jpg)
 
 
-``batchAnalysis.py`` provides methods for batch analyzing multiple stations for wind diversity one **month** at a time,
+``batchAnalysis.py`` provides methods for batch analyzing multiple stations for wind diversity one **month** at a time, 
 and exporting the analyzed results for faster plotting by other scripts. The main function provides an example of how to analyze all the monthly and annual data
 for an individual station in a given year using a list of stations for a continent. It should run as is if the sounding data for the given **start_year** and **end_year** range is downloaded.
 
-Once the script is finished, run the script again.  If all output text is green, then the monthly and annual data should be fully analyzed.
+Once the script is finished, run the script again.  If all output text is green, then the monthly and annual data should be fully analyzed. 
 
 Recommended config settings:
 
@@ -190,18 +169,16 @@ dataframe tables like below.  Generating colored tables, significantly increases
 ![alt text](Pictures/MonthlyWindProbability.png)
 ![alt text](Pictures/AnnualWindProbability3.png)
 
-The station probability images will be saved in the `analysis_folder` within the station directory of interest
-
 ### 2a. Batch Analyze ERA Data for Wind Diversity
 
 Another parameter in ``config.py`` is the **mode**, which can be *"radiosonde"* or *"era5"*. The default is to use radiosonde data for wind diversity, because of the significantly higher vertical resolution.
 But we also provide a method for performing the same analysis with ERA5 Reanalysis forecasts.
 
-ERA5 forecasts are conveniently split into pressure levels.
+ERA5 forecasts are convienently split into pressure levels.
 If downloading a different range of pressure levels, you will need to update **era5_pressure_levels** in ``config.py``.
 
 The default **era5_pressure_levels** for wind diversity
-analysis for HAPS is between 10-300 hpa (~10-30 km).
+analysis for HAPS is between 10-300 hpa (~10-30 km). 
 
 ``era5_pressure_levels = np.asarray([300, 250, 225, 200, 175, 150, 125, 100, 70, 50,  30,  20, 10])``
 
@@ -212,8 +189,8 @@ Below shows example parameters for downloading forecasts for wind diversity anal
 ![alt text](Pictures/era5-download-2.png)
 ![alt text](Pictures/era5-download-3.png)
 
-Note: ERA5 forecasts may need to be downloaded in batches depending on the region or time periods of interest.
-The Copernicus server does not support downloads over 10 gigs.
+Note: ERA5 forecasts may need to be downloaded in batches depending on the region or time periods of interest. 
+The copernicus server does not support downloads over 10 gigs.
 
 Option 1 is to do 2 different regions at a time. For instance North America, and then South America. This is what I've been doing
 
@@ -222,70 +199,43 @@ Option 2 is to partially download the region of interest then combine files.
 
 
 Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=form
-which includes the right timestamp, geographic region, pressure levels [300-10hPa],
+which includes the right timestamp, geographic region, pressure levels [300-10hPa], 
 geopotential, u-wind, v-wind, and temperature.
 
 
-### 3a. Plotting 1 Sounding Launch
-**Pre-requisites**: requires a sounding downloaded, or stored in the proper format.  
-Best way is to run ``AnnualWyomingDownload.py``
+### 3a. Plotting and Mapping for 1 Station
 
-* ``plotting/plot3DWindrose.py``: Default plots for Hilo, Hawaii (PHTO) in 2023
+* ``plot3DWindrose.py``:
 ![alt text](Pictures/Hilo-Hodograph.png)
 * ``plot_wind_quadrants.py``
 * ``skew-T.py`` [TODO]
 * ``diurnal.py`` [TODO]
 
 
-### 3b. Annual Plotting and Mapping
-The following scripts generate plots and maps of monthly and annual wind diversity trends.
-These plots assume the proper data has been downloaded and analyzed for the desired
- **year** and **continent** (may be multiple years and continents)
+### 3b. Plotting and Mapping for 1 Station
+The following scripts generate plots and maps of monthyl and annual wind diverstiy trends. These plots assume all the radiosonde
+data for the desired **year** and **continent** have been downloaded (``AnnualWyomingDownload.py``).  As well as the
+corresponding analysis scripts (``batchAnalysis.py``,``batchAnalysis-Calm.py``, ``batchAnalysis-Burst.py``)
 
 
-* ``plotting/hovmoller-full-wind-station.py``
-
-**Default Run Pre-requisites**: Produces an annual full wind directionality Hovmoller plot for a particular station (ex: SLC)
-   * Download Radiosondes for `North_America` in `2023`
- ![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
-
-* ``Mapping/map_stations.py``: Produces a plot of all stations in the UofWy Dataset
+Annual Plotting and Mapping Scripts:
+* ``Mapping/map_stations.py``:
 ![alt text](Pictures/UofWyRadisondeMapColored.png)
-
-* ``Mapping/burst_map.py``: Produces a map of annual burst averages for each station in the downloaded and burst analyzed regions
-
-**Default Run Pre-requisites**:
-  * Download Radiosondes for `North_America` in `2023`
-  * Run ``Analysis/batchAnalysis-Burst.py`` for `North_America` in `2023` with type `ALT`
+* ``Mapping/burst_map.py``:
 ![alt text](Maps/2023/World-BURST-2023_ALT_radiosonde-2023-AVERAGE.png)
-
-* ``Mapping/rainbow_probabilities.py``: Produces Monthly Opposing Winds Probability Maps (ex. North_America in 2023)
-
-**Default Run Pre-requisites**:
-  * Download Radiosondes for `North_America` in `2023`
-  * Run ``Analysis/batchAnalysis.py`` for `North_America` and  in `2023` with type `ALT`
+* ``plotting/hovmoller-full-wind-station.py``:
+![alt text](Pictures\Hovmoller-Full-Winds/SLC-2012.png)
+* ``Mapping/rainbow_probabilities.py``:
 ![alt text](Pictures/gifs/opposing-winds-western-hemisphere-2023.gif)
-
-* ``Mapping/difference_maps.py``: Produces a map of OW probability differences between ERA5 and radiosondes
-
-**Default Run Pre-requisites**:
-  * Download Radiosondes for `North_America` in `2023`
-  * Download ERA5 forecast for `North_America` in `2023`
-  * Run (2) ``Analysis/batchAnalysis.py`` for `North_America` in `2023` with type `PRES` for both mode `era5` and mode `radiosonde`
+* ``Mapping/difference_maps.py``:
 ![alt text](Pictures/gifs/radiosonde_era5_difference-2022.gif)
-
-* ``plotting/era5scatterplot.py``: Produces 2D and 3D scatter plots and overall trend lines for ERA5 vs Radiosdone OW analysis.
-
-**Default Run Pre-requisites**:
-  * Download Radiosondes for `North_America` in `2023`
-  * Download ERA5 forecast for `North_America` in `2023`
-  * Run (2) ``Analysis/batchAnalysis.py`` for `North_America` in `2023` with type `PRES` for both mode `era5` and mode `radiosonde`
+* ``Mapping/era5scatterplot.py``:
 ![alt text](Pictures/radiosonde_vs_era5_mean_lat_opposing_wind_trend.png)
 
 
 ### 4. Decadal Analysis, Plotting, and Mapping
 
-First, make sure the analysis files in step 3 have been run for the **years** and **regions** of interest
+First, make sure the analysis files in step 3 have been run for the **years** and **regions** of interest 
 before trying to run decadal analysis scripts.  Some plots and maps require running an additional decadal analysis script.
 
 Decadal Analysis scripts:
@@ -304,12 +254,12 @@ Decadal Plotting and Mapping Scripts:
 
 
 ## Notes/Discussion
-* While not the same, we assume geopotential height and geometric height are the same for this analysis.  At stratospheric altitudes, the difference is usually 100-200m of difference.
-* When binning winds,  it can be good to go over the limit to include some measurements outside the desired range for more accurate results.
-  * For instance, when doing radiosonde-based batch analysis with a pressure of 125 hPa, anything above 125 won't be included even though 126hPa is much closer to the mandatory pressure level of 125 than the next highest level of 150.  This causes lower opposing wind probabilities at the maximum and minimum altitudes.
-* Pressure is not linear like altitude,  so binning to the mandatory levels may not be the best method for radiosonde data.  Because higher altitudes will have a lot more readings assigned to the pressure levels since they are more spaced out.
-* Altitude is tough to compare between radiosonde and ERA5 forecasts because of the geopotential to height conversion.  (The heights are not the same level for every location and time of year).  Therefore pressure makes more sense to compare,  however the pressure bins are huge altitude gaps, so that doesn't tell the full story either.
-* Wind transition regions between 2 opposing wind altitudes levels have the most variability and calm winds.  Many commercial balloon navigators try to avoid these regions because they're unpredictable
+* While not the same, we assume geopotential height and geometric height are the same for this analysis.  At stratospheric altitudes, the difference is usually 100-200m of difference. 
+* When binning winds,  it can be good to go over the limit to include some measurements outside the desired range for more accurate results. 
+  * For instance, when doing radiosonde-based batch analysis with a pressure of 125 hPa, anything above 125 won't be included even though 126hPa is much closer to the mandatory pressure level of 125 than the next highest level of 150.  This causes lower opposing wind probabilities at the maximum and minimum altitudes. 
+* Pressure is not linear like altitude,  so binning to the mandatory levels may not be the best method for radiosonde data.  Because higher altitudes will have a lot more readings assigned to the pressure levels since they are more spaced out. 
+* Altitude is tough to compare between radiosonde and ERA5 forecasts because of the geopotential to height conversion.  (The heights are not the same level for every location and time of year).  Therefore pressure makes more sense to compare,  however the pressure bins are huge altitude gaps, so that doesn't tell the full story either. 
+* Wind transition regions between 2 opposing wind altitudes levels have the most variability and calm winds.  Many commercial balloon navigators try to avoid these regions because they're unpredictable 
 * The UofWy maps where we downloaded the continent stations lists from, changes from day to day, based on launches for that day.  So there's a good chance our station lists are missing a few.
 
 ## Authors

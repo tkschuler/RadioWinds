@@ -1,20 +1,16 @@
 SOUNDINGS_DATA2/
 
 .idea/
+.vscode/
 
 forecasts/
 SOUNDINGS_DATA/
 
-era5_ANALYSIS_PRES/
-era5_ANALYSIS_ALT/
-radiosonde_ANALYSIS_PRES/
-radiosonde_ANALYSIS_ALT/
-radiosonde_ANALYSIS_ALT-New/
-radiosonde_ANALYSIS_ALT-CALM/
-radiosonde_ANALYSIS_ALT-BURST/
-radiosonde_ANALYSIS_ALT-FULL/
 
-MAPS/
+radiosonde_ANALYSIS*/
+era5_ANALYSIS*/
+
+#MAPS/
 
 
 # Byte-compiled / optimized / DLL files

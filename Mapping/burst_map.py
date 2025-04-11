@@ -58,16 +58,8 @@ lats = np.arange(min_lat,max_lat,res)
 
 grid_x, grid_y = np.meshgrid(lons, lats)
 
-# Choose what Regions to plot
-continent = "North_America"
-stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1) #utils.getWorldStations()
 
-'''
-continent2 = "South_America"
-stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
-
-stations_df = pd.concat([stations_df, stations_df2])
-'''
+stations_df = utils.getWorldStations()
 
 print(stations_df)
 

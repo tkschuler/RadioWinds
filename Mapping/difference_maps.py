@@ -1,11 +1,5 @@
-"""
-This produces maps of probability differences between era5 and radiosonde analysis.
-Recommended to use PRES levels instead of Alt (because ERA5 comes with PRES levels)
-
-Therefore era5 and radiosonde for the region of interest must already be downloaded and analyzed
-"""
-
- cartopy.io
+import cartopy.crs as ccrs
+import cartopy.io
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 import pandas as pd
@@ -64,12 +58,12 @@ continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-'''
+
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
-'''
+
 
 
 #Generate a new dataframe of montly probaibilties for each station to add to the stations_df. Take the max probability (per alt/pres)
@@ -80,8 +74,8 @@ for row in stations_df.itertuples(index = 'WMO'):
     FAA = row.FAA
     Name = row.Station_Name
 
-    radiosonde_analysis = config.base_directory  + 'radiosonde' + '_ANALYSIS_' + 'PRES' + '/'
-    era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'PRES' + '/'
+    radiosonde_analysis = config.base_directory  + 'radiosonde' + '_ANALYSIS_' + 'ALT' + '/'
+    era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'ALT-new' + '/'
 
     analysis_folder = config.analysis_folder
 
@@ -97,7 +91,7 @@ for row in stations_df.itertuples(index = 'WMO'):
     #print(radiosonde)
     #print(era5)
 
-    difference = (radiosonde - era5).abs()
+    difference = (radiosonde - era5) #.abs()
     #print(difference)
     df = difference # radiosonde/(difference+.01)
     #df = df/df.max()
@@ -163,7 +157,7 @@ for month in range (1,12+1):
 
 
 
-    extent = [-170, -20, -25, 40] # Western Hemisphere
+    extent = [-160, -32, -33, 50] # Western Hemisphere
     #extent = [min_lon-10, max_lon + 10, min_lat-10, max_lat +10]
     #extent = [(min_lon -360)-20, (max_lon -360)-15, min_lat - 1, max_lat]
 
@@ -179,9 +173,11 @@ for month in range (1,12+1):
 
 
     #ax = plt.axes(projection=ccrs.PlateCarree())
-    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='gist_heat_r', alpha=.8, vmin=0, vmax=1)
-    cbar = fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
-    cbar.ax.yaxis.set_major_formatter(PercentFormatter(1, 0))
+    #D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='gist_heat_r', alpha=.8, vmin=0, vmax=1)
+    D = ax.pcolormesh(lons, lats, zi, transform=ccrs.PlateCarree(), cmap='seismic', alpha=.8, vmin=-1, vmax=1)
+    #Remove individual color bars for appendix figure
+    #cbar = fig.colorbar(D, ax=ax, shrink=.5, pad=.01)
+    #cbar.ax.yaxis.set_major_formatter(PercentFormatter(1, 0))
     #fig.colorbar.set_ylim(0, 1)
     #plt.clim(0,1)
     #ax.scatter(stn_lon, stn_lat, transform=ccrs.PlateCarree(), marker='+', s=100, c='k', linewidth=3)
@@ -193,6 +189,11 @@ for month in range (1,12+1):
     ax.scatter(stations_df[' LONG'], stations_df['  LAT'], marker = ".", c = "cyan", s= 4, transform = ccrs.Geodetic(), zorder=200)
 
     ax.add_feature(cfeature.OCEAN, facecolor = 'gray', alpha = 1, zorder = 150)
+
+    Months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+              'November', 'December']
+    ax.set_title(Months[month], fontsize=30)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
     '''
     ax.set_title(" % Error between Radiosonde and Forecasts \n " +
@@ -209,5 +210,5 @@ for month in range (1,12+1):
         # Create a new directory because it does not exist
         os.makedirs(path)
 
-    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month), bbox_inches='tight')
+    plt.savefig(path +"/" +  prefix + "_" + config.type+ "_" + config.mode + "-" + str(year) + '-' + str(month) +".jpg", bbox_inches='tight')
     #plt.show()

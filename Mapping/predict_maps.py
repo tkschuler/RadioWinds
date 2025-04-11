@@ -1,10 +1,3 @@
-"""
-This script requries both ERA5 and radiosonde data to have been downloaded and
-analyzed for the region of interest
-
-At default it will run with North America for one year (2023)
-"""
-
 import cartopy.crs as ccrs
 import cartopy.io
 import matplotlib.pyplot as plt
@@ -55,7 +48,7 @@ grid_x, grid_y = np.meshgrid(lons, lats)
 
 
 continent = "North_America"
-stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
+stations_df = pd.read_csv('Radisonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
 '''

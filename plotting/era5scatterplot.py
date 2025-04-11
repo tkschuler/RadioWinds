@@ -25,12 +25,12 @@ continent = "North_America"
 stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv", index_col=1)
 #stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-'''
+#'''
 continent2 = "South_America"
 stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv", index_col=1)
 
 stations_df = pd.concat([stations_df, stations_df2])
-'''
+#'''
 
 
 stations_df = utils.convert_stations_coords(stations_df)
@@ -56,8 +56,8 @@ for row in stations_df.itertuples(index = 'WMO'):
     FAA = row.FAA
     Name = row.Station_Name
 
-    radiosonde_analysis = config.base_directory  + 'radiosonde' + '_ANALYSIS_' + 'PRES' + '/'
-    era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'PRES' + '/'
+    radiosonde_analysis = config.base_directory  + 'radiosonde' + '_ANALYSIS_' + 'ALT' + '/'
+    era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'ALT-new' + '/'
 
     analysis_folder = config.analysis_folder
 
@@ -203,13 +203,23 @@ colors = cm.hsv(np.linspace(0, 1, 13))
 for i in range(1,13):
     plt.scatter(df_radiosonde[i], df_era5[i], color = colors[i], label=Months[i])
 
+#Bias line
+# Add a diagonal line (x = y) for comparison
+min_value = min(np.min(df_radiosonde[1:].values), np.min(df_era5[1:].values))  # min of both datasets
+max_value = max(np.max(df_radiosonde[1:].values), np.max(df_era5[1:].values))  # max of both datasets
+
+print(min_value,max_value)
+# Create a diagonal line between the min and max values of the data
+plt.plot([0, 1], [0, 1], color='black', linestyle='-')
+
+
 
 plt.legend()
 
 plt.xlabel("Radiosonde opposing wind probability")
 plt.ylabel("ERA5 Reanalysis Forecast opposing wind probability")
 plt.title("Comparison of Pressure level based Opposing Wind Probabilities between Radiosondes \n"
-          "and ERA5 Reanalysis Forecasts in "  + str(year) + " in the North America")
+          "and ERA5 Reanalysis Forecasts in "  + str(year) + " in North America")
 
 
 fig = plt.figure(figsize=(12, 12))
@@ -247,6 +257,6 @@ plt.title("Annual Mean Opposing Wind Probabilities by Latitude \n"
 plt.ylabel("Annual Mean Opposing Wind Probability")
 plt.xlabel("Latitude")
 
-pickle.dump(fig, open('ERA5-Radiosonde-Lat-3DSCATTER-2023.fig.pickle', 'wb')) # This is for Python 3 - py2 may need `file` instead of `open`
+#pickle.dump(fig, open('ERA5-Radiosonde-Lat-3DSCATTER-2023.fig.pickle', 'wb')) # This is for Python 3 - py2 may need `file` instead of `open`
 
 plt.show()

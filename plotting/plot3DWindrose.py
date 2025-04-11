@@ -17,8 +17,7 @@ from metpy.units import units
 from siphon.simplewebservice.wyoming import WyomingUpperAir
 import numpy as np
 import matplotlib.pyplot as plt
-#from matplotlib import cm
-#import matplotlib.colormaps as cm
+from matplotlib import cm
 import pandas as pd
 import config
 
@@ -109,27 +108,27 @@ def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolatio
         http://colaweb.gmu.edu/dev/clim301/lectures/wind/wind-uv
         https://confluence.ecmwf.int/pages/viewpage.action?pageId=133262398
         https://www.eol.ucar.edu/content/wind-direction-quick-reference
-
+        
         # Meteorological Wind Convention:
         U-winds are E-W
         V-winds are N-S
-
-        A positive u-wind blows **to** the East and is known as a **"Westerly"** wind
+        
+        A positive u-wind blows **to** the East and is known as a **"Westerly"** wind 
         A positive v-wind blows **to** the North and is known as a  **"Southerly"** wind
-
-        Geographic Wind Direction Typical Convention:
-
+        
+        Geographic Wind Direction Typical Convention: 
+        
                          +V-WIND
-                          (+)
+                          (+)       
                            0°
                            ▲
-                           N
-                           |
+                           N               
+                           |               
           (-) 270° ◀ W ── [■] ── E ⯈ 90° (+)  +U-WIND
-                           |
-                           S
-                           ▼
-                          180°
+                           |               
+                           S              
+                           ▼ 
+                          180°  
                           (-)
 
         '''
@@ -289,7 +288,7 @@ if __name__=="__main__":
     polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing_to = config.blowing_to, station = station, date = date)
 
     #To plot the sounding datapoints on top of the interpolated plot:
-    viridis = plt.get_cmap('Set1', 1) #This is jsut to get red dots
+    viridis = cm.get_cmap('Set1', 1) #This is jsut to get red dots
     polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing_to = config.blowing_to, station = station, date = date)
 
 

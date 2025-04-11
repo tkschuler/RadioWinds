@@ -8,6 +8,8 @@ Soundings data needs to already be downloaded (AnnualWyomingDownload.py) and ana
 import pandas as pd
 import numpy as np
 import os
+import sys
+sys.path.append('../RadioWinds')
 import config
 import glob
 import utils

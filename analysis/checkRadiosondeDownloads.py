@@ -1,5 +1,8 @@
 import os
 from termcolor import colored
+
+import sys
+sys.path.append('../RadioWinds')
 import config
 
 '''

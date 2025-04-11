@@ -10,46 +10,77 @@ import numpy as np
 import datetime as dt
 import utils
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import config
 
 import matplotlib.pyplot as plt
 from matplotlib.dates import MonthLocator, YearLocator, WeekdayLocator, DateFormatter
 import matplotlib.ticker as ticker
 
-FAA = "SLC"
+FAA = "SCCI"
 WMO = utils.lookupWMO(FAA)
 Station_Name = utils.lookupStationName(FAA)
-print(WMO, FAA, Station_Name)
+CO = utils.lookupCountry(FAA)
+lat,lon,el = utils.lookupCoordinate(FAA)
+print(WMO, FAA, Station_Name, lat,lon,el)
 
 def getDecadalMonthlyMeans(FAA, WMO):
     decadal_df = None
     #for year in range (config.start_year, config.end_year +1):
-    analysis_folder = utils.get_analysis_folder(FAA, WMO, 2023)
+    analysis_folder = utils.get_analysis_folder(FAA, WMO, config.start_year)
     analysis_folder = os.path.dirname(os.path.dirname(analysis_folder)) + "/" #Go up one level to get annual
     #analysis_folder = analysis_folder[:-13]  #go up one directory
+
     files = [f for f in listdir(analysis_folder) if f.endswith(".csv")]
     print(analysis_folder)
     print(files)
-    for file in files:
-        print(file)
-        try:
-            year = int(file[9:-29])
-            print(year)
-            df = pd.read_csv(analysis_folder + file, index_col=0)
-            df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
 
-            if decadal_df is None:
-                decadal_df = df.copy()
-            else:
-                decadal_df = pd.concat([decadal_df, df])
+    #Iterate through for one year vs decadal
+    if config.start_year != config.end_year:
+        for file in files:
+            print(file)
+            try:
+                # Extract year from the file name
+                year = int(file[9:-29])  # Adjust indices based on your file naming pattern
+                print(f"Processing file: {file}, Year: {year}")
 
-        except:
-            pass #skip for decadal analysis files.
+                df = pd.read_csv(analysis_folder + file, index_col=0)
+                df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
+
+                if decadal_df is None:
+                    decadal_df = df.copy()
+                else:
+                    decadal_df = pd.concat([decadal_df, df])
+
+            except:
+                pass #skip for decadal analysis files.
+    else:
+        for file in files:
+            try:
+                # Extract year from the file name
+                year = int(file[9:-29])  # Adjust indices based on your file naming pattern
+                print(f"Processing file: {file}, Year: {year}")
+
+                # Only process files matching the target year
+                if year == config.start_year:
+                    df = pd.read_csv(analysis_folder + file, index_col=0)
+                    df.index = pd.to_datetime(dict(year=year, month=df.index, day=1))
+
+                    # Concatenate data into the decadal_df
+                    if decadal_df is None:
+                        decadal_df = df.copy()
+                    else:
+                        decadal_df = pd.concat([decadal_df, df])
+                else:
+                    print(f"Skipping file: {file} (Year: {year} does not match target year {config.start_year})")
+
+            except Exception as e:
+                print(f"Error processing file {file}: {e}")
+                pass  # Skip files that don't conform to the expected pattern or have issues
 
     return (decadal_df)
 
 
 decadal_df = getDecadalMonthlyMeans(FAA, WMO)
-print(decadal_df)
 
 opposing_wind_probability = decadal_df.to_numpy()
 #Create timestamps for plotting, that match dataset
@@ -63,17 +94,23 @@ fig, ax = plt.subplots(1, 1 , figsize=(18,3))
 #im = ax.pcolormesh(decadal_df.index, decadal_df.columns, opposing_wind_probability, cmap='RdYlGn', vmin=0, vmax=1)
 im = ax.contourf(decadal_df.index, decadal_df.columns, opposing_wind_probability, levels=np.linspace(0, 1., 11), cmap='RdYlGn', vmin=0., vmax=1.)
 
-#plt.title("Fairbanks, Alaska USA (65$^\circ$N)" +
-plt.title(Station_Name +
-          "\nDecadal Opposing Winds Probability for " + FAA +  " [2012-2023]", fontsize=12)
-plt.ylabel('Altitude')
+if lat >= 0:
+    plt.title(Station_Name + "- " + CO + " (Station #" + str(WMO).zfill(5) + ") - " + str(int(lat)) + "$^\circ$N",
+              fontsize=12)
+else:
+    plt.title(Station_Name + "- " + CO + " (Station #" + str(WMO).zfill(5) + ") - " + str(int(-1 * lat)) + "$^\circ$N",
+              fontsize=12)
+
+plt.ylabel('Altitude (km)')
 plt.xlabel('Date')
 
 
 divider = make_axes_locatable(plt.gca())
-cax = divider.append_axes("right", "1%", pad="3%")
+cax = divider.append_axes("right", "1%", pad="1%")
 im.set_clim(0.,1.)
-fig.colorbar(im, cax=cax, boundaries=np.linspace(0, 1, 11))
+cbar = fig.colorbar(im, cax=cax, boundaries=np.linspace(0, 1, 11))
+
+cbar.set_label("Opposing Winds Probability", labelpad=10)
 
 ax.xaxis.set_minor_locator(YearLocator(1))
 ax.xaxis.set_minor_formatter(DateFormatter('%Y'))
@@ -90,5 +127,15 @@ fig.tight_layout()
 plt.tight_layout()
 plt.margins(0.1)
 #plt.bbox_inches='tight'
-plt.savefig("Pictures/Hovmoller/" +  str(FAA), bbox_inches='tight')
+
+folder_path = "Pictures/Hovmoller-OW/" # + str(FAA) + "/"
+if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+if config.start_year == config.end_year:
+    plt.savefig(folder_path + str(config.mode) + "-optimized-WH-" + str(config.type) + "-" + str(FAA)+ "-" + str(config.start_year),
+                bbox_inches='tight')
+else:
+    plt.savefig(folder_path + str(config.mode) + "-optimized-WH-" + str(config.type) + "-" + str(FAA)+ "-DECADAL",
+                bbox_inches='tight')
 plt.show()

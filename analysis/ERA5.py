@@ -21,9 +21,32 @@ class ERA5:
         self.file = netCDF4.Dataset(filepath)
 
         self.ds = xr.open_dataset(filepath, engine="netcdf4", decode_times=True)
+        print(self.ds)
+        #dfgdfg
+
+        # Safely check if 'plev' exists in the netCDF4 dataset
+        if hasattr(self.file, 'variables') and 'plev' in self.file.variables or hasattr(self.file,
+                                                                                        'dims') and 'plev' in self.file.dims:
+            print("FIXING LON")
+            self.ds = self.ds.assign_coords(lon=self.ds.lon - 360)
+            print(self.ds)
+        else:
+            print("'plev' is not found in the dataset!")
+
+        #print(self.ds)
+        #
 
     def get_statistics(self):
         #print(self.file)
+
+        # Safely check for the presence of 'plev' coordinate and set variable names accordingly
+        if hasattr(self.file, 'variables') and 'plev' in self.file.variables or hasattr(self.file,
+                                                                                        'dims') and 'plev' in self.file.dims:
+            lat_var = "lat"
+            lon_var = "lon"
+        else:
+            lat_var = "latitude"
+            lon_var = "longitude"
 
         time_arr = self.file.variables['time']
         # Convert from epoch to human readable time. Different than GFS for now.
@@ -33,22 +56,22 @@ class ERA5:
         self.determineRanges(netcdf_ranges)
 
         # smaller array of downloaded forecast subset
-        self.lat = self.file.variables['latitude'][self.lat_max_idx:self.lat_min_idx]
-        self.lon = self.file.variables['longitude'][self.lon_min_idx:self.lon_max_idx]
+        self.lat = self.file.variables[lat_var][self.lat_max_idx:self.lat_min_idx]
+        self.lon = self.file.variables[lon_var][self.lon_min_idx:self.lon_max_idx]
 
         # min/max lat/lon degree values from netcdf4 subset
-        self.LAT_LOW = self.file.variables['latitude'][self.lat_min_idx - 1]
-        self.LON_LOW = self.file.variables['longitude'][self.lon_min_idx]
-        self.LAT_HIGH = self.file.variables['latitude'][self.lat_max_idx]
-        self.LON_HIGH = self.file.variables['longitude'][self.lon_max_idx - 1]
+        self.LAT_LOW = self.file.variables[lat_var][self.lat_min_idx - 1]
+        self.LON_LOW = self.file.variables[lon_var][self.lon_min_idx]
+        self.LAT_HIGH = self.file.variables[lat_var][self.lat_max_idx]
+        self.LON_HIGH = self.file.variables[lon_var][self.lon_max_idx - 1]
 
         print()
         print("ERA5 Forecast Statistics")
-        print("LAT RANGE: min: " + str(self.file.variables['latitude'][self.lat_min_idx - 1]),
-              " max: " + str(self.file.variables['latitude'][self.lat_max_idx]) + " size: " + str(
+        print("LAT RANGE: min: " + str(self.file.variables[lat_var][self.lat_min_idx - 1]),
+              " max: " + str(self.file.variables[lat_var][self.lat_max_idx]) + " size: " + str(
                   self.lat_min_idx - self.lat_max_idx))
-        print("LON RANGE: min: " + str(self.file.variables['longitude'][self.lon_min_idx]),
-              " max: " + str(self.file.variables['longitude'][self.lon_max_idx - 1]) + " size: " + str(
+        print("LON RANGE: min: " + str(self.file.variables[lat_var][self.lon_min_idx]),
+              " max: " + str(self.file.variables[lon_var][self.lon_max_idx - 1]) + " size: " + str(
                   self.lon_max_idx - self.lon_min_idx))
 
 
@@ -94,7 +117,12 @@ class ERA5:
             self.lon_min_idx = 0
 
     def get_station(self, time, lat, lon):
-        station_ds = self.ds.sel(time=time, longitude=lon, latitude=lat, method = "nearest")
+        if hasattr(self.file, 'variables') and 'plev' in self.file.variables or hasattr(self.file,
+                                                                                        'dims') and 'plev' in self.file.dims:
+            station_ds = self.ds.sel(time=time, lon=lon, lat=lat, method="nearest")
+        else:
+            station_ds = self.ds.sel(time=time, longitude=lon, latitude=lat, method="nearest")
+
 
         station_df = self.get_dataframe(station_ds, time)
 
@@ -102,6 +130,7 @@ class ERA5:
         return station_df
 
     def get_dataframe(self, station, time):
+        #print(station)
         g = 9.80665  # gravitation constant used to convert geopotential height to height
         df = pd.DataFrame()
 
@@ -111,7 +140,12 @@ class ERA5:
         df['v_wind'] = station.v * 1  # put in same as radiosonde format,  blowing from?
         df['speed'] = (df['u_wind'] ** 2 + df['v_wind'] ** 2) ** 0.5
         df['direction'] = (90 - np.rad2deg(np.arctan2(df['v_wind'], df['u_wind']))) % 360  # convert to meteolorological wind?
-        df['pressure'] = station.level
+        if hasattr(self.file, 'variables') and 'plev' in self.file.variables or hasattr(self.file,
+                                                                                        'dims') and 'plev' in self.file.dims:
+            df['pressure'] = station.plev/100 # Need to convert from Pa to hPa for full CDS API
+
+        else:
+            df['pressure'] = station.level
 
         #Reverse order, so altitude is in ascending order
         df = df[::-1].reset_index(drop=True)
