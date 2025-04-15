@@ -18,6 +18,11 @@ For easy install on Windows use:
 python3 -m pip install -r requirements-Windows.txt
 ```
 
+Setup Environment:
+```
+pip3 install -e .
+```
+
 Tested to work on Windows 11 with the following:
 * Python Version 3.12
 * Conda Version 23.7.4
