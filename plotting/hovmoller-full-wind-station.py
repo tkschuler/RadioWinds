@@ -11,6 +11,12 @@ from matplotlib.dates import YearLocator,  DateFormatter
 import os
 import xarray as xr
 
+
+
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath('/mnt/d/RadioWinds/config.py')))
+
 import config
 import utils
 
@@ -25,7 +31,7 @@ def handle_missing_data(df):
 
     #return df.dropna(how='all')
 
-FAA = "SCCI"
+FAA = "IAD"
 WMO = utils.lookupWMO(FAA)
 Station_Name = utils.lookupStationName(FAA)
 CO = utils.lookupCountry(FAA)
@@ -210,8 +216,8 @@ else:
 #plt.title("Puntas Arenas, Chile (53$^\circ$S)" +
 #          "\nWind Directionality for Station #" + str(WMO).zfill(5) +  " in " + str(config.start_year), fontsize=13)
 
-#plt.title(Station_Name + "- " + CO +
-#          "\nWind Directionality for Station #" + str(WMO).zfill(5) +  " in " + str(config.start_year), fontsize=13)
+plt.title(Station_Name + "- " + CO +
+          "\nWind Directionality for Station #" + str(WMO).zfill(5) +  " in " + str(config.start_year), fontsize=13)
 plt.ylabel('Altitude (m)')
 plt.xlabel('Date')
 
@@ -243,7 +249,7 @@ isExist = os.path.exists(path)
 if not isExist:
     # Create a new directory because it does not exist
     os.makedirs(path)
-#plt.savefig("Pictures/Hovmoller/" +  str(FAA), bbox_inches='tight')
+plt.savefig("Pictures/Hovmoller/" +  str(FAA), bbox_inches='tight')
 print("Saving...")
-plt.savefig(path +  str(FAA) + "-" + str(config.start_year) + -"NO-TITLE", bbox_inches='tight')
+#plt.savefig(path +  str(FAA) + "-" + str(config.start_year) + "-NO-TITLE", bbox_inches='tight')
 plt.show()

@@ -32,6 +32,36 @@ def lookupStationName(FAA):
 
     return df.loc[df['FAA'] == FAA]['Station_Name'].iloc[0]
 
+def lookupCountry(FAA):
+    path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
+    all_stations = glob.glob(os.path.join(path, "*.csv"))
+
+    df = pd.concat((pd.read_csv(f) for f in all_stations), ignore_index=True)
+    df = df.drop_duplicates(subset=['WMO'])
+
+    df = df.drop_duplicates()
+
+    return df.loc[df['FAA'] == FAA]['CO'].iloc[0]
+
+def lookupCoordinate(FAA):
+    '''
+    This is just for looking up radiosonde coordinates
+    :param FAA:
+    :return:
+    '''
+    path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
+    all_stations = glob.glob(os.path.join(path, "*.csv"))
+
+    df = pd.concat((pd.read_csv(f) for f in all_stations), ignore_index=True)
+    df = df.drop_duplicates(subset=['WMO'])
+
+    df = df.drop_duplicates()
+
+    df = convert_stations_coords(df)
+
+    #Hard coded for Western Hemisphere Right nowe
+    return df.loc[df['FAA'] == FAA]['lat_era5'].iloc[0] , df.loc[df['FAA'] == FAA]['lon_era5'].iloc[0], df.loc[df['FAA'] == FAA]['EL'].iloc[0]
+
 
 def getWorldStations():
     path = r'Radiosonde_Stations_Info/CLEANED/'  # use your path
@@ -50,7 +80,7 @@ def convert_stations_coords(stations_df):
     stations_df['lat_era5'] = stations_df.apply(lambda x: (-1 * x['  LAT'] if x['N'] == 'S' else 1 * x['  LAT']),
                                                 axis=1)
     # This works with 360-x or -1*x???
-    stations_df['lon_era5'] = stations_df.apply(lambda x: (360 - x[' LONG'] if x['E'] == 'W' else 1 * x[' LONG']),
+    stations_df['lon_era5'] = stations_df.apply(lambda x: (-1* x[' LONG'] if x['E'] == 'W' else 1 * x[' LONG']),
                                                 axis=1)
 
     return stations_df
@@ -127,19 +157,3 @@ def export_colored_dataframes(df, title, path, suffix, precision=2, export_color
     filepath_dataframe = Path(path + '/' + suffix + '.csv')
     filepath_dataframe.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(filepath_dataframe)
-
-if __name__ == '__main__':
-    import dataframe_image as dfi
-
-    # Create a sample DataFrame
-    df = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]})
-
-    print(df)
-
-    # Style the DataFrame (optional)
-    df_styled = df.style.set_properties(**{'background-color': 'lightblue',
-                                            'color': 'black',
-                                            'border-color': 'black'})
-
-    # Export the DataFrame as an image
-    dfi.export(df_styled, 'dataframe.png', table_conversion='chrome')
