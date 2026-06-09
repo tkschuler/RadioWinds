@@ -201,7 +201,7 @@ Option 1 is to do 2 different regions at a time. For instance North America, and
 
 Option 2 is to partially download the region of interest then combine files.
 
-
+Note: If using NetCDF4 (Experimental), download in thirds (Jan-Apr, May-Aug, Sep-Dec) due to rate limit
 
 Download a netcdf ERA5 forecast from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=form
 which includes the right timestamp, geographic region, pressure levels [300-10hPa], 
