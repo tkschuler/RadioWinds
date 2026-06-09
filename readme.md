@@ -211,8 +211,10 @@ geopotential, u-wind, v-wind, and temperature.
 ### 3a. Plotting and Mapping for 1 Station
 
 * ``plot3DWindrose.py``:
+python3 -m plotting.plot3DWindrose
 ![alt text](Pictures/Hilo-Hodograph.png)
 * ``plot_wind_quadrants.py``
+python3 -m plotting.plot_wind_quadrants
 * ``skew-T.py`` [TODO]
 * ``diurnal.py`` [TODO]
 
