@@ -5,12 +5,15 @@ import os
 
 type = "ALT"                    # ALT or PRES
 mode = "radiosonde"             # radiosonde or era5
-continent = "North_America"     # North America, South America, Europe, Asia, Africa, Australia, Antartica
-mapping_mode = "diff"             # mode or diff
+continent = "All"               # 'all' will download every continent
+                                # Or you can do one at a time N: orth America, South America, 
+                                # Europe, Asia, Africa, Australia, Antarctica
+                                # May run into rate limits
+mapping_mode = "diff"           # mode or diff
 
 # Multithreading can be finicky and run out of memory on Windows (it also seems slower)
 # I have no memory issues on WSL or Ubuntu.
-parallelize = True #True             # It's recommended to change logging to False if parallelize is True.
+parallelize = True #True         # It's recommended to change logging to False if parallelize is True.
 logging = False                  # Displays extra debugging and status text in the Terminal
 
 start_year = 2023

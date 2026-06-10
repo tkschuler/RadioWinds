@@ -2,8 +2,9 @@
 """
 Download ERA5 pressure-level reanalysis from the Copernicus CDS API.
 
-Splits the job into one request per month so the CDS queue handles it
-quickly, and skips any month already on disk so you can stop/restart freely.
+Queues one request per month across multiple years, dropping each year's
+files into its own subfolder (era5_data/2023/, era5_data/2024/, ...). Skips
+anything already on disk, so you can stop/restart freely.
 
 Setup (one time):
   1. pip install "cdsapi>=0.7.7"
@@ -27,7 +28,8 @@ import cdsapi
 # ---------------------------------------------------------------------------
 DATASET = "reanalysis-era5-pressure-levels"
 
-YEAR = "2023"
+# Queue as many years as you like; they're processed in order.
+YEARS = ["2024", "2025"]
 
 VARIABLES = [
     "geopotential",
@@ -55,6 +57,7 @@ DATA_FORMAT = "grib"
 # Use "zip" if you'd rather get archives.
 DOWNLOAD_FORMAT = "unarchived"
 
+# Parent folder. Each year gets its own subfolder underneath this.
 OUTPUT_DIR = "era5_data"
 # ---------------------------------------------------------------------------
 
@@ -67,11 +70,11 @@ if DOWNLOAD_FORMAT == "zip":
     EXT = "zip"
 
 
-def build_request(month):
+def build_request(year, month):
     return {
         "product_type": ["reanalysis"],
         "variable": VARIABLES,
-        "year": [YEAR],
+        "year": [year],
         "month": [month],
         "day": ALL_DAYS,
         "time": TIMES,
@@ -89,26 +92,30 @@ def main():
     months = [f"{m:02d}" for m in range(1, 13)]
     failed = []
 
-    for month in months:
-        target = os.path.join(OUTPUT_DIR, f"era5_{YEAR}_{month}.{EXT}")
+    for year in YEARS:
+        year_dir = os.path.join(OUTPUT_DIR, year)
+        os.makedirs(year_dir, exist_ok=True)
 
-        if os.path.exists(target):
-            print(f"[skip] {target} already exists")
-            continue
+        for month in months:
+            target = os.path.join(year_dir, f"era5_{year}_{month}.{EXT}")
 
-        print(f"[get ] requesting {YEAR}-{month} -> {target}")
-        try:
-            client.retrieve(DATASET, build_request(month)).download(target)
-            print(f"[done] {target}")
-        except Exception as exc:
-            # One bad month shouldn't kill the whole run. Log it and move on;
-            # re-running the script will retry whatever's missing.
-            print(f"[FAIL] {YEAR}-{month}: {exc}", file=sys.stderr)
-            failed.append(month)
+            if os.path.exists(target):
+                print(f"[skip] {target} already exists")
+                continue
+
+            print(f"[get ] requesting {year}-{month} -> {target}")
+            try:
+                client.retrieve(DATASET, build_request(year, month)).download(target)
+                print(f"[done] {target}")
+            except Exception as exc:
+                # One bad month shouldn't kill the whole run. Log it and move on;
+                # re-running the script will retry whatever's missing.
+                print(f"[FAIL] {year}-{month}: {exc}", file=sys.stderr)
+                failed.append(f"{year}-{month}")
 
     print("\nFinished.")
     if failed:
-        print(f"Months that failed: {', '.join(failed)}")
+        print(f"Failed ({len(failed)}): {', '.join(failed)}")
         print("Re-run the script to retry just those.")
     else:
         print("All months downloaded.")
