@@ -23,3 +23,7 @@ termcolor==2.4.0
 windrose==1.9.0
 xarray==2024.1.1
 colorcet==3.1.0
+cdsapi==0.7.7 
+ecmwf-datastores-client==0.5.1 
+multiurl==0.3.7 
+tqdm==4.68.2
