@@ -168,9 +168,11 @@ def polar_interpolated_scatter_plot(df, fig, ax, station, date, num_interpolatio
 
     #Switch from math winds to Meteorological Winda visually
     compass = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+    tick_positions = np.deg2rad(np.arange(0, 360, 45))
+
     ax.set_theta_zero_location('N')
     ax.set_theta_direction(-1)
-    ax.set_xticklabels(compass)
+    ax.set_xticks(tick_positions, labels=compass)
 
 
     sc = ax.scatter(np.radians(interpolated_directions_deg), interpolated_altitudes, c=interpolated_speeds, cmap=color, s=10)
@@ -288,7 +290,7 @@ if __name__=="__main__":
     polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 100, color = 'winter', blowing_to = config.blowing_to, station = station, date = date)
 
     #To plot the sounding datapoints on top of the interpolated plot:
-    viridis = cm.get_cmap('Set1', 1) #This is jsut to get red dots
+    viridis = plt.get_cmap('Set1', 1) #This is jsut to get red dots
     polar_interpolated_scatter_plot(interpolated_df, fig, ax, num_interpolations = 1, color = viridis, size = 20, no_interpolation = True, blowing_to = config.blowing_to, station = station, date = date)
 
 

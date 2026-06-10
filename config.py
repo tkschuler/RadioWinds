@@ -6,7 +6,7 @@ import os
 type = "ALT"                    # ALT or PRES
 mode = "radiosonde"             # radiosonde or era5
 continent = "North_America"     # North America, South America, Europe, Asia, Africa, Australia, Antartica
-mapping_mode = mode             # mode or diff
+mapping_mode = "diff"             # mode or diff
 
 # Multithreading can be finicky and run out of memory on Windows (it also seems slower)
 # I have no memory issues on WSL or Ubuntu.
@@ -14,10 +14,10 @@ parallelize = True #True             # It's recommended to change logging to Fal
 logging = False                  # Displays extra debugging and status text in the Terminal
 
 start_year = 2023
-end_year = 2023
+end_year = 2025
 
 monthly_export_color = False
-annual_export_color = False
+annual_export_color = True
 dfi_mode = "chrome"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
 alt_step = 500                  # m
