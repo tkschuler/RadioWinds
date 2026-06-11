@@ -22,6 +22,9 @@ Then just run:  python download_era5.py
 import os
 import sys
 import cdsapi
+import glob
+import subprocess
+import shutil
 
 # ---------------------------------------------------------------------------
 # CONFIG — edit these, then run the file.
@@ -29,7 +32,7 @@ import cdsapi
 DATASET = "reanalysis-era5-pressure-levels"
 
 # Queue as many years as you like; they're processed in order.
-YEARS = ["2024", "2025"]
+YEARS = ["2023", "2024", "2025"]
 
 VARIABLES = [
     "geopotential",
@@ -84,6 +87,25 @@ def build_request(year, month):
         "area": AREA,
     }
 
+def merge_year(year):
+    """Combine that year's monthly GRIBs into one yearly NetCDF via CDO."""
+    year_dir = os.path.join(OUTPUT_DIR, year)
+    out_file = os.path.join(OUTPUT_DIR, f"era5_{year}.nc")
+
+    if os.path.exists(out_file):
+        print(f"[skip] {out_file} already exists")
+        return
+
+    # Expand the glob HERE, in Python — don't rely on the shell.
+    monthly = sorted(glob.glob(os.path.join(year_dir, f"era5_{year}_*.grib")))
+    if not monthly:
+        print(f"[warn] no monthly files found for {year}, skipping merge")
+        return
+
+    print(f"[merge] {len(monthly)} files -> {out_file}")
+    cmd = ["cdo", "-f", "nc", "mergetime", *monthly, out_file]
+    subprocess.run(cmd, check=True)
+    print(f"[done ] {out_file}")
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -113,6 +135,12 @@ def main():
                 print(f"[FAIL] {year}-{month}: {exc}", file=sys.stderr)
                 failed.append(f"{year}-{month}")
 
+        try:
+            merge_year(year)
+        except subprocess.CalledProcessError as exc:
+            print(f"[FAIL] merge {year}: {exc}", file=sys.stderr)
+            failed.append(f"merge-{year}")
+            
     print("\nFinished.")
     if failed:
         print(f"Failed ({len(failed)}): {', '.join(failed)}")
@@ -120,6 +148,8 @@ def main():
     else:
         print("All months downloaded.")
 
+
+#cdo -f nc mergetime era5_2020_*.grib era5_2020.nc (~90 seconds per year)
 
 if __name__ == "__main__":
     main()

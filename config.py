@@ -24,7 +24,7 @@ annual_export_color = True
 dfi_mode = "chrome"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
 alt_step = 500                  # m
-min_alt = 15000                 # m
+min_alt = 0               # m
 max_alt = 28000 + alt_step-1    # m  The +alt_step -1 is to include all data points above the max - the next step size.
 n_sectors = 16                  # m
 speed_threshold = 4             # knots for Radiosonde,  m/s for ERA5

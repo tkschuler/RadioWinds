@@ -31,7 +31,7 @@ def handle_missing_data(df):
 
     #return df.dropna(how='all')
 
-FAA = "IAD"
+FAA = "SBBV"
 WMO = utils.lookupWMO(FAA)
 Station_Name = utils.lookupStationName(FAA)
 CO = utils.lookupCountry(FAA)
@@ -75,8 +75,9 @@ def getDecadalMonthlyMeans(FAA, WMO):
 
 
                 date_chunks = file[:-4].split('-')
-                time = datetime(config.start_year, int(date_chunks[2]), int(date_chunks[3]), int(date_chunks[4]), 0, 0)
-
+                #time = datetime(config.start_year, int(date_chunks[2]), int(date_chunks[3]), int(date_chunks[4]), 0, 0)
+                time = datetime(int(date_chunks[1]), int(date_chunks[2]), int(date_chunks[3]), int(date_chunks[4]), 0, 0)
+                #Accounts for year
                 wind_directions.loc[time, :] = directions
 
                 #print(wind_directions)
