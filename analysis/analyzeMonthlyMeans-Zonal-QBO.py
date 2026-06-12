@@ -3,7 +3,6 @@ This script analyzes monthly zonal wind means from radiosonde data at user speci
 
 pressure can be any of the following  [20, 30, 50, 70, or 100]
 
-
 NOTE: THIS PROGRAM ASSUMES ALL RADIOSONDES HAVE BEEN DOWNLOADED IN THE
  PROPER ORGANIZATION STRUCTURE USING ANNUALWYOMINGDOWNLOAD.PY.  IF MONTHS ARE MISSING FROM THE DOWNLOAD
  YOU MUST RE-DOWNLOAD FOR THAT STATION OR INCLUDE EMPTY FOLDERS. OTHERWISE THIS PROGRAM WILL NOT COMPLETE.
@@ -112,10 +111,10 @@ if __name__=="__main__":
     stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv")
     # stations_df = stations_df.loc[stations_df["CO"] == "US"]
 
-    #continent2 = "South_America"
-    #stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv")
+    continent2 = "North_America"
+    stations_df2 = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent2 + ".csv")
 
-    #stations_df = pd.concat([stations_df, stations_df2])
+    stations_df = pd.concat([stations_df, stations_df2])
     stations_df = stations_df.drop_duplicates(subset=['WMO'])
     stations_df = stations_df.reset_index()
 

@@ -171,21 +171,23 @@ def parallelize(stations_df, year):
 
 if __name__ == "__main__":
 
-    continent = config.continent
-    stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv")
-    # stations_df = stations_df.loc[stations_df["CO"] == "US"]  # Only do US Countries for now
-    # stations_df = stations_df.drop_duplicates(subset=['FAA'])
+    if config.continent == "All":
+        continents = ["North_America", "South_America", "Europe",
+                      "Asia", "Africa", "Australia", "Antarctica"]
+    else:
+        continents = [config.continent]
+        
+    for continent in continents:
+        print(colored("=== Starting continent: " + continent + " ===", "cyan"))
+        stations_df = pd.read_csv('Radiosonde_Stations_Info/CLEANED/' + continent + ".csv")
+        print(stations_df)
 
-    print(stations_df)
-
-    for i in range(config.start_year, config.end_year + 1):
-
-        if config.parallelize:
-            print(colored("Downloading Radiosonde Datasets in Parallel [MultiThreading]", "cyan"))
-            parallelize(stations_df, year=i)
-        else:
-            print(colored("Downloading Radiosonde Datasets in Sequence", "cyan"))
-            for row in stations_df.itertuples(index=False):
-                get_yearly_soundings(row.FAA, row.WMO, year=i)
-                # Do not move onto the next year until all the processes have finished.
-        print(colored("MOVING ON TO YEAR" + str(i), "cyan"))
+        for i in range(config.start_year, config.end_year + 1):
+            if config.parallelize:
+                print(colored("Downloading Radiosonde Datasets in Parallel [MultiThreading]", "cyan"))
+                parallelize(stations_df, year=i)
+            else:
+                print(colored("Downloading Radiosonde Datasets in Sequence", "cyan"))
+                for row in stations_df.itertuples(index=False):
+                    get_yearly_soundings(row.FAA, row.WMO, year=i)
+            print(colored("MOVING ON TO YEAR " + str(i), "cyan"))

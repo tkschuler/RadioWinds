@@ -132,7 +132,7 @@ if not isExist:
 plt.savefig(path +  str(FAA) + "-" + str(config.start_year) + "-NO-TITLE", bbox_inches='tight')
 fig.tight_layout()
 plt.show()
-dfgdfg
+#dfgdfg
 
 
 

@@ -7,7 +7,7 @@ import xarray as xr
 import pandas as pd
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-import opposing_wind_wyoming
+from analysis import opposing_wind_wyoming
 import config
 from plotting.plot3DWindrose import polar_interpolated_scatter_plot
 import windrose

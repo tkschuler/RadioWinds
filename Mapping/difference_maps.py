@@ -74,7 +74,7 @@ for row in stations_df.itertuples(index = 'WMO'):
     FAA = row.FAA
     Name = row.Station_Name
 
-    radiosonde_analysis = config.base_directory  + 'radiosonde' + '_ANALYSIS_' + 'ALT' + '/'
+    radiosonde_analysis = config.analysis_folder
     era5_analysis = config.base_directory + 'era5' + '_ANALYSIS_' + 'ALT-new' + '/'
 
     analysis_folder = config.analysis_folder

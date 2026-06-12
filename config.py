@@ -4,24 +4,27 @@ import os
 # **************** DOWNLOAD AND ANALYSIS ************************
 
 type = "ALT"                    # ALT or PRES
-mode = "radiosonde"             # or radiosonde or era5
-continent = "North_America"     #
-mapping_mode = mode             # or "diff"
+mode = "radiosonde"             # radiosonde or era5
+continent = "All"               # 'all' will download every continent
+                                # Or you can do one at a time N: orth America, South America, 
+                                # Europe, Asia, Africa, Australia, Antarctica
+                                # May run into rate limits
+mapping_mode = "diff"           # mode or diff
 
 # Multithreading can be finicky and run out of memory on Windows (it also seems slower)
 # I have no memory issues on WSL or Ubuntu.
-parallelize = False #True             # It's recommended to change logging to False if parallelize is True.
-logging = True                  # Displays extra debugging and status text in the Terminal
+parallelize = True #True         # It's recommended to change logging to False if parallelize is True.
+logging = False                  # Displays extra debugging and status text in the Terminal
 
 start_year = 2023
-end_year = 2023
+end_year = 2025
 
-monthly_export_color = True
+monthly_export_color = False
 annual_export_color = True
 dfi_mode = "chrome"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
 alt_step = 500                  # m
-min_alt = 15000                 # m
+min_alt = 0               # m
 max_alt = 28000 + alt_step-1    # m  The +alt_step -1 is to include all data points above the max - the next step size.
 n_sectors = 16                  # m
 speed_threshold = 4             # knots for Radiosonde,  m/s for ERA5
@@ -38,7 +41,7 @@ base_directory = os.getcwd() + '/'  # The default is the RadioWinds directory
 parent_folder = base_directory + 'SOUNDINGS_DATA/'
 
 # Best to Change the analysis folders depending on which type of analsis you're doing
-#analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-FULL' + '/'
+analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-FULL' + '/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-CALM' + '/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-FULL' + '/'
 #analysis_folder = base_directory + mode + '_ANALYSIS_' + type + '-BURST' + '/'

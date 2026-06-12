@@ -11,8 +11,8 @@ import copy
 # RadioWinds Imports
 import config
 import utils
-import opposing_wind_wyoming
-from ERA5 import ERA5
+from analysis import opposing_wind_wyoming
+from analysis import ERA5
 
 """
 
