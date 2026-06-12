@@ -19,7 +19,7 @@ logging = False                  # Displays extra debugging and status text in t
 start_year = 2023
 end_year = 2025
 
-monthly_export_color = False
+monthly_export_color = True
 annual_export_color = True
 dfi_mode = "chrome"  # Default is "chrome" for Windows 11 and Ubuntu, WSL2 prefers "selenium"
 
@@ -58,10 +58,10 @@ g = 9.80665
 
 
 # ************************ ERA5 **********************************
-combined = False
+combined = True
 #era_file = "forecasts/" + "western_hemisphere-2022-North.nc"
 #era_file = "../../../../mnt/d/cds_api/" + "2023-ERA5-Complete.nc"
-era_file = "../../../../mnt/d/FORECASTS/" + "2023-ERA5-North.nc"
+#era_file = "../../../../mnt/d/FORECASTS/" + "2023-ERA5-North.nc"
 #era_file = "../../../../mnt/d/cds_api/" + "2022-ERA5-Complete-Mini.nc"
 #era_file = "../../../../mnt/d/FORECASTS/" + "optimized_ERA5-2022-WH.nc"
 
